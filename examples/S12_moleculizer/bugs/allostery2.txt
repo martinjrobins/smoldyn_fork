@@ -1,0 +1,101 @@
+# allostery2.txt
+# This model demonstrates the use of allostery in a model using an
+# allosteric-class.  Receptor molecules bind to Ligand in a standard
+# association reaction.  Receptor molecules can also bind to
+# Messengers when their Msite is in the Active form.  A
+# rule in the allosteric-classes section specifies Receptor.Ligand
+# subcomplexes change Receptor's Msite from Occluded to
+# Active.
+
+graphics opengl_good
+graphic_delay 100
+
+dim 3
+
+
+##########################################
+/*
+The largest complex in this file is Ligand-Receptor-Messenger, called LRM.  The full list of complexes
+is: Ligand, Receptor, Messenger, LR, RM, and LRM.
+
+Receptor's messenger site, Msite, is active when the ligand is bound and is otherwise occluded.
+
+This file appears to work adequately.
+
+However, a major inelegancy is that the species-class, as defined below, includes a binding site shape,
+which is ignored.  The class called "activeclass" should only include species with active receptors, which
+are LR and LRM.  It actually includes everything with a receptor, which are Receptor, LR, RM, and LRM.
+
+Ideally, species-classes could be defined that accounted for shapes.
+A less good option would be for species-classes to forbid the listing of binding site shapes.
+*/
+##########################################
+
+
+start_rules
+===== Molecules ======================
+  Receptor(Lsite, Msite {Occluded, Active}), mass = 10000.0;
+  Ligand, mass = 100.0;
+  Messenger(site), mass = 10000.0;
+
+==== Species-Classes ================
+  Receptor(Msite{Active}), name=activeclass;		# this doesn't do what the line implies
+#  Receptor(Lsite!0).Ligand(!0), name=activeclass;	# this works as intended
+
+===== Association-Reactions =========	
+  Receptor(Lsite) + Ligand -> Receptor(Lsite!0).Ligand(!0),
+    kon = 500, koff = 0.0;
+
+  Receptor(Msite {Occluded}) + Messenger(site) -> Receptor(Msite!0).Messenger(site!0),
+    kon = 0.0, koff = 10000,
+
+  Receptor(Msite {Active}) + Messenger(site) -> Receptor(Msite!0).Messenger(site!0),
+    kon = 500.0, koff = 0.0;
+
+=== Allostery-Classes ================
+  Receptor(Msite {Active <- *}, Lsite!0).Ligand(!0);
+
+===== Explicit-Species ===============
+  Receptor(Lsite!0).Ligand(!0), name = LR;
+  Receptor(Msite!0).Messenger(site!0), name = RM;
+  Receptor(Lsite!0, Msite!1).Messenger(site!1).Ligand(!0), name = LRM;
+
+end_rules
+
+expand_network all
+
+species Receptor Ligand Messenger LR LRM
+
+difc Receptor 100.0
+difc Ligand 100.0
+difc Messenger 100.0
+difc LR 100.0
+difc LRM 100.0
+
+color Receptor green
+color Ligand red
+color Messenger blue
+
+color LR 1 1 0 
+color LRM 0 1 1
+
+display_size LR 5.0
+display_size LRM 10.0
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+
+mol 100 Receptor 90 90 90
+mol 100 Messenger 50 50 50 
+mol 100 Ligand 10 10 10
+
+cmd b pause
+
+end_file
+

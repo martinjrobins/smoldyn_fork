@@ -1,0 +1,52 @@
+# This model illustrates how to make a basic small-mol/molecule
+# interaction, in this case between Receptor and Ligand.
+
+graphics opengl_good
+dim 3
+max_species 10
+max_mol 10000
+
+species Receptor Ligand BoundReceptor Dimer
+
+difc Receptor 0
+difc Ligand 10
+difc BoundReceptor 0
+difc Dimer 10
+
+color Receptor 0 1 0		# green
+color Ligand 1 0 0		# red
+color BoundReceptor 0 0 1	# blue
+color Dimer 0.1 0.1 0.1		# dark grey
+
+display_size all 2
+
+time_start 0
+time_stop 100
+time_step 0.1
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+start_rules
+
+===== Molecules ======================
+  Receptor(ligand_site), mass = 10000;
+  Ligand, mass = 100;
+
+===== Explicit-Species ================
+  Receptor(ligand_site!1).Ligand(!1), name=BoundReceptor;
+  Ligand(!1).Ligand(!1), name = Dimer;
+
+===== Association-Reactions =========	
+  Receptor(ligand_site) + Ligand -> Receptor(ligand_site!1).Ligand(!1),
+    kon = 100, koff = 1;
+  Ligand + Ligand -> Ligand(!1).Ligand(!1),
+    kon = 100, koff = 1;
+
+end_rules
+
+mol 50 Receptor 0 u u
+mol 300 Ligand u u u
+
+end_file

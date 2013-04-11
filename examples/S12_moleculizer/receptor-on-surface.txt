@@ -1,0 +1,112 @@
+# receptor-on-surface.txt
+#  This model extends the moleculizer-smallmol-example2.txt model, by
+#  adding a surface, placing receptor on the outside of that surface,
+#  and having receptor/ligand interactions done in that way.  
+
+graphics opengl_good
+graphic_delay 100
+
+dim 3
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+max_species 100
+max_surface 3
+max_compartment 3
+
+start_surface boundary
+action both all reflect
+color both 1 1 1
+polygon both edge 
+max_panels rect 6
+panel rect +0 0 0 0 100 100 # This is a panel perpindicular to the x
+                              # axis (0) -- in the yz plane with one
+                              # corner at (0,0,0), extends for 100 in
+                              # the y dir and 100 in the z dir.
+panel rect -0 100 0 0 100 100 
+panel rect -1 0 100 0 100 100 
+panel rect +1 0 0 0 100 100
+panel rect -2 0 0 100 100 100 
+panel rect +2 0 0 0 100 100
+end_surface
+
+
+start_surface cell
+action both all reflect
+color both 1 1 1
+polygon both edge
+max_panels sph 1
+panel sph 50 50 50 -30 20 20  # This should draw as sphere with center
+                              # (50, 50, 50), radius 30, the front on
+                              # the inside of the sphere, and with 20
+                              # longitudinal samplings, 20 latitudinal
+                              # samplings in order to define the
+                              # triangulation of the surface.
+end_surface
+
+
+# Define a compartment, the cytosol of the cell 
+start_compartment interior
+surface cell
+point 50 50 50                   
+end_compartment 
+
+start_compartment exterior
+compartment equalnot interior
+end_compartment 
+
+
+start_rules
+
+===== Molecules ======================
+      Receptor(ligand_site), mass = 10000.0;
+      Ligand, mass = 100.0;
+
+===== Association-Reactions =========	
+
+      Receptor(ligand_site) + Ligand -> Receptor(ligand_site!1).Ligand(!1),
+      	      kon = 100,
+	      koff = 10;
+
+===== Explicit-Species ===============
+
+      Receptor(ligand_site!1).Ligand(!1),
+	name = BoundReceptor;
+
+end_rules
+
+species Receptor Ligand BoundReceptor
+
+difc Receptor 10.0
+difc Ligand 100.0
+
+max_mol 10000;
+
+color Receptor(all) 0 1 0
+color Ligand(all) 1 0 0
+color BoundReceptor(all) 0 0 1
+
+display_size Receptor 1.0
+display_size Ligand .7
+display_size BoundReceptor 2.0
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+
+surface_mol 100 Receptor(back) cell all all
+mol 100 Ligand 10 10 10
+
+cmd b pause
+
+end_file
+
+
+color 

@@ -1,0 +1,54 @@
+# modifications.txt
+# Example file to illustrate MZR modifications
+
+graphics opengl_good
+
+dim 2
+max_species 100
+max_mol 1000
+
+species A
+
+difc all 20.0
+
+color A 1 0 0		# red
+
+time_start 0
+time_stop 5
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+
+start_rules
+==== Modifications ====
+  name=None, mass=0;
+  name=Phos, mass=95;
+
+==== Molecules ====
+  A(*Site1 {None,Phos}, *Site2 {None,Phos}, *Site3 {None,Phos}), mass = 10000;
+
+=== Species-Classes ===
+  A(*Site1{Phos}), name = class1;
+
+==== Transformation-Reactions ====
+  A(*Site1{None}) -> A(*Site1{Phos}), k=1;
+  A(*Site2{None}) -> A(*Site2{Phos}), k=1;
+  A(*Site3{None}) -> A(*Site3{Phos}), k=1;
+  A(*Site1{Phos}) -> A(*Site1{None}), k=1;
+  A(*Site2{Phos}) -> A(*Site2{None}), k=1;
+  A(*Site3{Phos}) -> A(*Site3{None}), k=1;
+
+end_rules
+
+expand_network all
+
+mol 250 A u u
+
+output_files stdout
+cmd N 10 molcount stdout
+cmd A molcountheader stdout
+
+end_file
+
+

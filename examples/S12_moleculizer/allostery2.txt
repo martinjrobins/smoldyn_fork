@@ -1,0 +1,112 @@
+# allostery.txt
+
+# In this model, surface-bound receptors bind to a ligand, on the surface's left side,
+# and transmit the signal by phosphorylating messengers on the surface's right side.
+
+# This model demonstrates the use of allostery in a model using an
+# allosteric class.  Receptor molecules bind to Ligand in a standard
+# association reaction.  Receptor molecules can also bind to
+# Messengers, but only when their Msite is in the Active form.
+
+
+
+graphics opengl_good
+graphic_delay 10
+
+dim 3
+
+species Receptor Ligand Messenger LR LRM Mp
+
+difc Ligand(all) 100
+difc Messenger(all) 100
+
+color Receptor(all) green
+color Ligand(all) red
+color Messenger(all) blue
+color LR(all) 0.5 0.5 0
+color LRM(all) 0 0.5 0.5
+color Mp(all) cyan
+
+display_size all 2
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100
+boundaries 1 0 100
+boundaries 2 0 100
+
+start_surface bounds
+action all both reflect
+polygon both edge
+panel rect +0 0 0 0 100 100
+panel rect -0 100 0 0 100 100
+panel rect +1 0 0 0 100 100
+panel rect -1 0 100 0 100 100
+panel rect +2 0 0 0 100 100
+panel rect -2 0 0 100 100 100
+end_surface
+
+start_surface membrane
+color both grey
+action all both reflect
+polygon both face
+panel rect +0 50 0 0 100 100
+end_surface
+
+surface_mol 100 Receptor(up) membrane all all
+mol 100 Messenger 50-100 u u
+mol 100 Ligand 1 u u
+
+
+start_rules
+===== Modifications =================
+  name=None, mass=0;
+  name=Phos, mass=95;
+
+===== Mols ==========================
+  Receptor(Lsite, Msite {Occluded, Active}), mass = 10000;
+  Ligand, mass = 100;
+  Messenger(Rsite, *PhosSite{None,Phos}), mass = 10000;
+
+===== Association-Reactions =========
+  Receptor(Lsite) + Ligand -> Receptor(Lsite!0).Ligand(!0),
+    kon = 1000, koff = 0.01;
+
+  # Note that Receptor Msite shapes are listed in the same order as above
+  Receptor(Msite {Occluded}) + Messenger(Rsite) -> Receptor(Msite!0).Messenger(Rsite!0),
+    kon = 1, koff = 10,
+
+  Receptor(Msite {Active}) + Messenger(Rsite) -> Receptor(Msite!0).Messenger(Rsite!0),
+    kon = 500, koff = 0.001;
+
+=== Allostery-Classes ================
+  Receptor(Msite {Active<-*},Lsite!0).Ligand(!0);
+
+===== Explicit-Species ===============
+  Receptor(Lsite!0).Ligand(!0), name = LR;
+  Receptor(Msite!0).Messenger(Rsite!0), name = RM;
+  Receptor(Lsite!0, Msite!1).Messenger(Rsite!1).Ligand(!0), name = LRM;
+#  Messenger(*PhosSite{Phos}) = Mp;
+
+====== Species-Classes ================
+  Receptor, name=ReceptorClass;
+
+====== Transformation-Reactions ========
+  Receptor(Msite!0).Messenger(Rsite!0,*PhosSite{None}) -> Receptor(Msite!0).Messenger(Rsite!0,*PhosSite{Phos}), k=0.1;
+
+end_rules
+
+expand_network all
+default_state Receptor(up)
+default_state Ligand(bsoln)
+default_state Messenger(soln)
+species_class_difc ReceptorClass(all) 0
+
+reference_difc Messenger
+
+cmd b pause
+
+end_file
+

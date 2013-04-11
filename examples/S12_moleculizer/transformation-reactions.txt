@@ -1,0 +1,77 @@
+# transformation-reactions.txt
+# This model illustrates how to make a basic small-mol/molecule
+# interaction, in this case between Receptor and Ligand.
+
+graphics opengl_good
+graphic_delay 100
+
+dim 3
+
+max_species 100
+species ATP ADP Firefly
+
+difc Firefly 20
+difc ATP 40.0
+difc ADP 40.0
+
+max_mol 10000;
+
+color ATP 1 0 0		# ATP is red
+color ADP 0 1 0		# ADP is green
+display_size Firefly 2
+display_size ATP 1
+display_size ADP 1
+
+time_start 0
+time_stop 100
+time_step 0.1
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 5 r
+
+start_rules
+
+===== Modifications ==================
+  name = None, mass = 0.0;
+  name = Phos, mass = 42.0;
+
+===== Molecules ======================
+  ATP, mass = 100.0;
+  ADP, mass = 100.0;
+  Firefly(axp_site,*PhosSite{None,Phos}), mass = 10000.0;
+
+===== Association-Reactions =========
+  Firefly(axp_site) + ATP -> Firefly(axp_site!1).ATP(!1),
+    kon = 500.0, koff = 0.0;
+
+  Firefly(axp_site) + ADP -> Firefly(axp_site!1).ADP(!1),
+    kon = 0.0, koff = 500.0;
+
+===== Transformation-Reactions =========
+  Firefly(axp_site!1,*PhosSite{None}).ATP(!1) -> Firefly(axp_site!1,*PhosSite{Phos}).ADP(!1),
+    k = 100.0;
+
+  Firefly(*PhosSite{Phos}) -> Firefly(*PhosSite{None}),
+    k = 100.0;
+
+===== Species-Classes ================
+      Firefly(*PhosSite{Phos}), name = On;
+      Firefly(*PhosSite{None}), name = Off;
+
+end_rules
+
+expand_network all
+
+species_class_display_size Off 2
+species_class_display_size On 3
+
+species_class_color Off 0 0 1	# Firefly-None is blue
+species_class_color On 1 1 0	# Firefly-Phos is yellow
+
+mol 10 Firefly u u u
+mol 20 ATP u u u
+
+cmd b pause
+
+end_file

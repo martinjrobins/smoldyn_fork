@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<moleculizer-input>
+  <model>
+    <modifications>
+    </modifications>
+    <mols>
+      <small-mol name="A">
+        <weight daltons="100">
+      </weight>
+      </small-mol>
+      <mod-mol name="B">
+        <weight daltons="100">
+        </weight>
+        <binding-site name="to-A">
+          <default-shape-ref name="default">
+          </default-shape-ref>
+          <site-shape name="default">
+          </site-shape>
+        </binding-site>
+      </mod-mol>
+    </mols>
+    <allosteric-plexes>
+    </allosteric-plexes>
+    <allosteric-omnis>
+    </allosteric-omnis>
+    <reaction-gens>
+      <dimerization-gen>
+        <mol-ref name="A">
+          <site-ref name="A">
+        </site-ref>
+        </mol-ref>
+        <mol-ref name="B">
+          <site-ref name="to-A">
+        </site-ref>
+        </mol-ref>
+        <default-on-rate value="1.0e11">
+        </default-on-rate>
+        <default-off-rate value="1.0">
+    </default-off-rate>
+    </dimerization-gen>
+    </reaction-gens>
+    <explicit-species>
+      <plex-species name="AB">
+        <plex>
+          <mol-instance name="the-A">
+            <mol-ref name="A">
+          </mol-ref>
+          </mol-instance>
+          <mol-instance name="the-B">
+            <mol-ref name="B">
+          </mol-ref>
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-A">
+              <binding-site-ref name="A">
+            </binding-site-ref>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-B">
+              <binding-site-ref name="to-A">
+        </binding-site-ref>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        <instance-states>
+        </instance-states>
+        <population count="1000">
+      </population>
+      </plex-species>
+      <plex-species name="A-singleton">
+        <plex>
+          <mol-instance name="the-A">
+            <mol-ref name="A">
+        </mol-ref>
+        </mol-instance>
+        </plex>
+        <instance-states>
+        </instance-states>
+        <population count="300">
+      </population>
+      </plex-species>
+      <plex-species name="B-singleton">
+        <plex>
+          <mol-instance name="the-B">
+            <mol-ref name="B">
+        </mol-ref>
+        </mol-instance>
+        </plex>
+        <instance-states>
+        </instance-states>
+        <population count="0">
+    </population>
+    </plex-species>
+    </explicit-species>
+    <explicit-reactions>
+    </explicit-reactions>
+    <volume liters="1.0e-11">
+</volume>
+</model>
+</moleculizer-input>
+

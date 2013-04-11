@@ -1,0 +1,93 @@
+# allostery.txt
+# This model demonstrates the use of allostery in a model using an
+# allosteric class.  Receptor molecules bind to Ligand in a standard
+# association reaction.  Receptor molecules can also bind to
+# Messengers, but only when their Msite is in the Active form.
+
+
+graphics opengl_good
+graphic_delay 10
+
+dim 3
+
+species Receptor Ligand Messenger LR LRM
+
+difc Ligand 100
+difc Messenger 100
+
+color Receptor(all) green
+color Ligand(all) red
+color Messenger(all) blue
+color LR(all) yellow
+color LRM(all) cyan
+
+display_size all 2
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100
+boundaries 1 0 100
+boundaries 2 0 100
+
+start_surface bounds
+action all both reflect
+polygon both edge
+panel rect +0 0 0 0 100 100
+panel rect -0 100 0 0 100 100
+panel rect +1 0 0 0 100 100
+panel rect -1 0 100 0 100 100
+panel rect +2 0 0 0 100 100
+panel rect -2 0 0 100 100 100
+end_surface
+
+
+start_surface membrane
+color both grey
+action all both reflect
+polygon both face
+panel rect +0 50 0 0 100 100
+end_surface
+
+
+surface_mol 100 Receptor(up) membrane all all
+mol 100 Messenger 50-100 u u
+mol 100 Ligand 0-50 u u
+
+start_rules
+xml_output allostery.xml
+
+===== Molecules ======================
+  Receptor(Lsite, Msite {Occluded, Active}), mass = 10000;
+  Ligand, mass = 100;
+  Messenger(site), mass = 10000;
+
+===== Association-Reactions =========
+  Receptor(Lsite) + Ligand -> Receptor(Lsite!0).Ligand(!0),
+    kon = 10000, koff = 0.001;
+
+  Receptor(Msite {Occluded}) + Messenger(site) -> Receptor(Msite!0).Messenger(site!0),
+    kon = 1, koff = 10,
+
+  Receptor(Msite {Active}) + Messenger(site) -> Receptor(Msite!0).Messenger(site!0),
+    kon = 500, koff = 0.001;
+
+=== Allostery-Classes ================
+  Receptor(Msite {Active<-*},Lsite!0).Ligand(!0);
+
+===== Explicit-Species ===============
+  Receptor(Lsite!0).Ligand(!0), name = LR;
+  Receptor(Msite!0).Messenger(site!0), name = RM;
+  Receptor(Lsite!0, Msite!1).Messenger(site!1).Ligand(!0), name = LRM;
+
+end_rules
+
+
+expand_network all
+default_state Receptor(up)
+
+cmd b pause
+
+end_file
+

@@ -1,0 +1,102 @@
+\chapter{Cookbook}
+
+This chapter contains explicit examples of many standard model
+constructs that users may find useful.
+
+Note that in the examples in this chapter, certain information needed
+in the model may not be explicitly listed.  For instance, in an
+example of a dimerization reaction, the mod-mols involved may not be
+explicitly defined, although they would need to be in an explicit model.
+
+\section{Defining Explict Modifications}
+
+Most models of signal transduction pathways will include
+modifications; at the least, modifications representing
+phosphorylation groups are often added.  A 'None' or 'Null'
+modification almost needed as well to represent a modification that
+doesn't exist: an 'un-phosphorylated' or 'un-ubiquitinated' or
+generally 'un-modified' state.
+
+\ref{'exampleSimpleModSection'} gives an example of a simple
+modification section that defines one phosphorylation section.
+
+\begin{lstlisting}[caption='Example of a simple modification section', label='exampleSimpleModSection']
+<modifications>
+  <modification name='None'>
+    <weight-delta daltons='0.0' />
+  </modification>
+  <modification name='phosphorylated'>
+    <weight-delta daltons='42.0'/>
+  </modification>
+</modifications>
+\end{lstlisting}
+
+\section{Defining Abstract Modifications}
+
+It is sometimes adventageous to define modifications that do not
+explicitly correspond to physical modifications. For instance, when
+modeling a doubly-phosphorylatable kinase target, it may be desirable
+to model the target as having only one modification site that can be
+in a 'singly-phosphorylated' or 'doubly-phosphorylated' state.  This
+can simplify reaction generation at the expense of some physical
+explicitness.  
+
+Using this simplified and abstractified system, only two reaction
+generators must be written, which take the target from 'None' to
+'phosphorylated', and another from 'phosphorylated' to
+'doubly-phosphorylated'.  
+
+\begin{lstlisting}
+<modifications>
+  <modification name='None'>
+    <weight-delta daltons='0.0' />
+  </modification>
+  <modification name='phosphorylated'>
+    <weight-delta daltons='42.0'/>
+  </modification>
+  <modification name='doubly-phosphorylated'>
+    <weight-delta daltons='84.0'/>
+  </modification>
+</modifications>
+\end{1stlisting}
+
+\section{Defining a binding-site on a mod-mol}
+\section{Defining an allosteric form of a binding-site}
+\section{Defining a site that has different behavior based on the
+  state of the containing protein}
+\section{Defining a binding site that has different behavior based on
+  more complicated factors}
+\section{Defining a simple dimerization reaction}
+
+The most general kind of reaction generator in libmoleculizer is the
+dimerization reaction, which defines a binding reaction between two
+proteins.  
+
+In its simplest form, it can be written as follows.  
+
+\section{Defining a dimerization reaction with allosteric kinetics}
+\section{Defining a modification state decomposition}
+A user may wish to express that a particular modified protein will
+decompose into an unmodified protein at some particular rate.
+
+This can be done using a uni-mol-gen.
+
+\begin{lstlisting}
+<uni-mol-gen>
+  <enabling-mol name='Protein' />
+  <enabling-modifications>
+    <mod-site-ref name='PhosphorylationSite'>
+      <mod-ref name='phosphorylated' />
+    </mod-site-ref>
+  </enabling-modifications>
+  <modification-exchanges>
+    <modification-exchange>
+      <mod-site-ref name='PhosphorylationSite' />
+      <installed-mod-ref name='None' />
+    </modification-exchange>
+  </modification-exchanges>
+  <rate value='1e5' />
+</uni-mol-gen>
+\end{lstlisting}
+
+\section{Defining a Complicated Reaction}

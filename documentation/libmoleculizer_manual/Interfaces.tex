@@ -1,0 +1,997 @@
+\chapter{Libmoleculizer Interfaces}
+\label{chap:interfacesChapter}
+
+Libmoleculizer is primarily a library.  It expeses its capabilities
+using different language interfaces (currently C++ and C) that allow
+users of different languages.  This chapter describes these
+interfaces and how to use them.
+
+\section{The C++ Interface}
+The C++ interface is the standard interface for libmoleculizer, as
+well as the implementation language for libmoleculizer.  Consequently,
+the C++ interface is the most powerful as well as the most detailed.
+
+The C++ interface controls creating a libmoleculizer instance,
+configuring it, loading a rules file into the instance, and expanding
+the reaction network out.  The interface also allows inspecting the
+network to see whether or not certain species have been created, see
+what reactions might be possible for a set of products, as well as
+several other capabilities.  
+
+These parts are given an overview below, although for a completely
+thorough description of the API, please consult either reference
+portions of this documentation, or browse the source code (the
+moleculizer interface can be found in src/mzr/moleculizer.hh and
+src/fnd/reactionNetworkDescription.hh).
+
+\subsection{Overview}
+Use of libmoleculizer in client code will usually follow, a ''create a
+libmoleculizer instance, configure the instance, load a file, run
+libmoleculizer, and read out species and reactions'' pattern.  
+
+\subsection{Creating a moleculizer instance}
+To use libmoleculizer in C++ code, a moleculizer object, which
+represents a single reaction-network that is expanded from a set of
+reaction rules, must be created by the user. This is easy, as
+moleculizer has exactly one constructor: moleculizer::moleculizer().
+All uses of libmoleculizer to expand reaction-networks begin with the
+creation of such an object.  To create a moleculizer object import
+``mzr/moleculizer.hh''  into your code and call the default
+constructor, as in the following example.  
+
+\begin{ExampleCPP}[caption=Creating a moleculizer object, label=creatingmzrexample]
+mzr::moleculizer m; // Note that this takes place in the namespace mzr,
+                    // as does all the C++ interface.
+\end{ExampleCPP}
+
+
+\subsection{Configuring moleculizer for running}
+Once a mzr::moleculizer instance has been created, parameters can be
+configured to tell the moleculizer object how to expand the network.
+As of now, there are two ways in which moleculizer can be configured.  
+
+First, the generation depth can be set (although it begins with a
+default of 1) by calling the moleculizer member fuction
+``moleculizer::setGenerateDepth(unsigned int)''.  The generation depth
+controlls how much generation of species and reaction are done when
+any species is expanded.  
+
+By default all new species that exist in libmoleculizer are
+unexpanded.  By expanding a species, all reactions that can occur
+between that newly expanding species and all species that have been
+previously expanded are generated.  These reactions are all added to
+libmoleculizer, and if any of those reactions' products are new
+species, those new species are added to libmoleculizer.  If the
+generation depth is 1, generation stops here.  If it is 2, all newly
+generated species are expanded and the new species generated during
+that phase are added in as unexpanded and generation stops.  If it is
+3, those species are expanded and so on.  
+
+The second configuration parameter that can be set is whether
+moleculizer should extrapolate reaction rates for new reactions that
+it creates, using the function ``moleculizer::setRateExtrapolation(
+bool )''.  If reaction rate extrapolation is turned off -- which is the default
+-- the rate used for the final reaction is simply the same number that
+was provided.  Using reaction-rate extrapolation will modify the basic
+rate by taking $k_{rxn} = M^*
+* k_{rule}$, where $M^*$ is the reduced-mass,
+$M^*=\sqrt{\frac{m_{sub_1} * m_{sub_2}}{m_{sub_1} + m_{sub_2}} }$.
+
+\subsection{Loading a Rule file}
+Once a moleculizer object has been created and configured, it must be
+given a rules file to load.  There are two options here.  The first
+option is to load in a standard MZR rules file; the second option is
+to load an xml rules file.  Either can be passed in as either a file
+name or as a string containing the file contents.  Only one file can
+be loaded per instance of libmoleculizer.
+
+To load a MZR rules file, call either of the member functions
+``moleculizer::loadCommonRulesFileName( const std::string&)'' or
+``moleculizer::loadCommonRulesFile( const std::string&)''.  Pass a
+file name to the first one, and a copy of the file in text format to
+the other.
+
+Loading a MZR rules file in the preceeding manner causes a python
+module to be loaded that compiles the MZR file to XML format.  If for
+whatever reason you have the XML file intermediates, these can be
+loaded directly as well, using the member functions
+``moleculizer.loadXmlFileName(const std::string&)'' or
+``moleculizer.loadXmlFile(const std::string&)''.  
+
+Any of these will load the necessary information into a model
+instance. Note however, that information can only be added into
+moleculizer once per instance.  Should the model have to be updated,
+the moleculizer object must be destroyed and recreated and loaded with
+the new model.  This is not optimal, and may change in upcoming
+versions.  
+
+Users can determine whether a model has been loaded by calling
+the ''bool moleculizer::getModelHasBeenLoaded() const'' function.  
+
+ \subsection{Running libmoleculizer}
+Once a Moleculizer object has been created, configured, and a
+rules-file has been loaded, there are several things that can be done.
+
+The things that can be done are inspecting the species and reactions
+that have been generated so far, expanding species and reactions in
+order to generate additional portions of the species and reaction
+network, inspecting the portion of the species and reaction network
+that were created during the most recent expansion phase, and
+searching for species and reactions match certain properties.  
+
+\subsection{Looking at the full list of species}
+Perhaps the easiest and most direct thing that can be done in a
+libmoleculizer simulation run is to get the full list of species.  The
+species are recorded in a map of std::string* to mzrSpecies*.  Use
+moleculizer's member function getSpeciesCatalog to obtain a reference
+to this map.  This map contains pointers to the tagged name of the
+species and has values which are the pointers to the species
+themselves.  
+
+\subsection{Looking at the full list of reactions}
+Another basic capability of libmoleculizer is to be able to obtain and
+read a list of all the reactions that have been registered by
+libmoleculizer.  This can be accomplished using moleculizer's
+getReactionList() member function.  This function returns either a
+const or a non-const reference to a list of mzr::mzrReaction*.  This
+list can be walked though be the user, and information about reactions
+can be read out this way.
+
+\subsection{Finding the size of the network}
+An obvious question to ask about a generated network is ``how large is
+it?''  The getTotalNumberSpecies() and getTotalNumberReactions()
+moleculizer member functions answer these questions.  
+
+\subsection{Looking up information about a species}
+So, you have a mzrSpecies* for a species that libmoleculizer has
+generated. Perhaps you got it walking through the complete list of
+species (via getSpeciesCatalog()); perhaps you got it walking through
+the list of recently created species (via the getDeltaSpeciesList()
+functions); perhaps it is a species belonging to a named structural
+class and you wish to find out more; maybe you actually looking it up
+directly by name and now have a pointer.  Neverthless, you have a
+pointer to a species and want to get information from it.
+
+\subsubsection{Getting a name from a species}
+
+Perhaps the most basic information about a species is its name.  As
+discussed before, species have two kinds of names: tagged names, which
+are unique within a particular libmoleculizer session, and unique ids,
+which are completely unique, amongst various sessions.  To get a
+tagged name use mzrSpecies::getTaggedName(); to get a unique ID use
+mzrSpecies::getUniqueID().  Both will return a std::string containing
+the name of that species.  
+
+Remember that getTaggedName() is fairly fast, while the
+getUniqueID() function is relatively slow.  (although they can be
+interconverted at any given time).  Also, getTaggedName() is
+guaranteed to be bounded, with a constant length on any system
+(usually around 10 characters).  getUniqueID() is not; depending on
+the complex, the unique ID has the potentially to have unbounded
+size.  For these reasons, we recommend using getTaggedName over
+getUniqueID for most purposes.  
+
+\subsubsection{Getting other species information}
+
+Species have other major properties that we might wish to check.
+First, we may be interested in the mass of the species.  All species
+have masses, although this information will not be valid unless the
+rule file was supplied with information (every mass will equal 0.0
+otherwise).  If appropriate, find the mass by calling mzrSpecies'
+member function getWeight().  This will return the weight of the
+species in the same units as the ones used to give the masses in the
+model file.  
+
+Another property we may wish the check regarding species is whether or
+not they belong to any structural species class that may have been
+defined in the rules.  For a specific species (there is also a method
+to get the list of all species within a species class), either the
+moleculizer member functions speciesWithTagIsInSpeciesStream or
+speciesWithUniqueIDIsInSpeciesStream.  Both functions take a string as
+the first parameter, representing either the tagged name or the unique
+id of the species in question respectively; both functions take a
+string containing the name of the species class as a second
+parameter.  They both return ``true'' if the species is a member of
+the class and ``false'' otherwise.  
+
+\subsection{Looking up species by name}
+Suppose you have either a tagged name or a unique id that corresponds
+to a species name and wish to look it up (perhaps you are interested
+in which structural classes such a species might belong to).  There
+are two functions which could be of interest.  They are the
+moleculizer member functions getSpeciesWithTaggedName and
+getSpeciesWithUniqueID.  Both of them return either a const
+mzrSpecies* or a plain old mzrSpecies*, depending on context.
+
+\subsection{Looking up information about a reaction}
+Suppose you have a mzrReaction*.  You could have gotten this pointer
+by either scanning through the list of all reactions ( using
+moleculizer::getReactionList() ); or you could have got it by looking
+at the list of recently created reactions
+(moleclizer::getDeltaReactionList()); you could have gotten the
+mzrReaction* by calling one of the findReactionWithSubstrates on one
+or two mzrSpecies*'s, thereby finding all unary or binary reactions
+that species or those species participate in.  Nevertheless, now you
+have a reaction.  What can be done with it?
+
+A reaction is basically a map of reactants paired with a map of
+products, that has a rate.  The function getReactants() returns a map
+of mzrSpecies* to ints; each mzrSpecies* that occurs as a key is a
+substrate of that reaction; each associated value is the reactant
+stochiometry of that reaction.  Likewise, the function getProducts()
+returns a map of mzrSpecies* to ints; here each mzrSpecies* is a
+product of the reaction; each value is the associated product
+stochiometry.  
+
+Finally, the function getDeltas() returns another map
+of mzrSpecies* to int.  In this function each mzrSpecies* that is
+affected by the reaction is a key in the map.  Each associated integer
+is the stochiometry change of that reactant.  That is, negative values
+represent substrates to the reaction; the value is the number of
+substrate molecules used up in the reaction.  Positive values
+represent products to the reaction; the value is the number of that
+product generated in the reaction.  
+
+You can get a name for that reaction by calling either its
+getTaggedName() or its getUniqueName() functions.  Like the name
+functions relating to species, the getTaggedName() function returns a
+string containing a name that is valid for the current run only; for
+all comparisons of names that must take place during a specific run
+use getTaggedName().  getTaggedName() is also human readable, so it
+can be used for those purposes as well.  When a unique name is needed,
+use getUniqueID(), which forms the reaction name by calling
+getUniqueID() on the species that take part in it.  
+
+Finally, use the member function getRate() to find out the rate of the
+reaction.  In normal mode, the rate for a generated reaction is simply
+the same rate that was supplied in the rules file along with the
+interaction.  When libmoleculizer is configured to use mass-based
+reaction rate extrapolation, the supplied rate is multiplied by the
+reduced mass of the products in order to approximate the way that
+masses affect reaction rates.  
+
+Finally, the getArity() function returns the stochiometry, or number
+of substrates molecules that are involved on the left hand side of the
+equation.
+
+\subsection{ Finding out information about the System}
+
+\subsubsection{Finding out about the model being run}
+
+One thing that can be done in a libmoleculizer session is to use
+various functions to find out whether or not a model file has been
+loaded, and if so, to find out some more infomration about it.
+Moleculizer's member function getModelHasBeenLoaded() does this,
+returning true if a model has been loaded and false otherwise.  
+
+Given that a model file has been loaded, the moleculizer object
+exposes several functions to recover information about the loaded
+model.  
+
+The getNumberOfDefinedModifications() function returns an int
+representing the number of statements defining modifications occurred
+within the model.  
+
+The getNumberOfDefinedMols() function returns an int representing the
+number of molecule types that were defined in the loaded model.  
+
+The getNumberOfDefinedRules() function returns an int representing the
+number of reaction rules defined in the local model.
+
+The getNumberOfDimerReactionRules() function returns an integer
+representing the number of association reaction rules in the local model.
+
+The getNumberOfOmniGenReactionRules() function returns an integer
+representing the number of transformation reactions defined whose ``enabling
+subcomplex'' is composed of more than one molecule.
+
+The getNumberOfUniMolReactionRules() returns an integer representing
+the number of transformation reactions defined whose enabling
+subcomplex consists of exactly one molecule.  
+
+\subsection{Inpecting the Species Classes}
+
+One major feature used by moleculizer is that of species classes.
+Defined in the MZR model file, species classes are named sets of
+species, that contain every species that posesses the structural
+features that define that property.  Accordingly, there are many
+functions in libmoleculizer which deal with these species classes.  
+
+The first thing to do is to find out how many species streams there
+are.  This can be determined using the moleculizer function
+getNumberOfSpeciesStreams().  
+
+Following this, it remains to actually find out what the names of
+those species streams are (the names are needed to go further and find
+out what species are in a particular class, for instance).  To do
+this, the function getSpeciesStreams is used.  This function, a member
+function of moleculizer's, takes a single parameter of type
+std::vector<std::string>\&.  To use this, create a new vector<string>
+object, and pass it as a parameter to the function.  The function call
+will insert each of the species stream names into that vector.
+
+So now we have the specific name of one or more species classes and
+wish to find out more about them.  Given a species class, two general
+things we might like to determine are how many species are in that
+class, and which species are in that species class. 
+
+To answer the former question, how large is a particular species
+class, use moleculizer's member function
+getNumberOfSpeciesInSpeciesStream by calling it with a string
+parameter containing the name of the species class.  
+
+To get a list of species contained in a particular species class, use
+the getSpeciesInSpeciesStream member function.  This function takes
+two parameters: the first is a string parameter that should contain a
+reference to a species class name; the second is a reference to a
+vector<const mzrSpecies*>\&.  The result of the function is that all
+the species which are contained in the species class named by the
+first parameter are inserted into the second parameter.  
+
+Finally, it is possible to check to see whether a species belongs to a
+species class or not, using one of three different functions.  A
+mzrSpecies* can be checked using the moleculizer member function
+speciesIsInSpeciesStream.  A tagged name can be checked using the
+member function speciesWithTagIsInSpeciesStream; a unique id can be
+checked using the member function
+speciesWithUniqueIDIsInSpeciesStream.  All three of these functions
+take a string containing the name of the class as the first parameter;
+all three take the species representation( either a mzrSpecies*, a
+string containing the tagged name, or a string containing the unique
+id).
+
+\subsection{Expanding the network}
+When a moleculizer model is loaded, every individual molecule is
+created as a species type along with every explicit-species within the
+model.  Following this, every one of these species is expanded.  What
+this means is that they are presented to the set of all expanded
+species and all reactions that can be created between the newly
+expanded species and the set of already expanded species is created. 
+
+However, at this point, the network is static.  In order to expand it
+further, unexpanded species in the list of species must be expanded.
+This expansion process can happen in a variety of ways.
+
+The simplest way is to expand a single mzrSpecies at a time.  This is
+done by calling mzrSpecies' member function expandReactionNetwork().
+If the mzrSpecies has been previously expanded, this will have no
+effect ( you can check whether or not a specific species has been
+expanded using the mzrSpecies member function hasNotified(), which
+returns a bool depending on the answer). 
+
+If the mzrSpecies has not been expanded, look out!, here comes the
+magic.  When this occurs, moleculizer will present that species to
+every already expanded species, in order to look for combinations of
+features (features are the subspecies components, a particular binding
+between two binding sites on two molecules for example, that define
+what it means for a species to be able to participate in a reaction).
+The result (and please review the Concepts chapter for more details
+into how this process works) is that any reactions that species can
+participate in, potentially with other expanded species as well, are
+created.  Any new products of those reactions are added as unexpanded
+species (unless moleculizer has been configured to expand multiple
+levels using the setGenerateDepth function).  
+
+
+=======
+Here is is; what libmoleculizer is all about.  
+
+
+
+\subsection{Viewing the expanded parts}
+
+
+
+
+
+
+
+generateCompleteNetwork()
+ngenerateCompleteNetwork(long maxNumSpecies, long maxNumRxns = -1);
+getUserNames
+recordUserNameToSpeciesIDPair
+nameIsUserName
+
+convertSomeNameToTaggedName
+getSpeciesWithSomeName
+
+getSpeciesWIthTaggedName (const/non-const)
+getSpeciesWithUniqueID()
+convertUserNameToSpeciesID
+convertUserNameToTaggedName
+
+
+        int getNumberOfDefinedModifications() const;
+        int getNumberOfDefinedMols() const;
+        int getNumberOfDefinedRules() const;
+
+
+        int getNumberOfPlexFamilies() const;
+
+
+        void getSpeciesStreams( std::vector<std::string>& speciesStreamNames) const;
+        int getNumberOfSpeciesStreams() const;
+        int getNumberOfSpeciesInSpeciesStream(const std::string& streamName) const;
+        void getSpeciesInSpeciesStream(const std::string& streamName, std::vector<const mzr::mzrSpecies*>& speciesVector) const;
+
+        bool speciesWithTagIsInSpeciesStream(const std::string speciesTag, const std::string& speciesStream ) const;
+        bool speciesWithUniqueIDIsInSpeciesStream(const std::string
+        speciesTag, const std::string& speciesStream ) const;
+
+        findReactionWithSubstrates
+        getTotalNumberSpecies
+        getTotalNumberReactions
+
+
+
+
+
+ 
+\subsection{The ReactionNetworkDescription interface.}
+The ReactionNetworkDescription interface
+(fnd::ReactionNetworkDescription<mzr::mzrSpecies, mzr::mzrReaction> in
+code, found in src/fnd/reactionNetworkDescription.hh) manages questions
+about species and reactions that have been created within a session of
+libmoleculizer.  The basic, relevant functions to using this interface
+are listed below.  Full a full description of this interface, please
+consult class documentation provided elsewhere in this documentation.
+
+Generally speaking, the ReactionNetworkDescription interaface can do
+three things:
+
+1.
+Find species with certain names, using the findSpecies function.  This
+function takes the name of a species and either returns a constant
+pointer to that species, or throws a fnd::NoSuchSpeciesXcpt
+exception.  Note that an exception may be thrown even if the species
+name is a legal one for this model, so long as that species has not
+been constructed yet.  Typically this is appropriate.  For instance,
+any species formed as a procuct of a generated reaction is guaranteed
+to have been created such that it will be returned by findSpecies.
+That said, there may be special cases, such as working with data from
+a previous run of the same model, where legal species names must be
+used to create species even though the current expansion of the model
+has not expanded that portion yet.  In this case,
+mzr::moleculizer::getSpeciesWithName, as described in the previous
+section, should be used.  
+
+2.  Find reactions with one or more substrates.
+This is accomplished using the findReactionWithSubstrates functions.
+If unary reactions are desired (what decompositions can a particular
+species undergo), use the function 
+\lstinline@bool findReactionWithSubstrates(SpeciesCPtr A, std::vector<ReactionTypeCPtr>& reactionVector)@ function.  To use 
+this, a species pointer that has been gotten using either the
+findSpecies or getSpeciesWithName functions is passed, along with an
+empty vector containing ReactionTypeCPtrs.  The function places a
+unique pointer to every unary reaction involving that species as a
+substrate, returning true if any exist.  
+
+For instance:
+\begin{ExampleCPP}
+m = mzr::molecuculizer();
+m.attachFile( ``Simpledemo-rules.xml''); 
+
+std::vector<const mzr::mzrReaction*> speciesDecompositionRxns;;
+
+// This function also converts user names, described in the rules, to
+// species pointers.
+const mzr::mzrSpecies* species = m.getSpeciesWithName(``A-B-dimer'');
+
+// When this function returns, speciesDecompositionRxns will contain
+// one element, corresponding to the ``AB -> A + B'' reaction.  
+m.findReactionWithSubstrates( species, speciesDecompositionRxns);
+\end{ExampleCPP}
+
+For reactions involving two substrates (libmoleculizer does not
+support reactions involving three or greater substrates at this time),
+the same idea is followed, except involving two species.  
+
+Example:
+\begin{ExampleCPP}
+m = mzr::moleculizer();
+m.attachFile(``Simpledemo-rules.xml'');
+std::vector<const mzr::mzrReaction*> binaryRxns;;
+
+const mzr::mzrSpecies* species1 = m.findSpecies(``___1A______'');
+const mzr::mzrSpecies* species2 = m.findSpecies(``___1B______'');
+
+// After this function call, binaryRxns will contain one element
+// corresponding to the reaction ``A + B -> AB'').
+m.findReactionWithSubstrates(species1, species2, binaryRxns);
+
+
+ReactionNetworkDescriptionInterface also provides general information
+on the state of the generated network through several functions:
+
+unsigned int getTotalNumberSpecies() const, 
+unsigned int getTotalNumberReactions() const,
+bool checkSpeciesIsKnow( const std::string& speciesName) const.
+\end{ExampleCPP}
+
+These functions all provide information about the state of the
+generated network.  The first two tell how large it is, and the third
+helps determine what is and is not in it.  
+
+Finally, there are other functions for manipulating and expanding the
+reaction network.  Each species and reaction is of classtype
+\lstinline@fnd::reactionNetworkComponent@, and had a function
+\lstinline@expandReactionNetwork(unsigned int)@.  This function will expand the
+reaction network around that object.  For any species X, calling this
+function will create all new reactions X + Y -> Z, where Y is a species
+already present in the system such that X and Y have a reaction rule
+which applies to them and Z is the product, as determined by the
+reaction rule.  Furthermore, any unary reactions X->? will be created
+and recorded in the system.  Finally, all species that occur on the
+right hand side of newly created reaction rules will be created and
+added to the system.  This sort of expansion can be done in two ways.
+
+1.  Calling \lstinline@expandReactionNetwork(unsigned int i)@ on a particular
+reactionNetworkComponent.
+
+All species \lstinline@mzr::mzrSpecies@ and reactions \lstinline@mzr::mzrReaction@ are
+also of type \lstinline@fnd::reactionNeworkComponent@, and as such, have a function
+called \lstinline@expandReactionNetwork(unsigned int i)@.  This function can only
+be called once for any such reactionNeworkComponent (calling a second
+time has no effect), but will expand the generated reaction network
+around that component, generating new species and reactions.
+
+
+2.  Calling
+\lstinline@fnd::reactionNetowrkDescription::incrementNetworkBySpeciesName(const SpeciesID& name)@.  
+
+Calling this function and giving it the name of a species already
+recorded within the system has the same effect as calling
+expandReactionNetwork on the mzr::mzrSpecies* returned by calling
+fnd::ReactionNetworkDescription::findSpecies using that same name. 
+
+One the reaction network has been expanded, users may be interested to
+find the difference with the old network: the set of species and
+reactions that were generated in that step.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{C Interface}
+The c interface is an api for libmoleculizer written in the C
+programming languages.  Using libmoleculizer with this interface is
+accomplished by including the appropriate header file, called
+``mzr/libmzr\_c\_interface.h''. 
+
+Generally speaking, using this interface consists of creating a new
+moleculizer* object by calling the createNewMoleculizerObject()
+function, attaching rules to that object by calling the
+loadRulesFile(moleculizer*, char* fileName) function, using the
+various functions in the api to expand, get information about, and
+work with the represented network, and finally releasing the memory by
+calling the freeMoleculizerObject(moleculizer*) function.  
+
+\begin{ExampleC}[caption=Basic example using the c-interface]
+  int main(){
+    char fileName[] = ``demos/omniKinase-rules.mzr'';
+    
+    moleculizer* the_moleculizer = createNewMoleculizerObject();
+    loadRulesFile( the_moleculizer, fileName);
+
+    /* Work with the moleculizer object here */
+
+    freeMoleculizerObject( the_moleculizer );
+    return 0;
+    }
+\end{ExampleC}
+
+\subsection{Creating a moleculizer object}
+In order to use libmoleculizer's species and rule based generation,
+an instance of the fundamental data type - 'moleculizer' - of the
+interface must be created.  This is done using the one and only
+function of this interface, defined as ``moleculizer*
+createNewMoleculizerObject()''.  When this function is called, it
+returns a pointer to a newly created moleculizer object, which is
+often called a handle.  This object is owned by the caller of the
+function and {\bf must} be freed using the freeMoleculizerObject
+function.
+
+\subsection{Loading rules into a moleculizer object}
+In order to perform reaction network generation, the moleculizer
+object must be combined with a rules file.  To do this, either a rules
+file, or a string containing the contents of a rules description must
+be added to a moleculizer* object using either the ``int
+loadRulesFile(moleculizer* handle, char* fileName)'', or the ``int
+loadRulesString( moleculizer* handle, char* fileAsString)'' function
+respectively.  
+
+\subsection{Fundamental datatypes: reactions and species}
+There are two types of datatypes besides the moleculizer handle that are used
+in this interface: 'species' and 'reactions'.  These are the objects
+passed around in the interface, and their definitions are shown below.
+
+\begin{ExampleC}[caption=Fundamental data-type definitions,
+  label=speciesreactiondef]
+
+  typedef struct species_type
+    {
+      char* name; /* The canonical name of the chemical species */
+      double* mass;  /* In daltons. */
+      double* radius; /* In meters */ 
+      double* diffusionCoeff; /* In ? */
+    } species;
+    
+    typedef struct reaction_type
+    {
+        int numberReactants;
+        species** reactantVector;
+        
+        int numberProducts;
+        species** productVector;
+        
+        double* rate;
+        
+    } reaction;
+
+\end{ExampleC}
+
+These datatypes are returned by different functions in the interface.
+For instance, when requesting the set of single-substrate reactions a
+species may be involved in, the result is an array of reaction*'s.
+When use of this array (or arrays of species*'s) is finished, its
+memory should be realeased.  This can easily be done by passing it to
+the function ``void freeReactionArray( reaction** pRxnArray, unsigned
+int numArrayElements)'', which will free each of the reaction*'s in the
+array, as well as the array itself.  Likewise the function ``void
+freeSpeciesArray( species** pSpeciesArray, unsigned int
+numArrayElements)'' will do the same to an array of species*.
+
+If needed, functions for removing single reaction and species objects
+are provided in the ``void freeReaction( reaction* pRxn )'' and ``void
+freeSpecies( species* pSpecies )'' functions.
+
+\subsection{Looking up single substrate reactions}
+For any complex species, users will want to know the different
+decomposition reactions that species can undergo, as well as the rate
+of each of them.  For any species, the set of all reactions such that
+that species is the one and only reactant can be found using the ``int
+getUnaryReactions(moleculizer* handle, char* speciesName, reaction***
+ptrReactionPtrArray, int* numReactions)'' function.  An example of
+it's use can be seen below.
+
+\begin{ExampleC}
+  char speciesID[256] = ``___5alpha4Ste24Ste4___00121020______'';
+  
+  reaction** reactionArray;
+  int numReactions;
+
+  getUnaryReactions(handle, speciesID, &reactionArray, &numReactions);
+
+  float totalPropensity = 0.0f;
+
+  int iteration = 0;
+  while(iteration != numReactions)
+  {
+    totalPropensity += reactionArray[iteration++];
+  }
+
+  freeReactionArray(reactionArray, numReactions);
+
+\end{ExampleC}
+
+\subsection{Looking up two substrate reactions}
+Another common task is to determine whether or not two species can
+react with one another.  This is the basic function used by a spatial
+simulator, for instance, which manages the positions and movement of
+chemical species, but given that two species have collided, queries
+libmoleculizer to determine what reactions, if any, those two species
+can participate in together as well as the different propensities for
+each reaction, represented as the intrinsic reaction rates of each
+reaction.  
+
+\begin{ExampleC}
+  char speciesID1[256] = ``___4Ste24Ste4___0012______'';
+  char speciesID2[256] = ``___5alpha______'';
+  
+  reaction** reactionArray;
+  int numReactions;
+
+  getReactionsBetween(handle, speciesID1, speciesID2, &reactionArray, &numReactions);
+
+  float totalPropensity = 0.0f;
+
+  int iteration = 0;
+  while(iteration != numReactions)
+  {
+    totalPropensity += reactionArray[iteration++];
+  }
+
+  freeReactionArray(reactionArray, numReactions);
+
+\end{ExampleC}
+
+\subsection{Finding all reactions a species participates in}
+On occasion, and typically when investigating the structural
+properties of the network, rather than in the course of simulation,
+the set of all reactions where a particular species participates as a
+substrate (both unary and binary) may be desired.  This can be done
+using the function ``int getReactionsInvolving(moleculizer* handle,
+char* speciesName, reaction*** ptrReactionPtrArray, int*
+numReactions)''.  
+
+\begin{ExampleC}
+  /* Find the species involved in the most reactions */
+
+  expandNetwork( handle );
+
+  species** speciesArray;
+  int numSpecies;
+  getAllSpecies(handle, &speciesArray, &numSpecies);
+  
+
+  int mostReactions = -1;
+  int speciesNdx;
+
+  char tagBuffer[10];
+
+  for(speciesNdx = 0; speciesNdx != numSpecies; ++speciesNdx)
+  {
+    reaction** reactionArray;
+    int numReactions;
+
+    getReactionsInvolving(handle, speciesArray[speciesNdx]->name, &reactionArray, &numReactions);
+    
+    if (numReactions > mostReactions)
+    {
+      mostReactions = numReactions;
+      convertIDToTag( handle, speciesArray[speciesNdx]->name, tagBuffer, 10);
+    }
+
+  }
+
+  char name[1000];
+  convertTagToID( handle, tagBuffer, name, 1000);
+
+  printf(``Species s has greatest connectivity of d'', name, numReactions);
+
+\end{ExampleC}
+
+\subsection{Looking at global properties of the network}
+There are four relevant functions involved in finding out the
+information about the network as a whole.  The first two are the ``int
+getNumberOfSpecies(moleculizer* hdl)'' and ``int
+getNumberOfReactions(moleculiser* hdl)'' functions.  These will return
+the total number of species and reactions in the reaction network of
+the moleculizer object passed in.  Note that this is only the number
+that has been generated at that point, not the number in the complete
+reaction network.  To find out the complete size of the network, call
+the expandNetwork function, in order to ensure that the entire network
+has been generated.  
+
+Next, all species and reactions can be read out, using either the
+``int getAllSpecies(moleculizer* handle, species*** pSpeciesArray,
+int* numberSpecies)'' or the ``int getAllReactions(moleculizer* handle,
+reaction*** pSpeciesArray, int* numberSpecies)'' functions.  Their
+usage is shown below.
+
+\begin{ExampleC}
+moleculizer* handle = createNewMoleculizerObject();
+loadRulesFile(handle, some_rules_file);
+expandNetwork(handle);
+
+printf(``There are d species and d reactions in the entire
+                   network.\n'', getNumberOfSpecies(handle),
+                   getNumberOfReactions(handle) ); 
+
+species** speciesArray;
+int numSpecies;
+
+reaction** reactionArray;
+int numReactions;
+
+getAllSpecies(handle, &speciesArray, &numSpecies);
+getAllReactions(handle, &speciesArray, &numSpecies);
+
+if (numSpecies >= 1)
+{
+  printf(``The first species is s and has approximate radius f.'', speciesArray[0]->name, speciesArray[0]->radius);
+}
+
+freeReactionArray(reactionArray, numReactions);
+freeSpeciesArray(speciesArray, numSpecies);
+
+freeMoleculizerObject(handle);
+
+\end{ExampleC}
+
+\subsection{Working with Names}
+
+\subsubsection{Tags, canonical ids, and user names}
+
+Libmoleculizer has multiple mechanisms for identifying species:
+user-names, tags, canonical ids.  User-names for species are defined
+in the mzr file.  In the explicit-species section, users can define
+any number of arbitrary complex species and give them arbitrary
+names.  Both tags and canonical ids are automatically generated, and
+both help uniquely identify complex species, however there are several
+key differences.  Tags are short, usually 8 charecters long, and
+uniquely identify species within a single libmoleculizer instance.
+That is, within a particular libmoleculizer instance, two complex
+species are the same if and only if they have the same tag.  However,
+tags cannot be compared between instances.  Different species may be
+given the same tag and identical species may be given different tags
+across program instance boundries.  Furthermore, although tags may be
+looked up, species cannot be constructed using its tag.  In contrast,
+to each complex species a canonical id is also generated.  The
+advantage of the canonical id is twofold.  First, canonical ids
+uniquely identify complexes between different instances of
+libmoleculizer.  Two species are identical if and only if their
+canonical ids are identical, even when the species and ids have been
+generated by different instances of libmoleculizer (this is system
+independent as well).  Secondly, species can be recreated based on the
+canonical id.  If a canonical id is serialized, the corresponding
+species can be recreated in any future instance of libmoleculizer
+(including, again, across different systems).  The disadvantage of
+canonical ids is their potentially large size.  Canonical IDs have
+potentially unbounded size, and typically have length that is
+proportional to the number of molecules in the complex -- complexes
+IDs with length of 750 charectors or greater are not uncommon.
+
+Each of these names has their place.  User-names are typically used to
+refer to complicated species is a human-readable way; tags can be used
+for tracking species within a running simulation; canonical IDs are
+usually used for input/output capabilities.  The remainder of this
+section discusses how to work with each type of name, specifically,
+how to get the species corresponding to a particular name or tag, and
+how to convert between different types of names (finding the
+corresponding canonical ID for a particular tag for instance).
+
+\subsubsection{Converting between tags and ids}
+Converting between tags and canonical IDs is a very straighforward
+procedure.  Depending on which direction conversion is desired, use
+either the ``int convertTagToID( moleculizer* handle, char*
+speciesTag, char* speciesID, int idSize)'' or the ``int
+convertIDToTag( moleculizer* handle, char* speciesID, char*
+speciesTag, int tagSize)'' functions.  In both these function, the
+first char* parameter takes the name (either the tag or ID) that the
+user is converting from.  The second char* parameter is a charector
+buffer where the converted name should be put.  The final parameter
+takes the size of the destination buffer.  Both these functions return
+0 on success and non-zero on failure.  
+
+\begin{ExampleC}
+
+char originalTagName[] = ``0x0384a4'';
+
+char canonicalID[1000];
+char newTag[10];
+
+if (convertTagToID( handle, originalTagName, canonicalID, 1000)) printErrorAndQuit();
+if (convertIDToTag(handle, canonicalID, newTag, 10)) printErrorAndQuit();
+
+/* This will always succeed.  If it doesn't, send me a bug report! */
+assert( !strcmp( origicalTagName, newTag) );
+
+\end{ExampleC}
+
+\subsubsection{User defined names}
+
+In the explicit species section, users can describe complex species
+and give them user defined names.  To find either the corresponding
+tag or the canonical id for a user defined species, needed for using
+the getReactionBetween and getUnaryReactions functions, use either the
+functions ``int convertUserNameToSpeciesID(moleculizer* handle, char*
+theUserName, char* correspondingSpeciesID, int bufferSize)'' or ``int
+convertUserNameToSpeciesID(moleculizer* handle, char* theUserName,
+char* correspondingTag, int bufferSize)''. 
+
+\begin{ExampleC}[caption=Example usage of convertUserNameToSpeciesID,
+  label=userNameCEx]
+
+  char userName[] = ``alpha-ste2 dimer'';
+  char canonicalName[256];
+  
+  int errorCode;
+
+  convertUserNameToSpeciesID( userName, canonicalName, 256);
+
+  if (errorCode == 0) printf(``The canonical id of %s is %s", userName, canonicalName);
+  if (errorCode == 1) printf(``No complex with the user-name '%s' was
+                                %defined", userName);
+  else if (errorCode == 2) printf(``The char* provided does not have
+  enough memory to store the canonical id.'');
+
+\end{ExampleC}
+
+\subsection{Using species streams}
+If a species stream is defined in the rules file, this can be looked
+up using the function ``int getAllStreamSpecies(moleculizer* handle,
+char* streamName, species** pSpeciesArray, int* numberSpecies)''. By
+passing in the name of the species stream given in the rules, as well
+as a pointer to a species** object.  
+
+\begin{ExampleC}
+moleculizer* the_mzr_obj = createNewMoleculizerObject();
+loadRulesFule( the_mzr_obj, file_name );
+expandNetwork( the_mzr_obj );
+
+char streamName[256] = ``alpha-ste2 complex'';
+char** speciesStreamArray;
+int numberOfSpeciesInStream;
+
+getAllStreamSpecies(the_mzr_obj, streamName, &speciesStreamArray,
+&numberOfSpeciesInStream);
+
+int index;
+for( index = 0; index != numberOfSpeciesInStream; ++index)
+{
+  printf(``s is a s'', speciesStreamArray[index]->name, streamName);
+}
+
+\end{ExampleC}
+
+\subsection{Expanding Individual Species}
+Many times users will want to expand the reaction network around a
+particular species.  What this means is to apply the rules to that
+species, generating each of the unary reactions that species can
+participate in, as well as generating all the binary reactions that
+species can participate in with each already expanded species in the
+reaction network.  This can be done either by using the species ID,
+the tag, or a pointer to the species itself using any of the functions
+``int expandSpeciesByTag( moleculizer* handle, char* theTag)'', ``int
+expandSpeciesByID( moleculizer* handle, char* theID)'', or ``int
+expandSpecies( moleculizer* handle, species* mzrSpecies)''.
+
+\begin{ExampleC}
+
+char userName[] = ``alpha-ste2 complex'';
+char tag[10];
+
+if( convertUserNameToSpeciesTag(handle, userName, tag, 10) ) printErrorAndQuit();
+
+expandSpeciesByTag( handle, tag);
+
+\end{ExampleC}
+
+\subsection{Expanding Individual Reactions}
+In addition to expanding individual species, with a reaction* a user
+may expand that reaction, which has the same effect as expanding each
+of that reaction's products.  This is done using the function ``int
+expandReaction(moleculizer* handle, reaction* mzrReaction)''. 
+
+\begin{ExampleC}
+  char userName[] = ``alpha-ste2 complex'';
+
+  char speciesID[1000];
+  if(convertUserNameToSpeciesID( handle, userName, speciesID, 1000) ) 
+  { 
+    printErrorAndQuit();
+  }
+
+  reaction** reactionArray;
+  int numDecompositionRxns;
+
+  getUnaryReactions(handle, speciesID, &reactionArray, &numDecompositionRxns);
+
+  if (numDecompositionRxns > 0)
+  {
+    expandReaction(handle, reactionArray[0] );
+  }
+  
+
+\end{ExampleC}
+
+
+
+
+
+
+
+
+

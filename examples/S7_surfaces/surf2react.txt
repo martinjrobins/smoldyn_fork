@@ -1,0 +1,45 @@
+# Equilibrium reaction within a surface
+
+graphics opengl
+
+dim 2
+species red green blue
+max_mol 1000
+
+difc red 3
+difc green 2
+difc blue 3
+
+color red 1 0 0
+color green 0 1 0
+color blue 0 0 1
+
+time_start 0
+time_stop 1000
+time_step 0.01
+
+boundaries 0 0 100
+boundaries 1 0 100
+frame_thickness 0
+
+mol 100 red 30 50
+mol 100 green 70 50
+
+reaction fwd red + green -> blue 50
+reaction rev blue -> red + green 1
+
+max_surface 1
+
+start_surface surf
+action both all reflect
+color front 1 0.7 0
+color back 0.6 0 0.6
+thickness 2
+max_panels sphere 1
+panel sph 50 50 30 20
+end_surface
+
+
+
+end_file
+

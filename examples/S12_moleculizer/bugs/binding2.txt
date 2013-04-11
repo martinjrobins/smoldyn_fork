@@ -1,0 +1,50 @@
+# binding.txt
+# Simple X + Y <-> XY reaction network.
+
+graphics opengl_good
+
+dim 2
+
+species X Y
+
+difc all 20.0
+
+color X 0 1 0		# green
+color Y 0.4 0.4 1	# light blue
+
+time_start 0
+time_stop 30
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+
+start_rules
+===== Molecules ======================
+  X(to-Y), mass = 10000;
+  Y(to-X), mass = 10000;
+
+===== Association-Reactions =========	
+  X(to-Y) + Y(to-X) -> X(to-Y!1).Y(to-X!1),
+    kon = 100.0, koff = 4.0;
+
+######################################################
+/*
+The species-classes shown below don't work entirely as hoped.  I had hoped that Y(to-X) would imply that the to-X site was explicitly unbound, although it doesn't.  Also, I had hoped that the to-X!* notation would imply that to-X is explicitly bound, although that line doesn't actually work at all.
+*/
+######################################################
+
+=== Species-Classes =====
+  X, name = Xclass;
+  Y(to-X), name = Y1class;
+#  Y(to-X!*), name = Y2class;
+  X(to-Y!1).Y(to-X!1), name=XYclass;
+
+end_rules
+
+mol 250 X 30 30
+mol 250 Y 70 70
+
+end_file
+
+

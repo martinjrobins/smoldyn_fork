@@ -1,0 +1,64 @@
+# abaccc.txt
+
+/*
+This file makes the complex C-A-B-A-C, and all subcomplexes.  They are
+A, B, AB, BA, ABA, C, CA, CAB, BAC, CABA, ABAC, and CABAC
+The file used to also enable binding of C to B, but that's commented out currently.
+Note that CAB and BAC are different complexes because the B mol is asymmetric
+(it has distinguishable left and right binding sites).
+
+There are 38 possible reactions and Libmzr finds all of them correctly.
+To enumerate reactions, note that each species can divide at each site;
+e.g. CABAC has 4 dissociation reactions, CABA has 3, etc.
+
+*/
+
+
+dim 3
+
+
+start_rules
+#xml_output abaccc.xml
+
+===== Mols ======================
+  A(Bsite,Csite), mass =10;
+  B(Lsite,Rsite,Csite), mass=10;
+  C(ABsite), mass=10;
+
+===== Association-Reactions =========
+  A(Bsite) + B(Lsite) -> A(Bsite!0).B(Lsite!0), kon=1, koff=1;
+  A(Bsite) + B(Rsite) -> A(Bsite!0).B(Rsite!0), kon=1, koff=1;
+  A(Csite) + C(ABsite) -> A(Csite!0).C(ABsite!0), kon=1, koff=1;
+#  B(Csite) + C(ABsite) -> B(Csite!0).C(ABsite!0), kon=1, koff=1;
+
+=== Explicit-Species ===
+
+end_rules
+
+expand_network all
+
+species A B C
+difc all 1
+
+reference_difc A
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+mol 100 A u u u
+mol 100 B u u u
+mol 100 C u u u
+
+output_files stdout
+cmd n 10 molcountheader stdout
+cmd n 10 molcount stdout
+
+cmd n 100 diagnostics reaction
+
+end_file
+

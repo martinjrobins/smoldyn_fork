@@ -1,0 +1,65 @@
+# Adapted from MinD5.txt
+
+graphics opengl
+
+dim 3
+
+species A
+
+difc A(all) 10.0
+color A(all) red
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 10 r
+
+/* ********************
+This is identical to transreact.txt, except that I replaced the single mol with two possible
+modifications with two separate mols.  I had hoped that this would fix the problem.  Instead,
+it shows a new problem.  The transformation reaction A -> B doesn't produce this result, but
+instead produces A -> A, and, likewise, B -> A is interpreted as B -> B.  The result is that
+the generated reactions include A -> A, AA -> AA, AB -> AB, B -> B, and BB -> BB.  They
+do not include A -> B, AB -> AA, or any other desired transformation.
+
+*/ *******************
+
+
+start_rules
+
+==== Modifications ====
+
+==== Mols ====
+  A(ds), mass = 1000;
+  B(ds), mass = 1000;
+
+=== Association-Reactions ===
+  A(ds) + A(ds) -> A(ds!0).A(ds!0),
+	kon = 1, koff = 1;
+  A(ds) + B(ds) -> A(ds!0).B(ds!0),
+	kon = 1, koff = 1;
+  B(ds) + B(ds) -> B(ds!0).B(ds!0),
+	kon = 1, koff = 1;
+
+=== Transformation-Reactions ===
+  A -> B, k=1;
+  B -> A, k=1;
+
+end_rules
+reference_difc A
+
+expand_network all
+
+mol 1000 A u u u
+
+output_files stdout
+cmd B molcountheader stdout
+cmd N 100 molcount stdout
+#cmd A diagnostics all stdout
+
+end_file
+
+

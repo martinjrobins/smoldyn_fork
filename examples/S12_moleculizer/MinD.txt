@@ -1,0 +1,80 @@
+# MinD.txt
+
+graphics opengl_good
+
+dim 3
+
+species MinD
+
+difc MinD(all) 10.0
+color MinD(all) red
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 10 r
+
+/* ********************
+
+This file misses some reactions.
+Run this file for parameters only (i.e. use -p option, so simulation doesn't run).
+It misses:
+AD -> DT
+AD -> DD
+AT -> TT
+AT -> DT
+DT -> TT
+DT -> AT
+
+*/ *******************
+
+
+start_rules
+
+==== Modifications ====
+  name=Apo, mass=0; name=ADP, mass=427; name=ATP, mass=507;
+
+==== Mols ====
+  MinD(ds{inact,act},*axp{Apo,ADP,ATP}), mass = 29600;
+  P, mass = 95;
+
+=== Explicit-Species ===
+
+=== Species-Classes ===
+
+=== Association-Reactions ===	
+  MinD(ds{inact}) + MinD(ds{inact}) -> MinD(ds!0).MinD(ds!0),
+	kon = 1, koff = 100,
+  MinD(ds{inact}) + MinD(ds{act}) -> MinD(ds!0).MinD(ds!0),
+	kon = 1, koff = 100,
+  MinD(ds{act}) + MinD(ds{act}) -> MinD(ds!0).MinD(ds!0),
+	kon = 100, koff = 1;
+
+=== Transformation-Reactions ===
+  MinD(*axp{Apo}) -> MinD(*axp{ATP}), k=1;
+  MinD(*axp{ATP}) -> MinD(*axp{Apo}), k=0.001;
+  MinD(*axp{Apo}) -> MinD(*axp{ADP}), k=0.001;
+  MinD(*axp{ADP}) -> MinD(*axp{Apo}), k=0.001;
+  MinD(*axp{ATP}) -> MinD(*axp{ADP}), k=0.001;
+  MinD(*axp{ADP}) -> MinD(*axp{ATP}), k=1;
+
+  MinD(ds!0,*axp{ATP}).MinD(ds!0) -> MinD(ds!0,*axp{ADP}).MinD(ds!0), k=10;
+
+=== Explicit-Allostery ===
+
+=== Allostery-Classes ===
+  MinD(ds{act<-*},*axp{ATP});
+
+end_rules
+
+reference_difc MinD
+expand_network all
+
+mol 100 MinD u u u
+
+end_file
+
+

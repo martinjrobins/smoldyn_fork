@@ -1,0 +1,54 @@
+# rates5.txt
+
+/*
+Reaction: A + A <-> AA
+Mod-mols, bind with binding sites, with modification states
+Order 2 rate constant should be 1 for all, and is 1 for all.
+This illustrates a symmetry challenge that is now handled correctly.
+*/
+
+dim 3
+
+
+start_rules
+#xml_output rates5xml.txt
+
+=== Modifications ===
+  name=M1, mass=0;
+  name=M2, mass=0;
+
+===== Mols ======================
+  A(Asite,*Msite{M1,M2}), mass =10;
+
+===== Association-Reactions =========
+  A(Asite) + A(Asite) -> A(Asite!0).A(Asite!0), kon=1, koff=1;
+
+=== Explicit-Species ===
+  A(*Msite{M2}), name=AM2;
+  A(Asite!0,*Msite{M1}).A(Asite!0,*Msite{M1}), name=AM1AM1;
+  A(Asite!0,*Msite{M1}).A(Asite!0,*Msite{M2}), name=AM1AM2;
+  A(Asite!0,*Msite{M2}).A(Asite!0,*Msite{M2}), name=AM2AM2;
+
+end_rules
+
+
+expand_network all
+
+species A AM2 AM1AM1 AM1AM2 AM2AM2
+difc all 1
+
+reference_difc A
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+mol 100 A u u u
+
+
+end_file
+

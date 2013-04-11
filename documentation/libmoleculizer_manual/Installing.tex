@@ -1,0 +1,128 @@
+\chapter{Installing Libmoleculizer}
+\label{chap:installingChapter}
+
+\section{Compiling and installing from source}
+The libmoleculizer package uses the Gnu Autotools to setup the build
+(this is the familiar configure, make, and make install style
+compilation) and should be fairly easy to install on a wide variety of
+platforms.
+
+\subsection{Prerequisites}
+Libmoleculizer has a single prerequisites which are necessary to compile and
+run libmoleculizer, a version of the libxml++ library.   Any version
+should be able to be detected and used properly with libmoleculizer.  
+
+The easiest way to install libxml++ is to use your systems package
+manager, if you have one, which will ensure that all the necessary
+files are installed and configured properly, in an automatic fashion.
+For instance, on a Ubuntu linux system, entering the command ``sudo
+apt-get install libxml++2.6-dev'' or ``sudo apt-get install
+libxml++1.0-dev'', depending on which version you prefer (version 1.0
+is simpler and smaller, version 2.6 is larger and has more
+dependencies, but has unicode support).  On a Fedora linux system, the
+command ``sudo yum install libxml++'' should work.
+
+On Macintosh systems, there is no standard package manager that comes
+with the system.  MacPorts (http://www.macports.org/) and Fink
+(http://www.finkproject.org/) are installable package managers for Mac
+systems, both of which provide libxml++.  Using Fink, either of the
+commands ``sudo fink install libxml++1'' or ``sudo fink install
+libxml++2'' will work, depending on which version you wish to install
+(1 is much smaller; 2 has unicode support).  Using MacPorts, the same
+corresponding commands would be either ``sudo port install libxmlxx''
+or ``sudo port install libxmlxx2'', which will install either version
+1 or 2 respectively.
+
+
+\subsubsection{Manually compiling and installing  libxml++}
+If you do not have a package manager, or just wish to go it alone, the
+next option is to compile libxml++ from source.  Source packages for
+libxml++ can be obtained from the downloads page of the libxml++
+webisite, which can be found at
+http://libxmlplusplus.sourceforge.net//  If this is the case, 
+using version 1.0, as opposed to any of the 2.x versions, is HIGHLY
+recommended, as libxml++-1.0 has a single prerequisite, whereas
+libxml++-2.x has legion. Installing 2.x from source is possible, and
+not terribly tricky, but is very time consuming, and will not be
+discussed here.
+
+To install libxml++-1.0 from scratch, another library, libxml2, must
+first be compiled and installed.  As it may already be installed on
+your system, attempt to run ./configure from within the libxml++-1.0
+directory.  If it works, great: followup with running make and then
+make install and you're done.  If not, follow the steps in the next
+paragraph to ensure libxml2 is installed.
+
+Libxml2 (http://xmlsoft.org/) can be downloaded from
+ftp://xmlsoft.org/libxml2/, At the time of this writing, the latest
+version is 2.7.3.  It has no prerequisites and so simply running
+./configure, make, and make install should be enough to install
+libxml2.
+
+Once this is done, libxml++-1.0 can be compiled, using a similar
+./configure, make, and make install procedeure.  
+
+After this is done, all the necessary preconditions for installing
+libmoleculizer have been satisfied.
+
+\subsection{Simplest compile/installation Procedure}
+Depending on your system configuration, the following procedure will
+probably be all that is necessary to get a working version of
+libmoleculizer onto your system.
+
+First, obtain the source.  The best option for this is to go to
+\libmzrwebsite and download the libmoleculizer-\currentversion.tar.gz source
+file, and make sure it is unpacked.  
+
+Assuming everything is setup, and the prerequisites are met, then
+installation will likely be as easy as going into the source directory
+and entering the following commands, which will compile the source
+code into an executable and install it in a place where it is
+globally accessable.  
+
+\begin{Shell}
+./bootstrap.sh
+./configure
+make
+sudo make install
+\end{Shell}
+
+\subsection{Can't or Dont want to install libmoleculizer globally}
+By default {\bf ./configure} installs libmoleculizer to a global
+location, usually /usr/lib or /usr/local/lib depending on your
+system.  This may either be unacceptable or impossible, say if you do
+not have administrator access on your computer.  This can be fixed py
+passing a {\bf --prefix=\emph{location}} flag to the {\bf ./configure}
+command.  
+
+\subsection{./configure cannot find necessary libraries}
+Configure may fail and say that libxml++ cannot be found.  The first
+thing to do, of course, is make sure it is installed on
+your machine.  If it isn't, that's the problem.  Follow the directions
+in the Prerequisites section and repeat.
+
+If it is installed, the likely problem is that pkg-config cannot find
+libxml++.  
+
+
+
+If they are, then configure must be explicitly told
+where to find the libraries and/or the corresponding header files. The
+easiest way to do this is to pass the header file locations to the
+CXXFLAGS environmental variable, and the library locations to the
+LDFLAGS environmental variable.
+
+\subsection{Enabling the demos}
+Libmoleculizer has several demos that come with it, that demonstrate
+in principle how to design a particle simulator using libmoleculizer
+(particlesim\_demo), how to design a stochastic simulator a la
+Gillespie using libmoleculizer (stochasticsim\_demo), how to use
+libmoleculizer to expand reaction networks (network\_expander\_demo),
+and how to use the c interface (c\_interface\_demo).  These examples are
+located in the doc/demos/simulators/ directory, however, by default,
+they are neither built nor installed.  
+
+If you desire to use these programs (recommended when learning to use
+libmoleculizer), add the flag --enable-demos when calling configure,
+i.e. run ``./configure --enable-demos''.  
+

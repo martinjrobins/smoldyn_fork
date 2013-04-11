@@ -1,0 +1,129 @@
+# allreceptor.txt
+
+graphics opengl_good
+graphic_delay 100
+
+dim 3
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+max_species 100
+max_surface 3
+max_compartment 3
+
+start_surface boundary
+action both all reflect
+color both 1 1 1
+polygon both edge 
+max_panels rect 6
+panel rect +0 0 0 0 100 100 # This is a panel perpindicular to the x
+                              # axis (0) -- in the yz plane with one
+                              # corner at (0,0,0), extends for 100 in
+                              # the y dir and 100 in the z dir.
+panel rect -0 100 0 0 100 100 
+panel rect -1 0 100 0 100 100 
+panel rect +1 0 0 0 100 100
+panel rect -2 0 0 100 100 100 
+panel rect +2 0 0 0 100 100
+end_surface
+
+
+start_surface cell
+action both all reflect
+color both 1 1 1
+polygon both edge
+max_panels sph 1
+panel sph 50 50 50 -30 20 20  # This should draw as sphere with center
+                              # (50, 50, 50), radius 30, the front on
+                              # the inside of the sphere, and with 20
+                              # longitudinal samplings, 20 latitudinal
+                              # samplings in order to define the
+                              # triangulation of the surface.
+end_surface
+
+
+# Define a compartment, the cytosol of the cell 
+start_compartment interior
+surface cell
+point 50 50 50                   
+end_compartment 
+
+start_compartment exterior
+compartment equalnot interior
+end_compartment 
+
+
+start_rules
+
+=== Modifications =======
+  name=None, mass=0;
+  name=Pho, mass=0;
+
+==== Molecules ===========
+  Ligand, mass = 100.0;
+  Receptor(ligand_site, secondary_site {Occluded, Active}), mass = 10000.0;
+  SecondMessenger( receptor-site, target-site {Inactive, Active}, *PhosSite{None, Pho}), mass = 10000.0;
+  Target( PrimarySite ), mass = 10000;
+
+==== Allostery-Classes  ======
+  SecondMessenger( target-site { Active <- *}, *PhosSite {Pho} );
+  Receptor( ligand_site!1, secondary_site {Active <-*} ).Ligand(!1);
+
+==== Explicit-Species ========
+  SecondMessenger(target-site!1).Target(PrimarySite!1), name = TargetComplex;
+
+==== Association-Reactions ========
+  Receptor(ligand_site) + Ligand -> Receptor(ligand_site!1).Ligand(!1),
+    kon = 100, koff = 10;
+
+  Receptor(secondary_site {Occluded}) + SecondMessenger( receptor-site ) -> Receptor(secondary_site!1).SecondMessenger( receptor-site!1 ),
+    kon = 0.0, koff = 10000;
+
+  Receptor(secondary_site {Active} ) + SecondMessenger( receptor-site ) -> Receptor(secondary_site!1).SecondMessenger( receptor-site!1 ),
+    kon = 100.0, koff = 0.0;
+
+  SecondMessenger(target-site {Inactive}) + Target( PrimarySite ) -> SecondMessenger(target-site).Target( PrimarySite ),
+    kon = 0.0, koff = 10000.0;
+
+  SecondMessenger(target-site {Active}) + Target( PrimarySite ) -> SecondMessenger(target-site).Target( PrimarySite ),
+    kon = 300.0, koff = 0.0;
+
+=== Transformation-Reactions ======
+  Receptor( secondary_site!1).SecondMessenger( receptor-site!1, *PhosSite {None} ) ->
+    Receptor( secondary_site!1).SecondMessenger( receptor-site!1, *PhosSite {Pho} ),
+    k = 100.0;
+
+end_rules
+
+max_network_species 11
+
+species A
+max_mol 1500
+
+color A 1 0 0
+display_size A 1.0
+
+time_start 0
+time_stop 10
+time_step 0.01
+
+compartment_mol 100 A interior
+
+output_files stdout
+cmd b molcountheader stdout
+cmd a molcountheader stdout
+
+cmd b molcount stdout
+cmd a molcount stdout
+
+cmd b speciesstreamheader stdout
+cmd b speciesstreamcount stdout
+
+cmd a speciesstreamheader stdout
+cmd a speciesstreamcount stdout
+
+cmd b pause
+
+

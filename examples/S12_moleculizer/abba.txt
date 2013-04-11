@@ -1,0 +1,67 @@
+# abba.txt
+
+/*
+This file correctly generates all reactions, as of subversion version 2013.
+
+I haven't checked all possible details yet, but at least the reaction list is correct.
+
+Reactions:
+A + B <-> AB
+A + BB <-> ABB
+A + ABB <-> ABBA
+B + AB <-> ABB
+B + B <-> BB
+AB + AB <-> ABBA
+*/
+
+
+random_seed 1
+
+dim 3
+
+
+start_rules
+#xml_output abbaxml.txt
+
+===== Mols ======================
+  A(Bsite), mass =10;
+  B(Asite,Bsite), mass=10;
+
+===== Association-Reactions =========
+  A(Bsite) + B(Asite) -> A(Bsite!0).B(Asite!0), kon=1, koff=1;
+  B(Bsite) + B(Bsite) -> B(Bsite!0).B(Bsite!0), kon=1, koff=1;
+
+=== Explicit-Species ===
+  A(Bsite!0).B(Asite!0), name=AB;
+  B(Bsite!0).B(Bsite!0), name=BB;
+  A(Bsite!0).B(Asite!0,Bsite!1).B(Bsite!1), name=ABB;
+  A(Bsite!0).A(Bsite!1).B(Asite!0,Bsite!2).B(Asite!1,Bsite!2), name=ABBA;
+
+end_rules
+
+expand_network all
+
+species A B AB BB ABB ABBA
+difc all 1
+
+reference_difc A
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+mol 100 A u u u
+mol 100 B u u u
+
+output_files stdout
+cmd b molcountheader stdout
+cmd n 10 molcount stdout
+
+#cmd n 100 diagnostics reaction
+
+end_file
+

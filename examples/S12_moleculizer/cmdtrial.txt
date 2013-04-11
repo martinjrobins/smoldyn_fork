@@ -1,0 +1,78 @@
+# cmdtrial.txt
+# This model uses basic-oligo-rules.mzr, which was created from
+# basicOligoRules.txt with moleculizer's new language.
+
+# graphics opengl
+
+graphics opengl_good
+graphic_delay 100
+
+dim 3
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+max_species 100
+
+start_rules
+
+==== Modifications ===========
+==== Molecules     ===========
+  A(left{default,occluded}, right{default,occluded}), mass = 1000.0;
+
+==== Explicit-Allostery  ======
+
+==== Allostery-Classes ======
+  A(left{occluded <-* }, right!1).A(left!1, right!2).A(left!2, right!3).A(left!3, right!4).A(left!4, right {occluded <- *});
+
+==== Explicit-Species ========
+
+==== Association-Reactions ========
+  A(left) + A(right) -> A(left!1).A(right!1),
+    kon = 1000, koff = 1;
+
+#         A(left {occluded}) + A(right {occluded}) -> A(left!1).A(right!1),
+#         kon = 0,
+#         koff = 10000;
+    
+=== Species-Classes ======
+  A(left!1).A(right!1), name=lengthtwo;
+  A(right!1).A(left!1,right!2).A(left!2,right!3).A(left!3), name=lengthfour;
+  A(right!1).A(left!1,right!2).A(left!2,right!3).A(left!3,right!4).A(left!4,right!5).A(left!5), name=lengthsix;
+
+end_rules
+
+max_network_species 11
+
+species A
+max_mol 1500
+
+difc A          999
+
+color A      1 0 0
+display_size A 1.0
+
+species_class_display_size lengthtwo 2.0
+species_class_display_size lengthfour 4.0
+species_class_display_size lengthsix 14.0
+
+species_class_color lengthfour 1 0 0 
+species_class_color lengthsix 0 0 1 
+
+time_start 0
+time_stop 10
+time_step 0.01
+
+mol 100 A u u u
+
+output_files stdout
+cmd b molcountheader stdout
+cmd b molcount stdout
+cmd b speciesstreamheader stdout
+cmd b speciesstreamcount stdout
+cmd b pause
+cmd a molcountheader stdout
+cmd a molcount stdout
+
+end_file

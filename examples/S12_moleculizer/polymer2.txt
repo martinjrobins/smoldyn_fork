@@ -1,0 +1,45 @@
+# polymer2.txt
+
+/*
+I haven't checked this file thoroughly yet, but it seems to work correctly.
+*/
+
+dim 3
+graphics opengl
+
+start_rules
+===== Mols ======================
+  A(L,R), mass = 10;
+  B(L,R), mass = 10;
+
+===== Association-Reactions =========
+  A(L) + B(R) -> A(L!0).B(R!0), kon = 1, koff = 1;
+  B(L) + A(R) -> B(L!0).A(R!0), kon = 1, koff =1;
+end_rules
+
+expand_network 0
+
+species A B
+difc all 1
+
+reference_difc A
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 10 r
+boundaries 1 0 10 r
+boundaries 2 0 100 r
+
+mol 1000 A u u u
+mol 1000 B u u u
+
+output_files stdout
+cmd n 10 molcountheader stdout
+cmd n 10 molcount stdout
+
+cmd n 100 diagnostics reaction
+
+end_file
+

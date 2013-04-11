@@ -1,0 +1,51 @@
+# abbbc.txt
+
+
+dim 3
+
+
+start_rules
+#xml_output abbbcxml.txt
+
+===== Mols ======================
+  A(Bsite), mass=10;
+  C(Bsite), mass=10;
+  B(site1,site2,site3,ACsite), mass=10;
+
+===== Association-Reactions =========
+  B(site1) + B(site1) -> B(site1!0).B(site1!0), kon=1, koff=1;
+  B(site2) + B(site2) -> B(site2!0).B(site2!0), kon=1, koff=1;
+  B(site3) + B(site3) -> B(site3!0).B(site3!0), kon=1, koff=1;
+  A(Bsite) + B(ACsite) -> A(Bsite!0).B(ACsite!0), kon=1, koff=1;
+  C(Bsite) + B(ACsite) -> C(Bsite!0).B(ACsite!0), kon=1, koff=1;
+
+end_rules
+
+expand_network 0
+
+graphics opengl
+
+species A B C
+difc all 1
+
+reference_difc A
+
+time_start 0
+time_stop 200
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+mol 100 A u u u
+mol 100 B u u u
+mol 100 C u u u
+
+output_files stdout
+#cmd N 100 molcountheader stdout
+
+cmd N 1000 diagnostics reaction
+
+end_file
+

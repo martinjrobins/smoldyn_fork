@@ -1,0 +1,116 @@
+\chapter{Introduction}
+\label{chap:introduction}
+
+\section{Overview of libmoleculizer}
+Libmoleculizer is a computer library that takes a set of rules
+describing a collection of protein and small molecule types as well as
+a set of descriptions of interactions amongst those types,
+i.e. different types of protein-protein, protein-small molecule, and
+enzymatic reactions (protein modifications), and using that
+information explicitly generates a network of multi-protein species
+and their reactions that are described by those rules.
+
+The ability to describe networks implicitly using rules can be be
+very advantageous for modeling biochemical networks.  This is because
+for many common cases, the size of the explicit network grows
+combinatorially relative to the number of protein/molecule types and
+interactions types that network possesses.  For instance, in a particular
+model of the alpha mating pathway in S. cerivisiae, defined
+with fewer than 20 molecule types and fewer than 40 interactions, the
+explicit network consists of over 350,000 species and over 1,000,000
+reactions.
+
+Libmoleculizer is a computer tool that helps manage the complexity of
+the absolute set of species and reactions in a reaction network, by
+expanding the typically much smaller and much more comprehensible
+network of biochemical interactions that users provide.  Typically,
+Libmoleculizer will be used as a component of a larger simulator,
+which will use libmoleculizer for species and reaction management.
+For instance, a simulator using libmoleculizer could take in a set of
+rules, use libmoleculizer to expand the corresponding network, and
+then use the generated network to run an ODE or stochastic simulation.
+
+Where libmoleculizer goes beyond other software packages of its type
+however, is in the generation of these networks.  Biochemical networks
+do not have to be expanded all at once.  This has two advantages: it
+allows libmoleculizer to be able to handle networks other packages
+cannot, such as unbounded species growth, and it also allows for
+faster operation.  In a spatial simulation, if two species collide,
+the user will not care to know every species and reaction that can
+occur in the model, they will only want to know whether those two
+species react or not.  Using libmoleculizer, users do not have to
+computationally pay for the time to generate huge portions of the
+network they do not care about.  
+
+\section{Manual Overview}
+
+\subsubsection{Disclaimer}
+At the current moment, this manual is highly incomplete.  We expect
+that in the next couple weeks, the next version of libmoleculizer will
+be released which will greatly flesh out this user-manual.  For the
+current release, we have decided to include all, including in
+progress, documentation -- however, certain aspects will be very, very
+roughly sketched out, to the point of being unreadable.  
+
+For the time being, chapters marked with a star are considered
+incomplete. 
+
+\subsubsection{Overview}
+
+This manual aims to provide introduction to the functionality and use
+of the libmoleculizer library.  
+
+This manual has three major goals.  The first of the manual is to
+describe what Moleculizer does; this is treated in chapters
+\ref{chap:conceptualOverviewChapter} and
+\ref{chap:usingLibmoleculizerChapter}.  The second objective is to
+describe the MZR file format in which reaction rules are specified;
+this is given an overview in chapter \ref{chap:theRulesChapter}, and
+more explicitly in chapter \ref{chap:mzrReference}.  Finally, the
+libmoleculizer API must be learned, in order to understand how to pass
+MZR files into libmoleculizer, expand the network, and read out
+the generated species and reactions.  This topic is dealt with in
+chapters \ref{chap:usingLibmoleculizerChapter},
+\ref{chap:interfacesChapter}, and \ref{chap:apiReference}.
+
+Finally, although libmoleculizer is a written in standard C++ and C,
+and packaged using standard methods, we cannot guarantee you won't
+have problems installing it.  Start by reading and following the
+instructions in the INSTALL file that came with libmoleculizer.  There
+is a 99\% chance that will work.  However, if you do have any trouble,
+consult the installation instructions and troubleshooting help
+available in the chapter \ref{chap:installingChapter}.
+
+\section{History}
+
+Libmoleculizer is the descendant of a prior program called Moleculizer,
+developed by Dr. Larry Lok at the Molecular Sciences Institute to
+study the alpha mating pathway in yeast. The standard modeling
+techniques at the time all involved explicitly enumerating a set of
+chemical species and reactions. However, it was determined for the
+alpha signal transduction pathway in yeast that there were so many
+species and reactions possible, that they could never be practically
+enumerated. The typical response to this problem had previously been
+to simplify the system, combining species and reactions, in order to
+produce a simpler but non-exact simulation of the system
+involved. This approach was non-optimal, as it required making
+fundamental assumptions about what was and was not important, prior to
+investigating system behavior.
+
+The response was to develop a new simulator called
+Moleculizer\cite{lok05} that took in a description of the basic
+monomeric proteins and small molecules, as well as a set of rules that
+described basic interactions between proteins. These rules were used
+within a simulator implementing Dan Gillespie's first reaction
+algorithm \cite{gillespie77}.  As it ran, Moleculizer would alternate
+between executing reaction events in the manner of Gillespie and using
+the rules to generate enough of the reaction network so that the
+ the next reaction event would always be accurate.
+
+Realizing the versatility of this new rule-based approach, a new
+software project was begun by Nathan Addy at the Molecular Sciences
+Institute, to adapt the reaction network generating components of
+Moleculizer into a generic library, called libmoleculizer, that could
+be used within a variety of simulators and in a variety of contexts.
+
+This manual corresponds to version \currentversion of that software. 

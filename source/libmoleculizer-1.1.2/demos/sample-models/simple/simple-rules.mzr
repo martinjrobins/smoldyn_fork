@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<moleculizer-input>
+  <model>
+    <modifications>
+    </modifications>
+    <mols>
+      <mod-mol name="A">
+        <weight daltons="100">
+        </weight>
+        <binding-site name="to-B">
+          <default-shape-ref name="default">
+          </default-shape-ref>
+          <site-shape name="default">
+      </site-shape>
+      </binding-site>
+      </mod-mol>
+      <mod-mol name="B">
+        <weight daltons="100">
+        </weight>
+        <binding-site name="to-A">
+          <default-shape-ref name="default">
+          </default-shape-ref>
+          <site-shape name="default">
+          </site-shape>
+        </binding-site>
+      </mod-mol>
+    </mols>
+    <allosteric-plexes>
+    </allosteric-plexes>
+    <allosteric-omnis>
+    </allosteric-omnis>
+    <reaction-gens>
+      <dimerization-gen>
+        <user-doc anchor-name="A-B-dimerizaton-anchor-name">
+          This is user documentation intended to make its way into the
+          html version of the model.  Associated with it is an
+          invisible anchor with name
+          A-B-dimerizaton-anchor-name.</user-doc>
+        <mol-ref name="A">
+          <site-ref name="to-B">
+        </site-ref>
+        </mol-ref>
+        <mol-ref name="B">
+          <site-ref name="to-A">
+        </site-ref>
+        </mol-ref>
+        <default-on-rate value="1.0e11">
+        </default-on-rate>
+        <default-off-rate value="1.0">
+    </default-off-rate>
+    </dimerization-gen>
+    </reaction-gens>
+    <explicit-species>
+      <plex-species name="A-singleton">
+        <plex>
+          <mol-instance name="the-A">
+            <mol-ref name="A">
+            </mol-ref>
+          </mol-instance>
+        </plex>
+      </plex-species>
+      <plex-species name="B-singleton">
+        <plex>
+          <mol-instance name="the-B">
+            <mol-ref name="B">
+            </mol-ref>
+          </mol-instance>
+        </plex>
+      </plex-species>
+    </explicit-species>
+    <explicit-reactions>
+    </explicit-reactions>
+    <volume liters="1.0e-11">
+  </volume>
+  </model>
+  <streams>
+    <species-streams>
+      <omni-species-stream name="A-B dimer">
+        <plex>
+          <mol-instance name="the-A">
+            <mol-ref name="A" />
+          </mol-instance>
+          <mol-instance name="the-B">
+            <mol-ref name="B" />
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-A">
+              <binding-site-ref name="to-B" />
+            </mol-instance-ref>
+            <mol-instance-ref name="the-B">
+              <binding-site-ref name="to-A" />
+            </mol-instance-ref>
+          </binding>
+        </plex>
+      </omni-species-stream>
+    </species-streams>
+  </streams>
+</moleculizer-input>

@@ -1,0 +1,58 @@
+# Simple bouncing molecules with surfaces
+
+graphics opengl
+
+dim 1
+species red green blue
+max_mol 40
+
+difc red 3
+difc green 2
+difc blue 3
+
+color red 1 0 0
+color green 0 1 0
+color blue 0 0 1
+display_size red 5
+display_size green 5
+display_size blue 5
+
+time_start 0
+time_stop 1000
+time_step 0.01
+
+boundaries 0 0 100
+
+mol 10 red 50
+mol 2 red 75
+mol 10 green 90
+mol 10 blue 5
+
+max_surface 2
+
+start_surface walls
+action both all jump
+color both 0 0 0
+max_panels rect 2
+panel rect +0 0
+panel rect -0 100
+jump rect0 f <-> rect1 f
+end_surface
+
+start_surface surf
+action both red reflect
+action both green absorb
+action both blue transmit
+color front 1 0.7 0
+color back 0.6 0 0.6
+thickness 2
+max_panels rect 1
+panel rect +0 60
+max_panels tri 1
+panel tri 30
+max_panels sph 1
+panel sph 75 5
+end_surface
+
+end_file
+

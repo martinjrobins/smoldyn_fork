@@ -1,0 +1,65 @@
+%% Some basic substitution commands I'm defining. 
+\newcommand{\libmzrwebsite}{\emph{http://sourceforge.net/projects/moleculizer/}}
+\newcommand{\myemail}{\emph{addy@molsci.org}}
+\newcommand{\currentversion}{1.1.3}
+
+%% The libmoleculizer manual.
+
+\documentclass{report}
+
+\usepackage{listings}
+\usepackage{makeidx}
+\usepackage{setspace}
+
+% \usepackage{glossary}
+
+%% Some definitions for the listings package.
+\lstloadlanguages{XML, C++, C, Python}
+\lstnewenvironment{ExampleC}{\lstset{language=C}}{}
+\lstnewenvironment{ExampleCPP}{\lstset{language=C++,caption=,label=,keywords=}}{}
+\lstnewenvironment{ExampleRNG}{\lstset{language=XML, keywords=} }{}
+\lstnewenvironment{ExampleXML}{\lstset{language=XML,} }{}
+\lstnewenvironment{ExampleMZR}{\lstset{language=Clean,
+    showspaces=false, showtabs=false, frame=single, basicstyle=\tiny,
+    keywords=} }{}
+
+\lstnewenvironment{Shell}{\lstset{language=Clean,caption=,label=, keywords=}}{}
+
+\author{Nathan Addy\\The Molecular Sciences Institute}
+
+\title{Libmoleculizer \currentversion\ User's Manual}
+
+% I'm told these must be in the preamble.
+\makeindex
+% \doublespacing
+
+\makeglossary
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+%% Each of the chapters, in order. 
+
+\include{Introduction}
+\include{ConceptualOverview}
+\include{Rules}
+\include{Interfaces2}
+
+\include{Installing}
+\include{Using}
+% 
+\include{Cookbook}
+\include{APIReference}
+\include{MZRReference}
+
+%% Print the glossary, the index, and then the bibliography.
+% \printglossary
+\printindex
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,68 @@
+\chapter{MZR Format Reference}
+\label{chap:mzrReference}
+
+This chapter serves as a complete reference to the MZR file format
+specification.  
+
+To understand it, at least a basic knowledge of the Relax NG format
+for specifying xml schemas will be assumed. (Never fear!  Even if the
+format is unknown to you, dear reader, it is fairly straightforward
+and can be largely understood without difficulties!)
+
+\section{/moleculizer-input}
+
+This mandatory root element of a moleculizer model contains a single
+model subelement.
+
+\begin{ExampleRNG}
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar
+    xmlns="http://relaxng.org/ns/structure/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="moleculizer-input">
+      <element name="model">
+	<ref name="model-content" />
+      </element>
+    </element>
+  </start>
+</grammar>
+\end{ExampleRNG}
+
+\section{/moleculizer/model}
+
+The model element contains all the biology in the model.  It consists
+of 
+
+\begin{ExampleRNG}
+<element name="model">
+  <element name="modifications">
+    <ref name="modifications-content" />
+  </element>
+  <element name="mols">
+    <ref name="mols-content" />
+  </element>
+  <element name="allosteric-plexes">
+    <ref name="allosteric-plexes-content" />
+  </element>
+  <element name="">
+    <ref name="" />
+  </element>
+  <element name="">
+    <ref name="" />
+  </element>
+  <element name="">
+    <ref name="" />
+  </element>
+  <element name="">
+    <ref name="" />
+  </element>
+</element>
+\end{ExampleRNG}
+
+
+
+
+
+\section{A Complete Specification of MZR Format in RelaxNG Format}
+

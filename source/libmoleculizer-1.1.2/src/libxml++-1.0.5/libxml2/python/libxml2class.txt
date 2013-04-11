@@ -1,0 +1,136 @@
+          Generated Classes for libxml2-python
+
+#
+# Global functions of the module
+#
+
+
+# functions from module python
+SAXParseFile()
+createInputBuffer()
+createOutputBuffer()
+createPushParser()
+debugMemory()
+dumpMemory()
+htmlCreatePushParser()
+htmlSAXParseFile()
+memoryUsed()
+newNode()
+pythonCleanupParser()
+setEntityLoader()
+
+
+#
+# Set of classes of the module
+#
+
+
+
+Class xmlNode(xmlCore)
+    # accessors
+    ns()
+    nsDefs()
+
+
+Class xmlDoc(xmlNode)
+
+
+Class xmlAttr(xmlNode)
+Class xmlReg()
+
+
+Class relaxNgValidCtxt(relaxNgValidCtxtCore)
+
+
+Class parserCtxt(parserCtxtCore)
+    # accessors
+    doc()
+    isValid()
+    lineNumbers()
+    loadSubset()
+    pedantic()
+    replaceEntities()
+    validate()
+    wellFormed()
+
+
+Class xmlDtd(xmlNode)
+Class relaxNgParserCtxt()
+Class xpathParserContext()
+    # accessors
+    context()
+Class SchemaParserCtxt()
+
+
+Class ValidCtxt(ValidCtxtCore)
+
+
+Class xmlNs(xmlNode)
+Class xmlTextReaderLocator()
+Class URI()
+    # accessors
+    authority()
+    fragment()
+    opaque()
+    path()
+    port()
+    query()
+    queryRaw()
+    scheme()
+    server()
+    setAuthority()
+    setFragment()
+    setOpaque()
+    setPath()
+    setPort()
+    setQuery()
+    setQueryRaw()
+    setScheme()
+    setServer()
+    setUser()
+    user()
+
+
+Class xmlAttribute(xmlNode)
+Class catalog()
+Class xpathContext()
+    # accessors
+    contextDoc()
+    contextNode()
+    contextPosition()
+    contextSize()
+    function()
+    functionURI()
+    setContextDoc()
+    setContextNode()
+
+    # functions from module python
+    registerXPathFunction()
+
+
+Class xmlElement(xmlNode)
+
+
+Class xmlTextReader(xmlTextReaderCore)
+
+
+Class xmlEntity(xmlNode)
+Class Schema()
+Class Error()
+    # accessors
+    code()
+    domain()
+    file()
+    level()
+    line()
+    message()
+Class relaxNgSchema()
+
+
+Class inputBuffer(ioReadWrapper)
+
+
+Class SchemaValidCtxt(SchemaValidCtxtCore)
+
+
+Class outputBuffer(ioWriteWrapper)

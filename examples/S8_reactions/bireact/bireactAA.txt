@@ -1,0 +1,51 @@
+# Bimolecular reactions, same reactant
+
+graphics none
+
+dim 3
+max_species 6
+species As
+species Am
+species Af
+species C
+max_mol 10000
+
+difc all 1
+
+time_start 0
+time_stop 100
+time_step 0.1
+
+boundaries 0 0 100 p
+boundaries 1 0 100 p
+boundaries 2 0 100 p
+
+mol 2000 As u u u
+mol 2000 Am u u u
+mol 2000 Af u u u
+
+output_files bireactAAout.txt
+cmd e molcount bireactAAout.txt
+
+reaction slow As + As -> C 1
+reaction med  Am + Am -> C 10
+reaction fast Af + Af -> C 50
+
+/*
+start_reaction
+order 2
+max_rxn 3
+reactant As + As slow
+rate slow 1
+product slow C
+reactant Am + Am med
+rate med 1
+product med C
+reactant Af + Af fast
+rate fast 1
+product fast C
+end_reaction
+*/
+
+end_file
+

@@ -1,0 +1,538 @@
+# Configuration file automatically created by Smoldyn
+
+# General simulation parameters
+dim 3
+max_names 11
+name protein
+name Na
+name K
+name protein_K
+name protein_Na
+name Ach
+name channel
+name channel_Ach
+max_mol 1000
+# random_seed for prior simulation was 1204243517
+random_seed 915628880  # this is a new random number
+time_start 0
+time_stop 10000
+time_step 0.02
+time_now 50
+graphics opengl
+graphic_iter 1000
+tiff_iter 0
+tiff_name OpenGL
+tiff_min 1
+tiff_max 999
+frame_thickness 2
+grid_thickness 0
+frame_color 0 0 0 1
+grid_color 0 0 0 1
+background_color 1 1 1 1
+accuracy 5
+
+# Boundary parameters
+low_wall 0 0 t
+high_wall 0 100 t
+low_wall 1 0 t
+high_wall 1 100 t
+low_wall 2 0 t
+high_wall 2 100 t
+
+# Surface parameters
+max_surface 2
+epsilon 2.22045e-14
+neighbor_dist 0
+
+start_surface
+name walls
+action front protein reflect
+action back protein reflect
+action front Na reflect
+action back Na reflect
+action front K reflect
+action back K reflect
+action front protein_K reflect
+action back protein_K reflect
+action front protein_Na reflect
+action back protein_Na reflect
+action front Ach reflect
+action back Ach reflect
+action front channel reflect
+action back channel reflect
+action front channel_Ach reflect
+action back channel_Ach reflect
+color front 0 0 0 1
+color back 0 0 0 1
+thickness 1
+polygon front edge
+polygon back edge
+max_panels rect 6
+panel rect +0 0 0 0 100 100 rect0
+panel rect -0 100 0 0 100 100 rect1
+panel rect +1 0 0 0 100 100 rect2
+panel rect -1 0 100 0 100 100 rect3
+panel rect +2 0 0 0 100 100 rect4
+panel rect -2 0 0 100 100 100 rect5
+end_surface
+
+start_surface
+name membrane
+action front protein reflect
+action back protein reflect
+action front Na reflect
+action back Na multiple
+rate Na bsoln solution 0.05
+action front K multiple
+action back K multiple
+rate K solution bsoln 0.02
+rate K bsoln solution 0.02
+action front protein_K reflect
+action back protein_K reflect
+action front protein_Na reflect
+action back protein_Na reflect
+action front Ach reflect
+action back Ach reflect
+action front channel reflect
+action back channel reflect
+action front channel_Ach reflect
+action back channel_Ach reflect
+color front 0 0 1 0.5
+color back 0 0 1 0.5
+thickness 1
+polygon front face
+polygon back face
+max_panels rect 1
+panel rect +0 20 0 0 100 100 panel1
+end_surface
+
+# Reaction parameters
+reaction NaPunbind protein_Na -> Na + protein 0.0002
+product_placement NaPunbind pgemmax 0.2
+reaction KPunbind protein_K -> K + protein 0.01
+product_placement KPunbind pgemmax 0.2
+reaction AchCunbind channel_Ach(up) -> Ach + channel(up) 0.0002
+product_placement AchCunbind pgemmax 0.2
+reaction Achuptake Ach -> 0 0.002
+reaction NaPbind Na + protein -> protein_Na 1000
+reaction KPbind K + protein -> protein_K 1000
+reaction AchCbind Ach + channel(up) -> channel_Ach(up) 500
+reaction Nain channel_Ach(up) + Na -> channel_Ach(up) + Na(bsoln) 100
+product_placement Nain pgemmax 0.2
+reaction Naout channel_Ach(up) + Na(bsoln) -> channel_Ach(up) + Na 100
+product_placement Naout pgemmax 0.2
+# Command parameters
+output_files neuroninside.txt neuronoutside.txt
+cmd j 2550 500001 50 molcountinbox 0 20 0 100 0 100 neuroninside.txt
+cmd j 2550 500001 50 molcountinbox 20 100 0 100 0 100 neuronoutside.txt
+cmd i 3000 3000 0.02 pointsource Ach 400 99 50 50
+
+# Molecule parameters
+gauss_table_size 4096
+molecule_lists diffuselist
+molecule_lists fixedlist
+difc protein(all) 0
+mol_list protein(all) fixedlist
+display_size protein(solution) 5
+display_size protein(front) 3
+display_size protein(back) 3
+display_size protein(up) 3
+display_size protein(down) 3
+color protein(solution) 0.8 0.8 0.8
+color protein(front) 0 0 0
+color protein(back) 0 0 0
+color protein(up) 0 0 0
+color protein(down) 0 0 0
+difc Na(solution) 10
+mol_list Na(solution) diffuselist
+mol_list Na(front) fixedlist
+mol_list Na(back) fixedlist
+mol_list Na(up) fixedlist
+mol_list Na(down) fixedlist
+display_size Na(all) 3
+color Na(solution) 1 0 0
+color Na(front) 0 0 0
+color Na(back) 0 0 0
+color Na(up) 0 0 0
+color Na(down) 0 0 0
+difc K(solution) 10
+mol_list K(solution) diffuselist
+mol_list K(front) fixedlist
+mol_list K(back) fixedlist
+mol_list K(up) fixedlist
+mol_list K(down) fixedlist
+display_size K(all) 3
+color K(solution) 0 1 0
+color K(front) 0 0 0
+color K(back) 0 0 0
+color K(up) 0 0 0
+color K(down) 0 0 0
+difc protein_K(all) 0
+mol_list protein_K(all) fixedlist
+display_size protein_K(solution) 5
+display_size protein_K(front) 3
+display_size protein_K(back) 3
+display_size protein_K(up) 3
+display_size protein_K(down) 3
+color protein_K(solution) 0.2 0.8 0.2
+color protein_K(front) 0 0 0
+color protein_K(back) 0 0 0
+color protein_K(up) 0 0 0
+color protein_K(down) 0 0 0
+difc protein_Na(all) 0
+mol_list protein_Na(all) fixedlist
+display_size protein_Na(solution) 5
+display_size protein_Na(front) 3
+display_size protein_Na(back) 3
+display_size protein_Na(up) 3
+display_size protein_Na(down) 3
+color protein_Na(solution) 1 0.5 0.5
+color protein_Na(front) 0 0 0
+color protein_Na(back) 0 0 0
+color protein_Na(up) 0 0 0
+color protein_Na(down) 0 0 0
+difc Ach(solution) 5
+mol_list Ach(solution) diffuselist
+mol_list Ach(front) fixedlist
+mol_list Ach(back) fixedlist
+mol_list Ach(up) fixedlist
+mol_list Ach(down) fixedlist
+display_size Ach(all) 3
+color Ach(solution) 0 0 0.5
+color Ach(front) 0 0 0
+color Ach(back) 0 0 0
+color Ach(up) 0 0 0
+color Ach(down) 0 0 0
+difc channel(all) 0
+mol_list channel(all) fixedlist
+display_size channel(solution) 5
+display_size channel(front) 3
+display_size channel(back) 3
+display_size channel(up) 3
+display_size channel(down) 3
+color channel(all) 0 0 0
+difc channel_Ach(all) 0
+mol_list channel_Ach(all) fixedlist
+display_size channel_Ach(solution) 5
+display_size channel_Ach(front) 3
+display_size channel_Ach(back) 3
+display_size channel_Ach(up) 3
+display_size channel_Ach(down) 3
+color channel_Ach(solution) 0 0 1
+color channel_Ach(front) 0 0 0
+color channel_Ach(back) 0 0 0
+color channel_Ach(up) 0 0 0
+color channel_Ach(down) 0 0 0
+mol 1 K 28.9079 31.8297 29.8748
+mol 1 K 79.3082 33.4469 11.4404
+mol 1 K 74.5974 44.5717 0.0596843
+mol 1 K 31.4883 42.0934 95.7845
+mol 1 K 35.8909 85.7883 69.4641
+mol 1 K 47.265 80.9723 4.24667
+mol 1 K 79.8616 14.9587 6.68491
+mol 1 K 56.7762 68.7171 55.3534
+mol 1 Na 42.7248 84.6426 73.5705
+mol 1 K 87.2353 60.1529 17.1871
+mol 1 Na 56.8233 18.7467 44.0088
+mol 1 Na 58.4745 85.1191 98.8603
+mol 1 Na 30.2422 88.2004 96.3304
+mol 1 Na 57.9656 96.1278 98.9877
+mol 1 Na 31.3748 24.3751 68.2036
+mol 1 Na 33.4099 23.7844 66.9565
+mol 1 Na 79.568 75.1615 14.2494
+mol 1 Na 41.0852 11.05 39.3774
+mol 1 Na 82.6715 11.4275 30.3238
+mol 1 Na 33.5854 18.8415 12.8342
+mol 1 Na 74.7228 94.6892 47.8676
+mol 1 Na 60.0894 87.0221 25.5967
+mol 1 Na 54.4865 53.4694 36.8546
+mol 1 Na 33.1785 75.0585 6.65896
+mol 1 Na 57.9561 13.0841 85.954
+mol 1 Na 97.4254 67.8483 11.5347
+mol 1 Na 67.5979 96.04 29.8184
+mol 1 Na 60.8395 66.5032 87.9525
+mol 1 Na 86.2863 91.7331 81.8104
+mol 1 Na 63.938 50.6059 10.1838
+mol 1 Na 81.2088 36.9025 59.4108
+mol 1 Na 98.1183 1.72103 71.8369
+mol 1 Na 51.3393 43.3133 66.9354
+mol 1 Na 98.1345 16.0695 40.7547
+mol 1 Na 96.5736 84.5835 35.3761
+mol 1 Na 83.8283 65.0543 79.0542
+mol 1 Na 62.043 6.08997 34.5849
+mol 1 Na 24.5107 87.1832 47.8599
+mol 1 Na 72.8536 27.8785 19.2547
+mol 1 Na 69.4413 88.753 83.5919
+mol 1 Na 59.9811 49.0667 13.2159
+mol 1 Na 24.3295 90.6459 7.30339
+mol 1 Na 92.108 23.7563 94.6846
+mol 1 Na 34.276 68.8608 18.0215
+mol 1 Na 93.5054 66.5507 63.353
+mol 1 Na 21.9605 64.3441 70.1603
+mol 1 Na 38.7486 44.3736 62.4562
+mol 1 Na 24.6777 33.0221 81.291
+mol 1 Na 68.2212 37.4391 35.1542
+mol 1 Na 47.8521 64.5599 1.66317
+mol 1 Na 88.5443 94.1891 74.0363
+mol 1 Na 42.6365 21.1389 82.4722
+mol 1 Na 47.7483 41.4408 46.9349
+mol 1 Na 74.3774 5.68016 88.2907
+mol 1 Na 36.0762 1.73443 19.7278
+mol 1 Na 33.1728 68.0636 7.24889
+mol 1 Na 23.4599 87.1493 13.2288
+mol 1 Na 81.7855 61.3804 61.284
+mol 1 Na 99.7678 38.581 66.2221
+mol 1 Na 29.4084 37.7248 41.1412
+mol 1 Na 79.5398 43.2803 75.2917
+mol 1 Na 37.3745 30.0344 79.0394
+mol 1 Na 43.8058 11.6604 35.717
+mol 1 Na 46.0651 70.1576 9.07075
+mol 1 Na 77.5294 33.1377 61.0457
+mol 1 Na 69.4521 47.1235 56.331
+mol 1 Na 52.5982 94.2968 98.6889
+mol 1 Na 72.4875 58.2078 96.3097
+mol 1 Na 62.1179 88.7493 40.0954
+mol 1 Na 55.7513 6.84226 65.6465
+mol 1 Na 40.4094 10.0122 14.1628
+mol 1 Na 24.3461 56.0564 41.3786
+mol 1 Na 80.8673 69.5717 14.0631
+mol 1 Na 57.1724 47.0123 73.3952
+mol 1 Na 86.3399 79.9197 39.073
+mol 1 Na 27.5084 75.7398 0.387153
+mol 1 Na 38.6883 40.1414 30.7944
+mol 1 Na 54.9667 81.3984 40.2539
+mol 1 Na 50.9779 73.0849 17.2489
+mol 1 Na 62.7759 3.34967 35.0961
+mol 1 Na 98.3826 96.6419 23.7985
+mol 1 Na 72.0135 18.7357 62.0379
+mol 1 Na 41.8237 31.1576 41.6753
+mol 1 Na 53.1279 48.5083 2.44696
+mol 1 Na 54.7582 62.8387 19.9971
+mol 1 Na 67.3926 10.2215 17.2728
+mol 1 Na 51.2296 34.5674 22.3181
+mol 1 Na 63.6739 70.1498 65.0372
+mol 1 Na 46.5475 83.9255 17.4069
+mol 1 Na 24.8445 96.5461 14.4497
+mol 1 Na 35.9663 65.4905 26.4715
+mol 1 Na 40.4536 17.3269 59.2266
+mol 1 Na 44.0196 6.24085 63.0536
+mol 1 Na 57.8001 72.8626 15.0517
+mol 1 Na 62.5383 85.7838 6.98995
+mol 1 Na 68.8334 44.1561 75.5109
+mol 1 Na 66.1079 5.11012 38.6208
+mol 1 Na 88.5965 5.51857 61.5506
+mol 1 Na 49.5368 27.7398 52.1703
+mol 1 Na 94.2035 67.3357 41.3336
+mol 1 Na 62.2819 44.1915 6.85379
+mol 1 Na 89.1351 52.9388 66.2752
+mol 1 Na 47.2879 74.553 16.0614
+mol 1 Na 34.3944 15.7772 69.0529
+mol 1 Na 84.5457 34.5159 23.2318
+mol 1 Na 50.15 33.5456 85.6995
+mol 1 Na 82.6876 69.0237 21.86
+mol 1 Na 42.9934 43.4339 90.9486
+mol 1 Na 55.0447 50.5378 45.4837
+mol 1 K 3.65691 94.2748 16.8404
+mol 1 K 3.41122 7.26448 21.4545
+surface_mol 1 channel(up) membrane rect panel1 20 39.8675 52.4652
+surface_mol 1 channel(up) membrane rect panel1 20 20.2178 99.8354
+surface_mol 1 channel(up) membrane rect panel1 20 64.54 23.5243
+surface_mol 1 channel(up) membrane rect panel1 20 71.4491 44.5921
+surface_mol 1 channel(up) membrane rect panel1 20 56.4568 68.602
+surface_mol 1 channel(up) membrane rect panel1 20 77.1502 63.3647
+surface_mol 1 channel(up) membrane rect panel1 20 38.388 86.6351
+surface_mol 1 channel(up) membrane rect panel1 20 59.4639 9.29978
+surface_mol 1 channel(up) membrane rect panel1 20 38.7826 18.8852
+surface_mol 1 channel(up) membrane rect panel1 20 69.0303 93.0238
+surface_mol 1 channel(up) membrane rect panel1 20 47.7561 36.8267
+surface_mol 1 channel(up) membrane rect panel1 20 98.9625 62.6826
+surface_mol 1 channel(up) membrane rect panel1 20 38.7433 59.357
+surface_mol 1 channel(up) membrane rect panel1 20 77.3273 39.1092
+surface_mol 1 channel(up) membrane rect panel1 20 47.6977 54.7238
+surface_mol 1 channel(up) membrane rect panel1 20 0.912286 32.795
+surface_mol 1 channel(up) membrane rect panel1 20 71.9621 67.5355
+surface_mol 1 channel(up) membrane rect panel1 20 33.9708 47.2757
+surface_mol 1 channel(up) membrane rect panel1 20 69.0028 30.6176
+surface_mol 1 channel(up) membrane rect panel1 20 14.9134 49.8087
+surface_mol 1 channel(up) membrane rect panel1 20 17.798 30.9199
+surface_mol 1 channel(up) membrane rect panel1 20 71.3667 59.9814
+surface_mol 1 channel(up) membrane rect panel1 20 38.315 60.4849
+surface_mol 1 channel(up) membrane rect panel1 20 67.8584 96.4895
+surface_mol 1 channel(up) membrane rect panel1 20 81.2386 76.4888
+surface_mol 1 channel(up) membrane rect panel1 20 34.9333 23.9388
+surface_mol 1 channel(up) membrane rect panel1 20 35.2051 92.2633
+surface_mol 1 channel(up) membrane rect panel1 20 60.9391 2.62479
+surface_mol 1 channel(up) membrane rect panel1 20 27.4627 65.7253
+surface_mol 1 channel(up) membrane rect panel1 20 27.1658 75.6252
+surface_mol 1 channel(up) membrane rect panel1 20 92.2254 32.6653
+surface_mol 1 channel(up) membrane rect panel1 20 61.999 17.7711
+surface_mol 1 channel(up) membrane rect panel1 20 99.7707 46.0132
+surface_mol 1 channel(up) membrane rect panel1 20 28.2786 78.0329
+surface_mol 1 channel(up) membrane rect panel1 20 97.645 19.6667
+surface_mol 1 channel(up) membrane rect panel1 20 8.21427 57.2782
+surface_mol 1 channel(up) membrane rect panel1 20 41.0941 68.709
+surface_mol 1 channel(up) membrane rect panel1 20 89.7199 23.0601
+surface_mol 1 channel(up) membrane rect panel1 20 72.5923 58.5509
+surface_mol 1 channel(up) membrane rect panel1 20 16.4413 29.7549
+surface_mol 1 channel(up) membrane rect panel1 20 38.0423 76.9397
+surface_mol 1 channel(up) membrane rect panel1 20 52.5227 48.5771
+surface_mol 1 channel(up) membrane rect panel1 20 98.762 92.4476
+surface_mol 1 channel(up) membrane rect panel1 20 97.1805 12.7648
+surface_mol 1 channel(up) membrane rect panel1 20 32.2526 68.9702
+surface_mol 1 channel(up) membrane rect panel1 20 85.4733 49.127
+surface_mol 1 channel(up) membrane rect panel1 20 47.5289 17.9616
+surface_mol 1 channel(up) membrane rect panel1 20 1.37572 21.7487
+surface_mol 1 channel(up) membrane rect panel1 20 73.7343 52.2105
+surface_mol 1 channel(up) membrane rect panel1 20 67.4583 72.3219
+surface_mol 1 channel(up) membrane rect panel1 20 6.71046 82.7277
+surface_mol 1 channel(up) membrane rect panel1 20 54.0342 53.241
+surface_mol 1 channel(up) membrane rect panel1 20 22.3243 5.0894
+surface_mol 1 channel(up) membrane rect panel1 20 90.3975 11.4221
+surface_mol 1 channel(up) membrane rect panel1 20 32.6992 75.2112
+surface_mol 1 channel(up) membrane rect panel1 20 80.183 35.7227
+surface_mol 1 channel(up) membrane rect panel1 20 77.6179 24.5723
+surface_mol 1 channel(up) membrane rect panel1 20 60.2819 58.0149
+surface_mol 1 channel(up) membrane rect panel1 20 80.1476 40.021
+surface_mol 1 channel(up) membrane rect panel1 20 50.2143 51.8325
+surface_mol 1 channel(up) membrane rect panel1 20 1.23589 71.6379
+surface_mol 1 channel(up) membrane rect panel1 20 60.9984 99.5618
+surface_mol 1 channel(up) membrane rect panel1 20 34.2291 88.7607
+surface_mol 1 channel(up) membrane rect panel1 20 75.5375 58.8448
+surface_mol 1 channel(up) membrane rect panel1 20 46.1945 90.5801
+surface_mol 1 channel(up) membrane rect panel1 20 92.0628 98.9607
+surface_mol 1 channel(up) membrane rect panel1 20 99.3385 82.8201
+surface_mol 1 channel(up) membrane rect panel1 20 12.9724 27.3908
+surface_mol 1 channel(up) membrane rect panel1 20 20.3009 96.9792
+surface_mol 1 channel(up) membrane rect panel1 20 55.7629 7.49185
+surface_mol 1 channel(up) membrane rect panel1 20 14.5063 7.207
+surface_mol 1 channel(up) membrane rect panel1 20 25.7065 49.5527
+surface_mol 1 channel(up) membrane rect panel1 20 12.6031 20.0634
+surface_mol 1 channel(up) membrane rect panel1 20 47.3518 42.3001
+surface_mol 1 channel(up) membrane rect panel1 20 53.1467 37.2769
+surface_mol 1 channel(up) membrane rect panel1 20 56.6632 39.103
+surface_mol 1 channel(up) membrane rect panel1 20 59.5993 85.4741
+surface_mol 1 channel(up) membrane rect panel1 20 22.6841 51.0911
+surface_mol 1 channel(up) membrane rect panel1 20 54.5791 11.1597
+surface_mol 1 channel(up) membrane rect panel1 20 16.1569 48.9726
+surface_mol 1 channel(up) membrane rect panel1 20 97.0644 61.2659
+surface_mol 1 channel(up) membrane rect panel1 20 93.7609 39.4128
+surface_mol 1 channel(up) membrane rect panel1 20 25.41 65.9978
+surface_mol 1 channel(up) membrane rect panel1 20 84.4367 26.9872
+surface_mol 1 channel(up) membrane rect panel1 20 82.8605 35.6343
+surface_mol 1 channel(up) membrane rect panel1 20 94.2714 19.805
+surface_mol 1 channel(up) membrane rect panel1 20 74.6455 67.6505
+surface_mol 1 channel(up) membrane rect panel1 20 92.5817 20.9562
+surface_mol 1 channel(up) membrane rect panel1 20 94.7559 62.5795
+surface_mol 1 channel(up) membrane rect panel1 20 73.2041 40.7409
+surface_mol 1 channel(up) membrane rect panel1 20 57.3388 92.683
+surface_mol 1 channel(up) membrane rect panel1 20 52.2605 42.7022
+surface_mol 1 channel(up) membrane rect panel1 20 37.5682 9.42184
+surface_mol 1 channel(up) membrane rect panel1 20 74.3993 28.3511
+surface_mol 1 channel(up) membrane rect panel1 20 95.7777 35.1066
+surface_mol 1 channel(up) membrane rect panel1 20 45.7797 19.3967
+surface_mol 1 channel(up) membrane rect panel1 20 18.5156 92.478
+surface_mol 1 channel(up) membrane rect panel1 20 39.3432 40.7881
+surface_mol 1 channel(up) membrane rect panel1 20 27.8351 24.1268
+surface_mol 1 channel(up) membrane rect panel1 20 45.0822 95.886
+mol 1 protein_K 15.2275 44.9545 50.5953
+mol 1 protein_K 15.832 44.1024 29.8195
+mol 1 protein_K 11.3383 14.6285 60.6045
+mol 1 protein_K 17.3489 14.6541 90.7096
+mol 1 protein_K 8.16617 43.8011 65.8518
+mol 1 protein_K 11.5226 0.843759 81.0649
+mol 1 protein 13.5125 22.8506 50.4355
+mol 1 protein_K 7.0654 41.2843 64.4011
+mol 1 protein 9.32702 96.5309 94.8498
+mol 1 protein_K 13.9022 73.1787 14.9982
+mol 1 protein_K 6.45395 57.3195 68.6494
+mol 1 protein_K 17.7553 69.1126 76.1506
+mol 1 protein_K 12.9868 45.3292 47.782
+mol 1 protein_K 9.44225 79.7274 78.3819
+mol 1 protein_K 16.9722 61.694 91.8812
+mol 1 protein 14.9521 98.6365 83.3781
+mol 1 protein 11.4127 66.6711 41.3594
+mol 1 protein_K 7.13002 71.4133 43.9519
+mol 1 protein_K 5.07498 76.0406 14.5199
+mol 1 protein_K 7.93332 76.4583 34.5391
+mol 1 protein_K 11.5978 17.3624 9.57996
+mol 1 protein_K 12.1047 19.2549 16.9574
+mol 1 protein_K 18.7306 23.4134 9.03555
+mol 1 protein_K 8.75491 19.0021 68.2985
+mol 1 protein_K 16.3881 72.5452 67.0639
+mol 1 protein_K 19.03 82.3081 52.5485
+mol 1 protein_K 10.1445 96.1334 13.7319
+mol 1 protein 11.0219 21.4185 81.2719
+mol 1 protein_K 2.28225 88.9815 12.6595
+mol 1 protein_K 13.3638 28.9091 75.0527
+mol 1 protein_K 18.2314 74.8106 42.294
+mol 1 protein_K 6.93516 96.3401 87.5089
+mol 1 protein_K 6.75088 10.3572 73.7208
+mol 1 protein_K 6.73839 60.9921 95.0101
+mol 1 protein_K 0.510263 79.9251 0.454967
+mol 1 protein 17.4407 29.2565 14.0079
+mol 1 protein_K 18.1495 97.1703 41.0589
+mol 1 protein_K 8.31207 4.67732 11.6725
+mol 1 protein_K 10.628 25.5617 15.4392
+mol 1 protein_K 6.08027 55.7479 55.6526
+mol 1 protein_K 9.63426 14.7174 55.3283
+mol 1 protein_K 11.895 96.2545 49.7345
+mol 1 protein_K 5.56709 30.438 72.0033
+mol 1 protein_K 7.42191 0.473162 52.4262
+mol 1 protein_K 12.0279 67.5623 20.3806
+mol 1 protein_K 19.0169 88.1848 22.3812
+mol 1 protein 10.6477 79.315 47.2241
+mol 1 protein_K 16.3315 16.8895 61.4801
+mol 1 protein_K 6.11066 9.26448 8.17407
+mol 1 protein_K 16.5092 48.421 12.2051
+mol 1 protein_K 19.7269 52.8232 98.6483
+mol 1 protein_K 17.0888 61.1927 66.4065
+mol 1 protein_K 6.73044 92.1655 25.5572
+mol 1 protein_K 19.6548 89.7818 63.4006
+mol 1 protein_K 12.1492 55.0948 77.9034
+mol 1 protein_K 17.3294 75.5799 71.2001
+mol 1 protein_K 5.43884 52.8725 28.0173
+mol 1 protein 17.1724 78.587 11.6169
+mol 1 protein 7.98276 31.2516 44.8222
+mol 1 protein_K 6.36685 38.5615 3.06121
+mol 1 protein_K 18.8002 72.3605 62.3198
+mol 1 protein_K 4.05239 42.7159 25.9206
+mol 1 protein_K 13.5478 88.3934 28.1978
+mol 1 protein_K 7.2038 71.1226 57.8252
+mol 1 protein_K 3.89996 32.888 48.6404
+mol 1 protein_K 7.48303 36.103 83.3933
+mol 1 protein_K 16.0674 23.5884 50.7251
+mol 1 protein 12.5451 27.3916 71.0934
+mol 1 protein_K 7.43211 57.0849 26.4141
+mol 1 protein_K 14.1855 81.7657 36.1556
+mol 1 protein_K 5.64799 29.0336 67.8857
+mol 1 protein_K 18.4001 49.3061 87.4635
+mol 1 protein_K 16.44 38.8124 20.4592
+mol 1 protein_K 19.3297 67.8594 13.7678
+mol 1 protein_K 13.9026 2.40788 69.1756
+mol 1 protein 2.59007 56.2175 46.7639
+mol 1 protein_K 2.07889 99.6754 43.9782
+mol 1 protein 4.49104 4.24203 95.8252
+mol 1 protein 12.2656 41.6635 38.8489
+mol 1 protein 18.3882 50.1065 39.6672
+mol 1 protein 0.0655104 5.1644 98.0947
+mol 1 protein 4.2942 63.4164 40.0284
+mol 1 protein_K 0.479615 4.40468 29.4421
+mol 1 protein 9.9411 0.0182766 7.17482
+mol 1 protein 13.8031 40.8832 24.3859
+mol 1 protein_K 14.6147 43.1207 29.9853
+mol 1 protein 6.97025 45.2972 10.3906
+mol 1 protein_K 14.3337 31.3043 31.8974
+mol 1 protein 12.532 27.3508 85.2045
+mol 1 protein 12.783 22.7555 51.4245
+mol 1 protein 19.8353 56.3964 54.1293
+mol 1 protein_K 15.5503 71.3562 83.7433
+mol 1 protein 10.2527 82.4761 75.6185
+mol 1 protein_K 1.72096 20.8714 85.0141
+mol 1 protein 6.79145 19.2842 9.17964
+mol 1 protein 9.07712 95.8026 54.4067
+mol 1 protein 19.7737 84.7535 52.0301
+mol 1 protein_K 17.4371 26.6092 21.4328
+mol 1 protein_K 14.7584 19.3501 17.9242
+mol 1 protein_K 15.5155 44.1916 27.8327
+
+end_file

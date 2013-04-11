@@ -1,0 +1,74 @@
+/*
+Smoldyn file submitted to me by Max Hoffman 9/6/11.
+
+This file doesn't actually do anything because there are no molecules
+at time 0.  If I add a single molecule to the initial system, as in the
+commented-out line below, then this fixes the problem and the simulation
+runs.  I haven't figured out why the simulation won't run without any
+molecules.
+
+This might be an OpenGL glut problem.  If I try to debug by adding a line
+to simulatetimestep that simply prints out the time at each time step, then
+that fixes the bug.  Also, if I run in gdb, then the bug either happens or
+doesn't happen depending on what break points I set.
+*/
+
+graphics opengl
+
+dim 3
+species red
+max_mol 15000
+
+difc all 1
+
+color red 1 0 0
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 -50 50 r
+boundaries 1 -50 50 r
+boundaries 2 -50 50 r
+
+start_surface surf1
+action all both reflect
+color both black 0.1
+thickness 2
+polygon front edge
+polygon back edge
+panel sph 0 0 0 15 10 20
+end_surface
+
+start_surface surf2
+action all both reflect
+color both black 0.1
+thickness 2
+polygon front edge
+polygon back edge
+panel disk 0 0 0 40 0 1 0 10
+end_surface
+
+start_compartment test1
+surface surf1
+point 0 0 0
+end_compartment
+
+start_compartment test2
+surface surf2
+point 0 5 0
+end_compartment
+
+start_compartment test3
+compartment equal test1
+compartment and test2
+end_compartment
+
+boxsize 5				# SSA
+#mol 1 red u u u				# SSA
+
+reaction_cmpt test3 slow 0 -> red 0.00045
+
+end_file
+
+

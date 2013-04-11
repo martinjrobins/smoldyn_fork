@@ -1,0 +1,1017 @@
+\chapter{Libmoleculizer interfaces}
+
+Libmoleculizer is a software library: a software component ready to be
+used in building other software programs.  In order for these other
+programs (clients) to use libmoleculizer, it is important that they understand
+the interfaces that libmoleculizer uses.  That is the topic of this
+chapter.  
+
+Currently, libmoleculizer has two interfaces that can be used by other
+programs.  The first, primary interface is written in C++, the primary
+language libmoleculizer is written in.  The second interface is
+written in C, and which largely wraps and exposes functions in the C++
+interface.  
+
+This chapter will discuss both of these.
+
+
+\section{The C++ Interface}
+
+If your program is written in C++, you should use the C++ interface
+(although it is possible to use the C interface as well).  To do this,
+make sure to include the header file
+``libmoleculizer/mzr/moleculizer.hh'' in your program.  
+
+Also please notice that, unless specified otherwise, all classes and
+function described are all contained in namespace mzr.
+
+\subsection{The mzrSpecies class}
+The mzrSpecies class represents a unique type of complex species.
+This class has several main functions.
+
+\subsubsection{std::string mzrSpecies::getTag() const }
+Calling this function causes the tagged name of the mzrSpecies to be
+returned.  The tagged name is a unique name for this species, but
+which is only valid during a single libmoleculizer run.  
+
+\subsubsection{std::string mzrSpecies::getName() const }
+Calling this function returns the unique id of the mzrSpecies.  This
+unique id is unique to the complex completely.  The same complex will
+always generate the same unique id, even between sessions.  However,
+it takes much more time to generate than getting a tagged name.
+
+
+\subsubsection{std::string mzrSpecies::getWeight() const }
+This function returns the mass of the species.  Note this is
+calculated by summing over all the masses of the molecules that make
+up the species, as well as summing over all the modifications on the
+molecules in the species.  Therefore the masses are only valid if
+correct masses were added to the model in the first place.  
+
+\subsubsection{std::string mzrSpecies::expandReactionNetwork() const }
+This function causes the mzrSpecies to be expanded.  If the species
+has been expanded already, this will have no effect.  However, the
+first time this is called on a species, that species is compared
+against all other already-expanded mzrSpecies.  If new reactions can
+be formed while doing this, they are created, along with any new
+species products and everything is added to the running libmoleculizer.
+
+\subsubsection{The mzrReaction class }
+
+The mzrReaction class represents a reaction between mzrSpecies.  This
+includes information about the numbers and identities of reactants,
+the numbers and identities of products, as well as kinetic
+information.  
+
+\subsubsection{bool mzrReaction::hasReactant( const mzrSpecies* )
+  const }
+Pass this function in a pointer to a mzrSpecies and it will return
+whether or not that species is a substrate of the reaction.
+
+\subsubsection{bool mzrReaction::hasProduct( const mzrSpecies* )
+  const}
+Pass this function in a pointer to a mzrSpecies and it will return
+whether or not that species is a substrate of the reaction.
+
+\subsubsection{const multMap\& mzrReaction::getReactants() const}
+This function returns a constant reference to a multMap, which is a
+type defined as std::map$<$mzrSpecies*, int$>$, representing the reactants
+of the reaction.  Each reactant type is in the map as a key; its value
+is the stochiometry of that reactant (1 means one of that species is
+used up in single reaction; 2 means two of that species are used up;
+etc).
+
+\subsubsection{const multMap\& mzrReaction::getProducts() const}
+This function returns a constant reference to a multMap, which is a
+type defined as std::map$<$mzrSpecies*, int$>$, representing the products
+of the reaction..  Each product type is in
+the map as a key; its value is the stochiometry of that reactant (1
+means one of that species is created in single reaction; 2 means two
+of that species are created; etc).  
+
+\subsubsection{double mzrReaction::getRate() const }
+This function returns the rate of the reaction.  Typically, this
+value will be the same kinetic parameter that went into the reaction
+rule that created this reaction.  However, if mass-based reaction rate
+extrapolation is used, the base kinetic rate is multiplied by the
+reduced mass of the reactant species to give a derived rate for the
+equation.  Regardless of which system libmoleculizer is configured to
+use, this function will return the kinetic rate of the reaction.
+
+
+\subsubsection{std::string mzrReaction::getTaggedName() const}
+This function will return a unique name for the reaction, based on
+combining the tagged names of its products and reactants.  As such,
+much the same can be said about this function and the names it
+produces as can be said about the same function for mzrSpecies.  Its
+advantage is that it is quite fast (a constant time operation); the
+downside is that tagged names are only unique over a given moleculizer
+run.  
+
+\subsubsection{std::string mzrReaction::getUniqueName() const}
+This function will return a unique name for the reaction, based on
+combining the unique ids of its products and reactants.  As such,
+much the same can be said about this function and the names it
+produces as can be said about the same function for mzrSpecies.  Its
+advantage is that the names it produces uniquely identify reactions
+between runs of libmoleculizer; the disadvantage is that it is much
+slower than getTaggedName (which operates in a fast constant time) --
+getUniqueName runs at a slow O(n log n) at best.
+
+
+\subsection{moleculizer}
+
+The moleculizer class represents a reaction network that can be
+expanded.  In a very high level view, it is responsible for reading
+and interpreting rule-based models and then managing the expansion of
+that network using those rules.  
+
+\subsubsection{void moleculizer::moleculizer()}
+This is the one and only constructor of a moleculizer object.  
+
+\subsubsection{ void moleculizer::setGenerateDepth(int)}
+This function sets the generation depth that is to be used for species
+and reaction generation.  It can be called at any time.  By setting it
+to 0, no reaction generation is ever performed.  1 is the default and
+means that when a species or reaction is expanded, a single round of
+species and reaction generation is performed.  For numbers greater
+than 1, that many rounds of species/reaction generation will be
+performed.  For instance, when the generation depth is two, when a
+species is expanded, each of the new species produced by that
+expansion are themselves expanded (although only a single time).  
+
+
+\subsubsection{unsigned int moleculizer::getGenerationDepth()}
+This function returns the generation depth.  This usually has the
+value of 1, but can be set to any non-zero value.  This function
+returns the generation depth's current value. 
+
+\subsubsection{void moleculizer::setRateExtrapolation(bool)}
+This function controls whether or not libmoleculizer should use mass-based reaction-rate
+extrapolation when it expands a reaction.  If this is set to false
+(the default value), when a reaction is created based on a reaction
+rule, the reaction rule's kinetic value is passed directly into the
+reaction.  If set to true, then the kinetic value is multiplied by the
+reduced-mass of the reacting species before being passed into the
+reaction.  This function MUST be called prior to loading a model in
+order for it to have an affect.  
+
+\subsubsection{bool moleculizer::getRateExtrapolation() const }
+This function returns a boolean that says whether or not reaction rate
+extrapolation is being used in the current, loaded model.  
+
+
+\subsubsection{void moleculizer::loadCommonRulesFileName(const std::string\&
+aFileName )}
+This function takes a filename of a file containing a rule-based model
+using the standard mzr syntax and loads it.  
+
+
+\subsubsection{void moleculizer::loadCommonRulesString(const std::string\&
+commonRulesAsString)}
+This function takes a string containing the contents of a mzr rules
+file and loads it.  
+
+\subsubsection{void moleculizer::loadXmlFileName( const std::string\& aFileName )}
+The typical rules files used by libmoleculizer are mzr files, written
+in a compact, human readable form.  However, they are compiled
+internally to an xml form.  If, for some reason, you want to work with
+models written in this internal form (for instance, for legacy support
+-- the xml syntax used internally is the old moleculizer rule format),
+you can load a model by passing in the name of the file into this function.
+
+\subsubsection{void moleculizer::loadXmlString( const std::string\& documentAsString
+)}
+This function is basically the same as the previous function, however,
+in this case a string containing the contents of an libmoleculizer
+xml string are passed to the function. 
+
+
+\subsubsection{void moleculizer::addParameterStatement(const std::string\& statement )}
+This function allows the addition of a single parameter statement by
+passing in a string.  
+
+\subsubsection{void moleculizer::addModificationStatement( std::string\& statement)}
+This function allows adding a single modification statement to the
+model.  
+
+
+\subsubsection{void moleculizer::addMolsStatement( std::string\& statement)}
+This function allows adding a mzr-format  molecule definition statement to the
+model.  
+
+\subsubsection{void moleculizer::addAllostericPlexStatement( std::string\& statement)}
+This function adds a single allosteric-plex mzr-format statement to be
+added to the model.
+
+\subsubsection{void moleculizer::addAllostericOmniStatement( std::string\& statement)}
+This function adds a single allosteric-omni statement to the model.
+
+
+\subsubsection{void moleculizer::addDimerizationGenStatement( std::string\& statement)}
+This function adds a single dimerization-gen statement to the model
+
+\subsubsection{void moleculizer::addOmniGenStatement( std::string\& statement)}
+This function adds a single omni-gen reaction rule to the model.
+
+\subsubsection{void moleculizer::addUniMolGenStatement( std::string\& statement)}
+This function adds a single uni-mol-gen reaction rule statement to the model.
+
+\subsubsection{void moleculizer::addSpeciesStreamStatement( std::string\& statement)}
+This function adds a new species stream definition to the model.  
+
+
+\subsection{Functions for looking at the state of libmoleculizer}
+
+\subsubsection{int moleculizer::getNumberOfDefinedModifications() const}
+This function returns the number of modifications that have been
+defined in the current model.
+
+\subsubsection{int moleculizer::getNumberOfDefinedMols() const}
+This function returns the number of small-molecule and
+modifiable-molecules that have been defined in the current model.
+
+\subsubsection{int moleculizer::getNumberOfDefinedRules() const}
+This function returns the number of reaction rules that have been
+loaded into libmoleculizer
+
+\subsubsection{int moleculizer::getNumberOfDimerReactionRules() const}
+This function returns the number of association-reaction rules that
+have been defined in the current model.
+
+\subsubsection{int moleculizer::getNumberOfOmniGenReactionRules() const}
+This function returns the number of omni-gen reaction rules that have
+been defined in the current model.
+
+\subsubsection{int moleculizer::getNumberOfUniMolReactionRules() const}
+This function returns the number of uni-mol-gen reaction rules that
+have been defined in the current model.
+
+\subsubsection{int moleculizer::getNumberOfPlexFamilies() const}
+This function returns the number of distinct plex families (a plex
+family is a collection of species that are composed of the same
+molecules bound in the same way, but ignoring the modification states
+of the same).
+
+\subsection{Functions for expanding species and reactions}
+
+\subsubsection{void moleculizer::generateCompleteNetwork()}
+Calling this function will generate the complete biochemical network
+that can be generated given the species identities already present
+with the loaded model.  Essentially this function keeps scanning the
+list of species, expanding unexpanding species, until nothing is left
+unexpanded.  At this point, nothing new can be generated and the
+function returns.  Note that many models generate infinitely large
+networks; others will simply generate gargantuan sized networks.  In
+either of this cases this function will take a long time to run, if it
+ever, in fact, returns.  Beware of calling this function on these
+sorts of models.
+
+\subsubsection{CachePosition moleculizer::generateCompleteNetwork(long maxNumSpecies, long
+maxNumRxns = -1)}
+
+This function generates a bounded network.  That is,
+it will return enough information to describe a self-contained network
+with no more than maxNumSpecies and, if defined, no more than
+maxNumRxns.  It does this by returning a CachePosition, which is
+defined as a std::pair, where the first value is a SpeciesList
+iterator and the second value is a ReactionList iterator.  
+
+There are two basic way to use this function.  The first, easiest way
+is to use it immediately after loading a model.  Then, the network
+consisting of all species from begin() to the first component of the
+CachePosition (the species list iterator) in the
+getDeltaSpeciesList() and all reactions from begin() to the second
+component of the CachePosition (the reaction list iterator) will be a
+bounded reaction network, that can be simulated in a self-contained
+manner.
+
+The second way to use this function is to record all the current
+species and reactions present, clear the delta cache using
+resetCurrentState(), call the generateCompleteNetwork function, add
+the newly generated species and reactions (the new stuff in the delta
+species and delta reaction caches).  
+
+
+
+
+\subsection{Utility Functions}
+\subsubsection{xmlpp::Document* moleculizer::makeDomOutput(bool verbose)}
+This function causes moleculizer to write out the current state of
+moleculizer to an xml, whose structure is discusses elsewhere in the
+documentation.  This function can be used with the loadXml* functions
+in libmoleculizer to resume state.  By default, species are only
+listed with their tagged names in this output unless verbose is set
+to true, in which case all species are listed with both their tagged
+names.
+
+\subsubsection{xmlpp::Document* moleculizer::makeDomOutput(bool verboseXML, CachePosition
+networkSizeRange )}
+This function causes moleculizer to write out a bounded network to an
+xml file (after running generateCompleteNetwork() ).  However for this
+to work properly, resetCurrentState() must not have been called during
+the program run.  
+
+\subsubsection{void moleculizer::writeOutputFile( const std::string\& fileName, bool verbose =
+false) }
+
+Pass this function the name of a file and it will write the
+current model to disk in a way that allows reloading later by the
+loadXmlFile function.  This data includes not only the rule
+information present in the original model, but also the list of all
+species and reactions that have been generated.  When verbose is true,
+the output will include the names of all the unique ids of the
+species, as opposed to merely the tagged names.
+
+\subsubsection{void moleculizer::writeOutputFile( const std::string\& fileName, bool verbose,
+CachePosition pos)}
+This function is intended to be used with the
+generateCompleteNetwork(int,int) function (the one that generates a
+network whose size is bounded from above by the integer parameters
+into the file.  By passing in a cache position piece of data, this
+function writes out the original model, as well as the state of the
+delta lists, up to the cache position.  
+
+\subsubsection{void moleculizer::getUserNames(std::vector$<$std::string$>$\& refVector) const}
+
+This function takes a reference to a (usually empty) vector of
+strings.  It then inserts into that vector, copies of all the user
+names that have been defined.  
+
+
+\subsubsection{void moleculizer::recordUserNameToSpeciesIDPair( const std::string\& userName,
+const std::string\& speciesID )}
+This function takes a user defined string along with a species ID and
+records this association.  After calling this function, the user-name
+will be associated with that species/speciesID and can be used
+accordingly in all the associated functions.
+
+\subsubsection{bool moleculizer::nameIsUserName( const std::string\&
+  possibleUserName) const }
+
+Pass this function in a name, and it will return true if the name is a
+user-name and false otherwise.  This is equivalent functionality to
+returning whether the string possibleUserName is contained in the
+vector of strings generated by the getUserNames function.
+
+\subsubsection{std::string moleculizer::convertSomeNameToTaggedName(const
+  std::string\& name) const}
+This function will take any kind of species name that libmoleculizer
+is aware of (either a user provided name, a tagged name, or a species
+ID, and will convert it to a tagged name.  This function has been
+useful to some of the client programs of libmoleculizer, which, when
+adding libmoleculizer species into their simulation model, use the
+species ID, if it is less than 256 characters, and use the tagged name
+otherwise.  In these cases, rather than keeping track of where the
+name came from automatically, it was actually easier and faster to use
+this function, which simply returns the tagged name of the species,
+regardless of where the name came from.
+
+\subsubsection{const mzrSpecies* moleculizer::getSpeciesWithSomeName(
+  const std::string\& name) const }
+\subsubsection{mzrSpecies moleculizer::getSpeciesWithSomeName(
+  const std::string\& name) }
+By passing in either a user-name, a species ID, or a a tagged name,
+these functions will return the associated species pointer, in
+const-correct form.  
+
+\subsubsection{mzrSpecies* moleculizer::getSpeciesWithTaggedName( const
+  std::string\& taggedName) }
+\subsubsection{const mzrSpecies* moleculizer::getSpeciesWithTaggedName( const
+  std::string\& taggedName) const }
+These functions take a tagged named as a parameter, and return a
+pointer to the accompanying species, in const-correct form.  If no
+such tagged name has been recorded by the system, these functions will
+throw a fnd::NoSuchSpeciesXcpt. 
+
+
+\subsection{mzrSpecies* moleculizer::getSpeciesWithUniqueID( const
+  std::string\& uniqueID
+  )}
+\subsection{const mzrSpecies* moleculizer::getSpeciesWithUniqueID(
+  const std::string\& uniqueID ) const}
+Both these functions take a unique id as their parameter and return a
+poiinter to the accompanying species, in const-correct form.  If no
+such species exists, this function will attempt to create it and add
+it to simulation, returning the result.  If the species does not
+exist, and then subsequently cannot be created, these functions throw
+a mzr::IllegalNameXcpt exception.
+
+\subsubsection{void moleculizer::getSpeciesStreams( std::vector$<$std::string$>$\&
+  speciesStreamNames) const}
+This function takes a reference to a (typically empty) vector of
+strings.  It then inserts into that vector the names of each of the
+species-streams that have been recorded by libmoleculizer.
+
+\subsubsection{int moleculizer::getNumberOfSpeciesStreams() const}
+This function returns the number of species streams (called species
+classes in the rules) that have been recorded by libmoleculizer.
+
+\subsubsection{int moleculizer::getNumberOfSpeciesInSpeciesStream(const
+  std::string\& streamName) const}
+This function takes the name of a species class and returns the number
+of species that have been generated thus far which are a part of that
+species class.
+
+\subsubsection{void moleculizer::getSpeciesInSpeciesStream(const std::string\&
+  streamName, std::vector$<$const mzr::mzrSpecies*$>$\& speciesVector)
+  const}
+This function takes the name of a species class as its first parameter
+and a reference to a (typically empty) vector of const mzrSpecies
+pointers.  This function then inserts pointers to each of the species
+within that species stream into the vector.
+
+\subsubsection{bool moleculizer::speciesWithTagIsInSpeciesStream(const std::string
+  speciesTag, const std::string\& speciesStream ) const}
+This function takes the tagged name of a species and the name of a
+species class and returns true if the species is a member of the
+species class and false otherwise.  This function is the fastest way
+possible to answer this question.
+
+\subsubsection{bool moleculizer::speciesWithUniqueIDIsInSpeciesStream(const
+  std::string speciesTag, const std::string\& speciesStream ) const }
+This function takes the unique id of a species and the name of a
+species class and returns true if the species is a member of the
+species class and false otherwise.  Although the
+``speciesWithTageIsInSpeciesStream'' function is faster, this function
+is the fastest way possible to answer the question if only the species
+ID is possessed.
+
+\subsubsection{int moleculizer::getMolCountInSpecies(const std::string\& molName,
+  const mzr::mzrSpecies* pSpec) const}
+This function returns the number of molecules present in a particular
+species.  Essentially this function uses dynamic\_cast to convert the
+mzr::mzrSpecies* to a plx::mzrPlexSpecies*, and then inspects the
+structure of the mzrPlexSpecies, and is used largely as a convenience
+to the libmoleculizer library.  
+
+\subsubsection{int moleculizer::getMolCountInTaggedSpecies(const std::string\&
+  molName, const std::string\& taggedName) const}
+This function returns the number of molecules present in a particular
+tagged species, by finding the corresponding mzrSpecies* and calling
+getMolCountInSpecies on the pointer.  This function is largely used as
+a convenience to the c-interface for this library.  
+
+\subsection{Other}
+
+\subsubsection{bool moleculizer::recordSpecies( mzrSpecies*)}
+This function is typically only used internally by libmoleculizer to
+record new species that have been created by expanding species and
+reactions, however is exposed to users.  Pass a new species pointer
+into this function and it will be recorded by libmoleculizer.  This
+function will return true if the species is new, and false if the
+species has already been recorded by libmoleculizer.
+
+
+\subsubsection{bool moleculizer::recordSpecies( mzrSpecies*, std::string\&)}
+This function is typically only used internally by libmoleculizer to
+record new species that have been created by expanding species and
+reactions, however is exposed to users.  Pass a new species pointer
+and a reference to a string into this function.  If the species
+has not been recorded by libmoleculizer this function will record it.
+The species ID of the species will be placed into the reference to the
+string regardless, and the function will return true if the species
+has not been seen by libmoleculizer before, and false otherwise.
+
+\subsubsection{void moleculizer::mustRecordSpecies( mzrSpecies* pSpecies ) throw( utl::xcpt )}
+\subsubsection{void moleculizer::mustRecordSpecies( mzrSpecies*
+  pSpecies, SpeciesTag\& refName ) throw( utl::xcpt )}
+These two functions are essentially the same as the previous two
+functions (void moleculizer::recordSpecies(mzrSpecies*) and void
+moleculizer::recordSpecies(mzrSpecies*, const std::string\&)
+functions.  However, they expect to be successful in their recording.
+Accordingly they throw exceptions if the species has already been
+recorded by libmoleculizer.
+
+\subsubsection{bool moleculizer::recordReaction( mzrReaction* pRxn
+  )}
+The function is typically used internally by libmoleculizer to record
+reactions generated by the expansion of species, however is exposed to
+users just in case.  This function records the reaction pRxn in its
+lists and always returns true.  
+
+\subsubsection{void moleculizer::mustRecordReaction( mzrReaction* pRxn ) throw( utl::xcpt )}
+The function is typically used internally by libmoleculizer to record
+reactions generated by the expansion of species, however is exposed to
+users just in case.  This function records the reaction pRxn in its
+lists and always returns.  (Technically it will throw a
+fnd::DuplicatedCatalogEntryXcpt if the reaction has been recorded
+before, but for the time being, this always succeeds). 
+        
+\subsubsection{mzrSpecies* moleculizer::findSpecies( const
+  std::string\& specTag ) throw( fnd::NoSuchSpeciesXcpt )}
+\subsubsection{const mzrSpecies* moleculizer::findSpecies( const
+  const std::string\& specTag ) const throw( fnd::NoSuchSpeciesXcpt )}
+These two functions are the fundamental functions for locating
+species.  Pass them a string containing the tagged name of a species
+and these functions will return a pointer to that species in
+const-correct form.  If no species with that tag is recorded these
+functions will throw a fnd::NoSuchSpeciesXcpt.
+
+\subsubsection{bool moleculizer::checkSpeciesIsKnown( const
+  std::string\& speciesTag ) const}
+This function will return true if a species with the given species tag
+has been recorded by libmoleculizer and false otherwise.
+
+\subsubsection{bool moleculizer::findReactionWithSubstrates(
+  const mzrSpecies* A, std::vector$<$ReactionTypeCptr$>$\& reactionVector)}
+This function is used to locate all unimolecular reactions involving a
+species A.  To use it, pass in a species pointer to the species in
+question, and a reference to a vector of reaction pointers
+(mzrReaction*).  If the species has not been expanded, it will be.
+Then, all unimolecular reactions involving A as a substrate will be
+inserted into the reaction vector.  The function will return true if
+the vector is non-empty and false otherwise.
+
+\subsubsection{bool moleculizer::findReactionWithSubstrates(
+  const mzrSpecies* A, const mzrSpecies* B,
+  std::vector$<$ReactionTypeCptr$>$\& reactionVector)}
+This function is used to locate all binary reactions in terms of two
+substrates, A and B.  To use it, pass in species pointers involving
+the two substrates into this function along with a reference to a
+vector of reaction pointers (mzrReaction*).  If either species is
+unexpanded, they will be expanded.  Then, all binary reactions
+involving these two species will be inserted into the passed in
+reactionVector.  The function will return true if the vector is
+non-empty and false otherwise.
+
+\subsubsection{const std::list$<$mzrReaction*$>$\& moleculizer::getReactionList()
+  const}
+This function will return a const reference to a list
+(std::list$<$mzr::mzrReaction*$>$) of all the reactions that have been
+recorded thus far by libmoleculizer. 
+
+\subsubsection{SpeciesCatalog\& moleculizer::getSpeciesCatalog()}
+\subsubsection{const SpeciesCatalog\& moleculizer::getSpeciesCatalog()
+  const}
+These functions will return a reference to a SpeciesCatalog (a
+map$<$const std::string*, mzrSpecies*$>$, although the keys in the map are
+compared by the dereferenced value of their strings).  By using these
+functions, the entire list of generated species can be read out at any
+time.  
+
+\subsubsection{unsigned int moleculizer::getTotalNumberSpecies()
+  const}
+This function returns the total number of species that are in the
+network at any given time.
+
+\subsubsection{unsigned int moleculizer::getTotalNumberReactions()
+  const}
+This function returns the total number of reactions that are in the
+network at any given time.
+
+\subsubsection{unsigned int moleculizer::getNumberDeltaSpecies()
+  const}
+This function returns the number of species in the delta species list
+at any given time.
+
+\subsubsection{unsigned int moleculizer::getNumberDeltaReactions()
+  const}
+This function returns the number of reactions in the delta reactions
+list at any given time. 
+
+\subsubsection{const SpeciesList\& moleculizer::getDeltaSpeciesList()
+  const}
+This function returns a constant reference to the delta species list,
+of type std::list$<$mzr::mzrSpecies*$>$.  This is a list of all species
+that have been generated since the last time
+moleculizer::resetCurrentState() has been called, and can be used to
+incrementally generate and read out portions of the network.
+
+\subsubsection{const ReactionList\&
+  moleculizer::getDeltaReactionList() const}
+This function returns a constant reference to the delta reactions list
+(of type std::list$<$mzr::mzrReaction*$>$).  This is a list of all the
+reactions that have been generated since the last time
+moleculizer::resetCurrentState() has been called, and can be used to
+incrementally generate and read out portions of the network.
+
+\subsubsection{void moleculizer::resetCurrentState()}
+This function clears the lists of delta species and delta reactions.
+
+
+\subsubsection{void moleculizer::incrementNetworkBySpeciesTag( const
+  SpeciesTag\& rName ) throw( utl::xcpt )}
+This function expands the species with the provided species tag.  If
+the species has already been expanded, this will do nothing.  However,
+if it has not been expanded, it will likely cause species and
+reactions to be generated, each of which will be placed in the
+complete lists of species/reactions as well as the delta lists of
+species/reactions. 
+
+\subsubsection{std::string moleculizer::convertSpeciesTagToSpeciesID(
+  const SpeciesTag\& rTag ) const throw( utl::xcpt )}
+
+This function will take a species tag and covert it to a species ID.
+It will throw a NoSuchSpeciesXcpt if a species with the species tag
+cannot be found.
+
+
+\subsubsection{std::string moleculizer::convertSpeciesIDToSpeciesTag(
+  const std::string\& rID) const throw( utl::xcpt )}
+
+This function will take a species ID and convert it to a species tag.
+It will throw a NoSuchSpeciesXcpt if a species with the supplied
+species ID cannot be found.
+
+\section{The C Interface}
+
+If your program is written in C, you should use the C interface.  To
+make use of the c-interface, include the file
+``libmoleculizer/mzr/libmzr\_c\_interface.h''.  
+
+
+\subsection{Data Types}
+There are three main data types used by the libmoleculizer
+c-interface, and each of them are discussed in this section.
+
+\subsubsection{moleculizer*}
+The moleculizer*, referred in the interface as a moleculizer handle,
+is the main data type used, although it acts almost completely as a
+black box.  A moleculizer* must be created using the
+createNewMoleculizerObject function and freed using the
+freeMoleculizerObject function.  It is required as the first parameter
+to every function in the interface, but otherwise cannot be interacted
+with in any meaningful way.
+
+\subsubsection{ species }
+This structure represents a moleculizer species.  A species structure
+contains four sub-elements: a char* name  (containing the species'
+tag), a double* mass (this represents the species mass, although is
+meaningful only if the appropriate masses for each of the molecules
+have been set in the rules), a double* radius (this was added for
+Smoldyn -- it estimates the radius based on the species' mass, an
+assumption it is globular, and the average density for protein), and a
+double* diffusion coefficient (this is also Smoldyn based, and simply
+returns 3.0 for molecules with masses greater than 1500 and 100.0 for
+species with masses less than 1500). 
+
+Mostly, the species structure is used to read out its tagged name.
+
+\subsubsection{ reaction }
+This structure represents a moleculizer reaction.  The reaction
+structure consists of a char* name, consisting of an automatically
+generated and unique name for the reaction, an int numberReactants
+and an int numberProducts which describe the number of products and
+reactants that make up that reaction, a species** reactantVector (an
+array of species pointers making up the reactants), a species**
+productVector (an array of species pointers making up the products),
+and a double* rate, which describes the rate of the reaction.  
+
+If mass-based reaction rate extrapolation is used, the basic reaction
+rate multiplied by the reduced mass of the reactant species is used
+here.  If it is not used, the basic kinetic rate supplied to the
+reaction rule that generated this reaction is what is used.  
+
+\subsection{Functions}
+\subsubsection{moleculizer* createNewMoleculizerObject()}
+This function is the first function that must be called to use
+libmoleculizer using c.  Simply call the function and it returns a
+pointer to a newly allocated moleculizer*.  This pointer is then used
+as the first parameter to all other c-interface functions.  The
+pointer is owned by the caller.  Hang onto it and free it using the
+freeMoleculizerObject function, lest memory leaks.
+
+\subsubsection{void freeMoleculizerObject( moleculizer* handle)}
+Simply pass in a pointer to a moleculizer structure, as allocated by
+the createNewMoleculizerObject function, and all its memory will be
+released back to the operating system.  Remember, don't you dare use
+the pointer after passing it to this function, or you'll (best case)
+segfault the program.
+
+\subsubsection{int setRateExtrapolation( moleculizer* handle, int
+  extrapolation)}
+This function should be used prior to loading a set of rules.  As with
+all other functions in this interface, it takes a pointer to a
+moleculizer object allocated using ``createNewMoleculizerObject''.  It
+also takes an integer parameter.  If the parameter is non-zero, rate
+extrapolation is set on the moleculizer* object.  If set to zero,
+rate-extrapolation is turned off.  
+
+\subsubsection{int loadCommonRulesFile(moleculizer* handle, char*
+  fileName)}
+This function takes a moleculizer handle as well as the filename of a
+common-rules ``.mzr'' file.  This function loads and parses that file
+and adds its information into the handle object.  The function returns
+0 on success; non-zero otherwise (1 = Unknown error, 2 means the
+document was unparsable, 3 means the moleculizer handle has already
+had a set of rules loaded into it; 4 means the file could not be found
+). 
+\subsubsection{int loadCommonRulesString( moleculizer* handle, char*
+  file)}
+This function is quite similar to the loadCommonRulesFile function.
+However, instead of passing in a c-string containing the name of a
+file, this function takes in a c-string containing the file contents
+directly and loads it into the handle.  The function returns 0 on
+success; non-zero otherwise (1 = unknown error; 2 = document
+unparsable; 3 = rules have already been loaded into the handle object).
+
+\subsubsection{int loadXMLRulesFile(moleculizer* handle, char*
+  fileName)}
+Typically not used, this function takes a filename containing
+moleculizer rules in xml format and loads them.  (Note that the xml
+format here used to be the old moleculizer format; those old files can
+be loaded in using this function.  Additionally, the new common-rules
+format .mzr files are compiled internally into xml, which can be
+loaded using this fule).  This function returns 0 on success and
+non-zero otherwise( 1 on unknown error, 2 if the document is
+unparsable, 3 if rules have already been loaded into the handle, and 4
+if the file was not found).
+
+\subsubsection{int loadXMLRulesString( moleculizer* handle, char*
+  file)}
+Typically not used (XML input is depreciated in favor of the new
+mzr rules format (mzr files)), this function takes a moleculizer
+handle and a char* containing the contents of an xml rules file and
+loads that information into the handle.  This function returns 0 on
+success, 1 on unknown error, 2 if the document passed in was not
+parsable, and a 3 if rules have already been loaded into the handle.  
+
+\subsubsection{int expandNetwork( moleculizer* handle)}
+This function takes a moleculizer handle and fully expands the
+network, by continually scanning the list of species and reactions,
+and expanding them until nothing is left to expand.  BEWARE: for
+either infinitely large networks, or even for many large but finite
+networks, this function make take a very long time to return if ever,
+so use with some caution (or use the getBoundedNetwork function
+instead).  This function returns 0 on success, 1 for an unknown error,
+and 2 if no model has been loaded.  
+
+\subsubsection{int getBoundedNetwork( moleculizer* handle, long
+  maxNumSpecies, long maxNumReactions, species*** pSpeciesArray, int*
+  pNumSpec, reaction*** pReactionArrry, int* pNumRxns)}
+This function takes a moleculizer handle, a number indicating a
+maximum number of species and a maximum number of reactions (the
+maximum number of reactions may be negative, in which case only the
+maximum number of species is used), as well as addresses of a species
+array, an integer holding the number of species returned, an address
+of a array of reaction pointers, and an address of an integer that
+will hold the number of reactions.  
+
+\subsubsection{int incrementSpecies( moleculizer* handle, char*
+  speciesTag)}
+This function takes a moleculizer handle as well as a species tag and
+expands that species, possibly generating new species and new
+reactions.  The function returns 0 on success, 1 for an unknown error,
+and 2 if the speciesTag is unknown to the moleculizer object.
+
+\subsubsection{int expandSpeciesByTag( moleculizer* handle, char*
+  theTag)}
+This function takes a moleculizer handle as well as a species tag and
+expands that species, possibly generating new species and new
+reactions.  The function returns 0 on success, 1 on failure.
+
+\subsubsection{int expandSpeciesByID( moleculizer* handle, char*
+  theID)}
+This function takes a moleculizer handle as well as a species ID and
+will expand that species.  The function returns 0 on success and 1 on failure.
+
+\subsubsection{int getNumberOfSpecies(moleculizer* handle)}
+This function returns the number of species that have been generated
+in the reaction network contained in the moleculizer handle.  
+
+\subsubsection{int getNumberOfReactions(moleculizer* handle)}
+This function returns the number of reactions that have been generated
+in the reaction network contained in the moleculizer handle. 
+
+\subsubsection{int getDeltaSpecies( moleculizer* handle, species***
+  pSpeciesArray, int* pNum)}
+Pass this function a moleculizer handle, as well as the address of a
+species pointer array and the address of an int.  The function copies
+all the delta species contained in the handle and copies them into the
+array of species pointers and copies the size of that array into the
+pNum.  The species array is then owned by the caller and can be
+iterated over and its information read out.  The species array must be
+freed using the freeSpeciesArray function.  The function returns 0 on
+success and 1 on unknown failure.
+
+\subsubsection{int getDeltaReactions( moleculizer* handle, reaction***
+  pReactionArray, int* pNum)}
+Pass this function a moleculizer handle, as well as the address of a
+reaction pointer array and the address of an int.  The function copies
+all the delta reactions currently contained in the handle into the
+reaction pointer array and puts the number of reactions copies into
+pNum.  The reaction array is owned by the caller and can be iterated
+over so that its information can be read out.  The reaction array must
+be freed using the freeReactionArray function.  The function returns 0
+on success and 1 on unknown failure.
+
+\subsubsection{int clearDeltaState( moleculizer* handle)}
+This function takes a moleculizer handle and clears the delta caches
+(the delta species array and the delta reaction array).  This function
+returns 0 on success and 1 on unknown failure. 
+
+\subsubsection{int getAllSpecies(moleculizer* handle, species***
+  pSpeciesArray, int* numberSpecies)}
+This function takes a moleculizer handle, the address of a species
+pointer array and the address of an int.  It then copies every species
+that has been generated into the species array and copies the number
+of species into numberSpecies.  The resulting array is owned by the
+caller and must be freed using the freeSpeciesArray function.  The
+function returns 0 on success and 1 on unknown error.
+
+\subsubsection{int getAllReactions(moleculizer* handle, reaction***
+  pReactionArray, int* numberReactions)}
+This function takes a moleculizer handle, the address of a reaction
+pointer array and the address of an int.  It then copies every
+reaction that has been generated into the reaction pointer array and
+the number of reactions into numberReactions.  The resulting array is
+owned by the caller and must be freed using the freeReactionArray
+function.  The function returns 0 on success and 1 on unknown error.
+
+\subsubsection{int getNumModificationDefs( moleculizer* handle)}
+This function takes a moleculizer handle and returns the number of
+modifications that have been defined in the rules.  
+
+
+\subsubsection{int getNumMolDefs( moleculizer* handle)}
+This function takes a moleculizer handle and returns the number of
+molecule types that have been defined in the rules. 
+
+\subsubsection{int getNumReactionRules( moleculizer* handle)}
+This function takes a moleculizer handle and returns the number of
+reaction rules (association-reactions and enzymatic-reactions,
+consisting of all dimer-gens, omni-gens, and uni-mol-gens) in the program.
+
+\subsubsection{int getNumDimerDecompReactionRules( moleculizer*
+  handle)}
+This function takes a moleculizer handle and returns the number of
+association reactions (dimer-gens) defined in the rules. 
+
+\subsubsection{int getNumOmniGenReactionRules( moleculizer* handle)}
+This function takes a moleculizer handle and returns the number of
+enzymatic reactions (omni-gens) defined in the rules. 
+
+\subsubsection{int getNumSpeciesStreams( moleculizer* handle)}
+This function takes a moleculizer handle and returns the number of
+species-streams that have been defined in the model.
+
+\subsubsection{int getReactionsBetween(moleculizer* handle, char*
+  speciesID2, char* speciesID2, reaction*** ptrReactionPtrArray,
+  int* numReactions)}
+This function takes a moleculizer handle as well as the unique ids of
+two species (they can be equal, which will find all reactions of the
+form A + A -$>$ ? ).  By also passing in a pointer to an array of
+reaction pointers as well as an address of an int, this function will
+search for all reactions that involve the two species as substrates
+and place all of them into the reaction pointer array, and place their
+number into the numReactions pointer.  The reaction pointer array is
+owned by the caller and must be freed using the freeReaction array
+function.  This function returns 0 on success, 1 on unknown error, and
+2 if one of the species has an illegal name.  
+
+\subsubsection{int getUnaryReactions(moleculizer* handle, char*
+  speciesID, reaction*** ptrReactionPtrArray, int* numReactions)}
+Use this function to find all unary reactions involving a particular
+substrate.  To use it, pass in a moleculizer handle, the species ID of
+the species concerned, and the address of a pointer of reaction
+pointers and the address of an int.  This function finds all unary
+reactions that involve the substrate and copy them into the array of
+reactions, and copy the number of reactions found into the
+numReactions parameter.  The returned array is owned by the caller,
+and must be freed using the freeReactionArray function.  This function
+returns 0 on success, 1 on unknown error, and 2 if the species name
+passed in is illegal.
+
+\subsubsection{int getAllExteriorSpecies(moleculizer* handle,
+  species*** pSpeciesArray, int* numberSpecies)}
+This function takes the standard moleculizer handle, an address of an
+array of species pointers, and an address of an int, and copies in all
+unexpanded species into the species array and their number into the
+numberSpecies parameter.  As always, the memory returned is owned by
+the user and should be freed using the freeSpeciesArray function.  The
+function returns 0 on success and 1 on unknown failure.
+
+\subsubsection{int getMolCountInTaggedSpecies(moleculizer* handle,
+  const char* molName, const char* speciesTag)}
+This function takes the name of a molecule type and a species tag, and
+returns the number of that type of molecule that are found in the
+speciesTag.  The function returns -1 if there is an error of some
+kind.  
+
+\subsubsection{void getAllSpeciesStreams( moleculizer* handle, char***
+  speciesStreamArray, int* numberSpeciesStreams)}
+Use this function to get the names of all the different species
+streams that have been registered in a moleculizer handle.  To use it,
+pass in a moleculizer handle and an address of an array of character
+pointers as well as an address to an int.  This function copies out
+all the names of the species streams into the array and copies their
+number into the numberSpeciesStreams parameter.  As always, this
+memory is owned by the user and should be freed using the
+freeCharPtrArray function.  
+
+
+\subsubsection{int getAllStreamSpecies(moleculizer* handle, char*
+  streamName, species** pSpeciesArray, int* numberSpecies)}
+This function takes a moleculizer handle, the name of a species
+stream, and addresses to a species pointer array and an int.  The
+function takes the tagged names of all the species in that species
+stream and places them into the array, and their number into
+numberSpecies.  The function returns 0 on success, 1 on an unexpected
+error, and 2 if the species stream does not exist.  
+
+\subsubsection{int checkSpeciesTagIsInSpeciesStream( moleculizer*
+  handle, const char* speciesTag, char* speciesStream)}
+This function takes a moleculizer handle, the name of a species
+tag, and the name of a species stream.  It returns 0 if not, 1 if so.
+A -1 means an unknown error, a -2 if the species does not exist, and a
+-3 if the species stream does not exist.  
+
+\subsubsection{int checkSpeciesIDIsInSpeciesStream( moleculizer*
+  handle, const  char* speciesID, char* speciesStream)}
+This function takes a moleculizer handle, the name of a species ID,
+and the name of a species stream.  It returns 0 if not, and 1 if true.
+A -1 is returned if there is an error: either the species ID or the
+species stream does not exist. 
+
+\subsubsection{int convertTaggedNameToUniqueID( moleculizer* handle,
+  char* speciesTag, char* speciesID, unsigned int idSize)}
+Use this function to convert a species tag into a species ID.  Pass in
+a moleculizer handle, a species tag, as well as a character buffer
+that will hold the species ID and an integer parameter that holds the
+size of the buffer.  The function returns 0 on success, a 1 on unknown
+error, a 2 if the species tag cannot be found in the moleculizer
+handle, and a 3 if the character buffer is not large enough to hold
+the resulting species ID.  
+
+\subsubsection{int convertUniqueIDToTaggedName( moleculizer* handle,
+  char* speciesID, char* speciesTag, unsigned int tagSize)}
+Use this function to convert a species ID into a species tag.  Pass in
+a moleculizer handle, a species tag, as well as a character buffer
+that will hold the species tag and an integer parameter that holds the
+size of the buffer (the size of species tags is fixed on any given
+system, but should never be larger than 15 characters).  The function
+returns 0 on success, a 1 on an unknown error, a 2 if the species ID
+is unknown to libmoleculizer, and a 3 if the character buffer is too
+small to hold the resulting species tag.
+
+
+\subsubsection{int convertUserNameToTaggedName(moleculizer* handle,
+  char* theUserName, char* correspondingTag, unsigned int bufferSize)}
+Use this function to convert an explicit, user name to a tagged name.
+As other similar functions, it takes the moleculizer handle and the
+user name as parameters, as well as a character buffer and an integer
+parameter holding the size of the buffer.  The function returns 0 on
+success, 1 on unknown error, 2 if there is no such explicit species
+name registered, and 3 if the buffer isn't large enough to hold the
+resulting tag. 
+
+\subsubsection{int convertUserNameToUniqueID(moleculizer* handle,
+  char* theUserName, char* correspondingSpeciesID, unsigned int
+  bufferSize)}
+This function works identically to the convertUserNameToTaggedName
+function, except that it returns a species ID.  Otherwise everything
+else is the same.  The function returns 0 on success, 1 on unknown
+error, 2 if there is no such user name registered, and 3 if the buffer
+isn't large enough to hold the resulting ID.
+
+\subsubsection{int convertSomeNameToTaggedName( moleculizer* handle,
+  char* theName, char* taggedNameBuffer, unsigned int bufferSize)}
+This function works similarly to other functions, except in this case
+it can take (with associated performance penalty) any name as its
+second parameter.  If the name is found, either as a tagged name, an
+explicit name, or a species ID, it is converted to a tag and that tag
+is copied into the taggedNameBuffer.  If successful, the function
+returns 0.  It also returns 1 on unknown error, 2 if the name cannot
+be found, and 3 if the tagged name was found but is too large to copy
+into the taggedNameBuffer.
+
+\subsubsection{int getExplicitSpeciesList(moleculizer* handle, char***
+  theExplicitSpeciesNames, unsigned int* numSpecies)}
+Use this function to get the list of all registered explicit species.
+Pass it in a moleculizer handle, the address of an array of character
+pointers and the address of an int.  This function will copy over all
+the explicit names into the array and copy their number into
+numSpecies.  The resulting array of strings is owned by the user and
+should be freed using the freeCharPtrArray function.  The function
+returns 0 on success and 1 on an unknown error.  
+
+\subsubsection{void freeReactionArray( reaction** pRxnArray, unsigned
+  int numArrayElements)}
+Pass this function a reaction array and the number of elements in that
+array and everything is freed.  
+
+\subsubsection{void freeSpeciesArray( species** pSpeciesArray,
+  unsigned int numArrayElements)}
+Pass this function a species array and a number of elements in that
+array and everything is freed. 
+
+
+\subsubsection{void freeCharPtrArray( char** pCharArray, unsigned int
+  numCharPtrElements)}
+
+Pass this function an array of strings (the memory should all be owned
+by the user, as is always the case for libmoleculizer functions) and
+the number of elements in that array and all the associated memory is
+freed.  
+
+\subsubsection{void freeReaction( reaction* pRxn )}
+This function frees a single reaction pointer.  It is mostly used
+internally by the freeReactionArray function.
+
+\subsubsection{void freeSpecies( species* pSpecies )}
+This function frees a single species pointer.  It is mostly used
+internally by the freeSpeciesArray function.
+
+
+

@@ -1,0 +1,273 @@
+# omniReceptor.txt
+
+##########################################################################
+## 
+## Simple Scaffold Model
+##
+## Notes: 
+## This model is currently a simple proof-of-concept for how to use 
+## libmoleculizer along with Smoldyn to generate some networks.  
+## 
+##########################################################################
+
+######################
+## Preamble
+## 
+
+## Some graphics parameters
+graphics opengl_good
+graphic_delay 100
+
+dim 3
+max_species 10000
+max_surface 3
+max_compartment 3
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+######################
+## Surfaces
+## 
+
+## This is how you define a boundry that is contained in the rectangle
+## with the two corners (0,0,0) and (100,100,100).
+## It's front of the boundry faces it's interior. 
+
+start_surface boundary
+action both all reflect
+color both 1 1 1
+polygon both edge 
+max_panels rect 6
+panel rect +0 0 0 0 100 100 
+panel rect -0 100 0 0 100 100 
+panel rect -1 0 100 0 100 100 
+panel rect +1 0 0 0 100 100
+panel rect -2 0 0 100 100 100 
+panel rect +2 0 0 0 100 100
+end_surface
+
+
+## This creates a spherical object called the cell with center at
+## (50,50,50), a radius of 30, and its front on its inside.
+
+start_surface cell
+action both all reflect
+color both 1 1 1
+polygon both edge
+max_panels sph 1
+panel sph 50 50 50 -30 20 20  
+end_surface
+
+
+######################
+## Compartments
+## 
+
+## Define a compartment, the cytosol of the cell 
+start_compartment interior
+surface cell
+point 50 50 50                   
+end_compartment 
+
+start_compartment environment
+compartment equalnot interior
+end_compartment 
+
+######################
+## Moleculizer Stuff
+##
+
+start_rules
+=== Modifications =====================
+     name = None, mass = 0.0;
+     name = Phos, mass = 42.0;
+     name = PhosPhos, mass = 84.0;
+     name = GDP, mass = 100.0;
+     name = GTP, mass = 110.0;
+
+=== Molecules ===============================
+   alpha,
+	mass = 100.0;
+
+    # The receptor
+    ReceptorGpa1Complex(to-Ste4 { GDP-bound-shape, GTP-bound-shape},  to-alpha, *GXP-site { GDP, GTP} ), 
+   	mass = 100.0;
+
+    Ste4(to-Gpa1, to-Ste5 { default, obstructed}, to-Ste20 { default, obstructed} ),
+         mass = 100.0;
+
+    Ste20(to-Ste4),
+        mass = 100.0;
+
+    Ste5( to-Ste4, to-Ste11, to-Ste7, to-Fus3),
+         mass = 100.0;
+
+    Ste11( to-Ste5, *PhosSite { None, Phos, PhosPhos }),
+         mass = 100.0;
+
+    Ste7( to-Ste5, *PhosSite { None, Phos, PhosPhos } ),
+         mass = 100.0;
+
+    Fus3( to-Ste5, *PhosSite { None, Phos, PhosPhos } ),
+         mass = 100.0;
+
+=== Explicit-Species ====================
+    ReceptorGpa1Complex(to-Ste4!1).Ste4(to-Gpa1!1), 
+        name = ReceptorBoundGpa;
+
+=== Allostery-Classes =======
+
+    ReceptorGpa1Complex( *GXP-site { GTP }, to-Ste4 { GTP-bound-shape <- * } );
+    ReceptorGpa1Complex( *GXP-site { GDP }, to-Ste4 { GDP-bound-shape <- * } );
+
+    Ste4( to-Gpa1!1, to-Ste5 { obstructed <- * }, to-Ste20 { obstructed <- *} ).ReceptorGpa1Complex( to-Ste4!1);
+
+=== Association-Reactions =====
+    #
+    # alpha/Receptor Binding
+    #
+
+    alpha() + ReceptorGpa1Complex(to-alpha) -> alpha(!1).ReceptorGpa1Complex(to-alpha!1),
+    	   kon = 10000.0,
+	   koff = 1.0;
+
+    ReceptorGpa1Complex( to-Ste4 { GDP-bound-shape } ) + Ste4( to-Gpa1 ) -> ReceptorGpa1Complex( to-Ste4!1 ).Ste4( to-Gpa1!1 ),
+           kon = 100.0,
+           koff = 1.0,
+         ReceptorGpa1Complex( to-Ste4 { GTP-bound-shape } ) + Ste4( to-Gpa1 ) -> ReceptorGpa1Complex( to-Ste4!1 ).Ste4( to-Gpa1!1 ),
+             kon = 1.0,
+             koff = 100.0;
+
+    Ste4( to-Ste5) + Ste5( to-Ste4) -> Ste4( to-Ste5!1).Ste5( to-Ste4!1),
+            kon = 100.0,
+            koff = 1.0,
+        Ste4( to-Ste5 { obstructed} ) + Ste5( to-Ste4) -> Ste4( to-Ste5!1).Ste5( to-Ste4!1),
+             kon = 1.0,
+             koff = 100.0;
+
+    Ste4(to-Ste20) + Ste20( to-Ste4) -> Ste4( to-Ste20!1).Ste20( to-Ste4!1),
+             kon = 100.0,
+             koff = 1.0,
+       Ste4(to-Ste20 {obstructed} ) + Ste20( to-Ste4) -> Ste4( to-Ste20!1).Ste20( to-Ste4!1),
+              kon = 1.0,
+	      koff = 100.0;
+
+    Ste5(to-Ste11) + Ste11(to-Ste5) -> Ste5(to-Ste11!1).Ste11(to-Ste5!1),
+             kon = 100.0,
+             koff = 1.0;
+
+    Ste5(to-Ste7) + Ste7(to-Ste5) -> Ste5(to-Ste7!1).Ste7(to-Ste5!1),
+             kon = 100.0,
+             koff = 1.0;
+
+    Ste5(to-Fus3) + Fus3(to-Ste5) -> Ste5(to-Fus3!1).Fus3(to-Ste5!1),
+             kon = 100.0,
+             koff = 1.0;
+
+=== Transformation-Reactions =============
+
+    alpha(!1).ReceptorGpa1Complex(to-alpha!1, *GXP-site { GDP} ) -> alpha(!1).ReceptorGpa1Complex(to-alpha!1, *GXP-site { GTP} ),
+          k = 10000.0;
+          
+    ReceptorGpa1Complex(*GXP-site { GTP } ) -> ReceptorGpa1Complex( *GXP-site { GDP } ),
+          k = 10.0;
+
+    # The two Ste20->Ste11 Functions
+    Ste5(to-Ste4!1,to-Ste11!3).Ste4(to-Ste5!1,to-Ste20!2).Ste20(to-Ste4!2).Ste11(to-Ste5!3, *PhosSite {None} ) -> Ste5(to-Ste4!1,to-Ste11!3).Ste4(to-Ste5!1,to-Ste20!2).Ste20(to-Ste4!2).Ste11(to-Ste5!3, *PhosSite {Phos} ),
+         k = 100.0;
+
+    Ste5(to-Ste4!1,to-Ste11!3).Ste4(to-Ste5!1,to-Ste20!2).Ste20(to-Ste4!2).Ste11(to-Ste5!3, *PhosSite {Phos} ) -> Ste5(to-Ste4!1,to-Ste11!3).Ste4(to-Ste5!1,to-Ste20!2).Ste20(to-Ste4!2).Ste11(to-Ste5!3, *PhosSite {PhosPhos} ),
+         k = 100.0;
+
+    #####
+    # The four Ste11 -> Ste7 transfer functions.
+    #
+    Ste5(to-Ste11!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {None} ).Ste11(to-Ste5!1, *PhosSite {Phos} )-> Ste5(to-Ste11!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {Phos} ).Ste11(to-Ste5!1, *PhosSite {None} ),
+          k = 100.0;
+
+    Ste5(to-Ste11!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {Phos} ).Ste11(to-Ste5!1, *PhosSite {Phos} )-> Ste5(to-Ste11!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {PhosPhos} ).Ste11(to-Ste5!1, *PhosSite {None} ),
+          k = 100.0;
+
+    Ste5(to-Ste11!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {Phos} ).Ste11(to-Ste5!1, *PhosSite {PhosPhos} )-> Ste5(to-Ste11!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {PhosPhos} ).Ste11(to-Ste5!1, *PhosSite {Phos} ),
+          k = 100.0;
+
+    Ste5(to-Ste11!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {None} ).Ste11(to-Ste5!1, *PhosSite {PhosPhos} )-> Ste5(to-Ste11!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {Phos} ).Ste11(to-Ste5!1, *PhosSite {Phos} ),
+          k = 100.0;
+    #####
+    # The four Ste7 -> Fus3 transfer function
+    #
+    Ste5(to-Fus3!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {Phos} ).Fus3(to-Ste5!1, *PhosSite {None} )-> Ste5(to-Fus3!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {None} ).Fus3(to-Ste5!1, *PhosSite {Phos} ),
+          k = 100.0;
+
+    Ste5(to-Fus3!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {Phos} ).Fus3(to-Ste5!1, *PhosSite {Phos} )-> Ste5(to-Fus3!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {None} ).Fus3(to-Ste5!1, *PhosSite {PhosPhos} ),
+          k = 100.0;
+
+    Ste5(to-Fus3!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {PhosPhos} ).Fus3(to-Ste5!1, *PhosSite {None} )-> Ste5(to-Fus3!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {Phos} ).Fus3(to-Ste5!1, *PhosSite {Phos} ),
+          k = 100.0;
+
+    Ste5(to-Fus3!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {PhosPhos} ).Fus3(to-Ste5!1, *PhosSite {Phos} )-> Ste5(to-Fus3!1, to-Ste7!2).Ste7(to-Ste5!2, *PhosSite {Phos} ).Fus3(to-Ste5!1, *PhosSite {PhosPhos} ),
+          k = 100.0;
+
+
+=== Species-Classes =====================
+    ReceptorGpa1Complex(to-alpha!1).alpha(!1),
+	name = BoundAlpha;
+
+    ReceptorGpa1Complex(to-alpha!1, to-Ste4!2).alpha(!1).Ste4(to-Gpa1!2),
+        name = BoundUnit;
+
+    Fus3(to-Ste5, *PhosSite {PhosPhos}),
+        name = PhosPhosFus3;
+   
+end_rules
+
+
+##################
+## Defining species
+##
+
+max_mol 40000
+species alpha ReceptorGpa1Complex Ste4 Ste5
+
+difc alpha 100
+difc ReceptorGpa1Complex 20
+difc Ste4 10
+difc Ste5 20
+
+display_size alpha 0.2
+display_size ReceptorGpa1Complex .5
+display_size Ste4 .3
+display_size Ste5 .6
+
+color alpha 0 1 0 
+
+
+species_class_color BoundAlpha(all) 0 0 1
+species_class_display_size BoundAlpha(all) 5.0
+
+species_class_color BoundUnit(all) 1 0 0
+species_class_display_size BoundUnit(all) 5.0
+
+######################
+## Create species
+##
+
+mol 7000 alpha 15 15 15
+surface_mol 100 ReceptorGpa1Complex(back) cell all all
+compartment_mol 200 Ste5 interior
+
+time_start 0
+time_stop 5
+time_step 0.01
+
+output_files stdout
+
+cmd b molcountheader stdout
+cmd a molcountheader stdout
+cmd b molcount stdout
+cmd a molcount stdout
+cmd b pause
+
+end_file	

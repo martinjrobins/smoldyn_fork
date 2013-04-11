@@ -1,0 +1,50 @@
+# rates4.txt
+
+/*
+Reaction: A + B <-> AB
+Mod-mols, no binding sites, no modification sites
+Order 2 rate constant should be 1 and is 1.
+This illustrates a symmetry challenge that is handled correctly.
+*/
+
+dim 3
+
+
+start_rules
+#xml_output rates4xml.txt
+
+=== Modifications ===
+
+===== Mols ======================
+  A(Bsite), mass =10;
+  B(Asite), mass =10;
+
+===== Association-Reactions =========
+  A(Bsite) + B(Asite) -> A(Bsite!0).B(Asite!0), kon=1, koff=1;
+
+=== Explicit-Species ===
+  A(Bsite!0).B(Asite!0), name=AB;
+
+end_rules
+
+
+expand_network all
+
+species A B
+difc all 1
+
+reference_difc A
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+mol 100 A u u u
+
+
+end_file
+

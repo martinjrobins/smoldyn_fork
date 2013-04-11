@@ -1,0 +1,2428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<moleculizer-input>
+  <model naming-convention="mangled-name-assembler">
+    <modifications>
+      <modification name="none">
+        <weight-delta daltons="0.0"/>
+      </modification>
+      <modification name="phosphorylated">
+        <weight-delta daltons="42.0"/>
+      </modification>
+      <modification name="doubly-phosphorylated">
+        <weight-delta daltons="84.0"/>
+      </modification>
+      <modification name="triply-phosphorylated">
+        <weight-delta daltons="126.0"/>
+    </modification>
+    </modifications>
+    <mols>
+      <small-mol name="GDP">
+        <user-doc anchor-href="http://en.wikipedia.org/wiki/Guanosine_diphosphate"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  anchor-name="GDP-defined"/>
+        <weight daltons="443.2"/>
+      </small-mol>
+      <small-mol name="GTP">
+        <user-doc anchor-href="http://en.wikipedia.org/wiki/Guanosine_triphosphate"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  anchor-name="GTP-defined"/>
+        <weight daltons="523.18"/>
+      </small-mol>
+      <small-mol name="ADP">
+        <user-doc anchor-href="http://en.wikipedia.org/wiki/Adenosine_diphosphate"/>
+        <weight daltons="427.20"/>
+      </small-mol>
+      <small-mol name="ATP">
+        <user-doc anchor-href="http://en.wikipedia.org/wiki/Adenosine_triphosphate"/>
+        <weight daltons="507.181"/>
+      </small-mol>
+      <mod-mol name="alpha">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Pheromone"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     anchor-name="alpha-factor-defined"/>
+        <weight daltons="13271.1"/>
+        <binding-site name="to-Ste2">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+      </binding-site>
+      </mod-mol>
+      <mod-mol name="Ste2">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        anchor-name="Ste2-defined"/>
+        <weight daltons="47849.8"/>
+        <binding-site name="to-Gpa1">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <binding-site name="to-alpha">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <binding-site name="to-Sst2">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+      </binding-site>
+      </mod-mol>
+      <mod-mol name="Gpa1">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Gpa1"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          anchor-name="Gpa1-defined">
+          Binding
+          between Gpa1 and GDP is said to be stabilized by binding of
+          Gpa1 to Ste4.  Also, there is no binding site for Sst2,
+          which does hydrolysis on Gpa1 only when in the
+          Sst2-Ste2-Gpa1 bridging
+          complex.</user-doc>
+        <weight daltons="54075.9"/>
+        <binding-site name="to-Ste2">
+          <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Pheromone/Receptor/G_protein_interactions#Reaction_Definition_2"
+                                                                                               anchor-name="Gpa1-to-Ste2-binding-site">
+            Affinity
+            between Gpa1 and Ste2 is said to be increased by Gpa1's
+            being bound to Ste4; the Ste4-bound shape brings about
+            this increase in binding
+            affinity.</user-doc>
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+          <site-shape name="Ste4-bound"/>
+        </binding-site>
+        <binding-site name="to-Ste4">
+          <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Pheromone/Receptor/G_protein_interactions#G.CE.B1_.28Gpa1.29_interactions_with_G.CE.B2:G.CE.B3_.28Ste4:Ste18.29"
+                                                                                                                                                                                    anchor-name="Gpa1-to-Ste4-binding-site">
+            The
+            binding site between Gpa1 and Ste4 is affected both by
+            binding of Gpa1 to pheromone-bound receptor and by binding
+            of Gpa1 to GTP/GDP.  These shape changes are assumed to
+            affect only
+            off-rates.</user-doc>
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+          <site-shape name="Ste2-GTP-bound"/>
+          <site-shape name="Ste2-GDP-bound"/>
+          <site-shape name="GTP-bound"/>
+          <site-shape name="GDP-bound"/>
+        </binding-site>
+        <binding-site name="to-GXP">
+          <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange"
+                                                                                                                                                                                                                                                                                       anchor-name="Gpa1-to-GXP-binding-site">
+            Changes
+            in the shape of the nucleotide (GTP/GDP) binding site
+            because Gpa1's being bound to active receptor is how
+            nucleotide exchange is achieved in this model.  When Gpa1
+            is bound to Ste4, its binding to GDP is also said to be
+            enhanced.</user-doc>
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+          <site-shape name="active-receptor-bound"/>
+          <site-shape name="Ste4-bound"/>
+      </binding-site>
+      </mod-mol>
+      <mod-mol name="Sst2">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Sst2"
+                                                                                                                                                                                                                                anchor-name="Sst2-defined">
+          Sst2
+          is said to interact with Gpa1 only in complex with Ste2 in
+          the Wiki, and no direct binding is described between Sst2
+          and Gpa1.  Here, we also are assuming that Fus3 will
+          phosphorylate Sst2, activating its effect in assisting
+          Gpa1-GTP hydrolysis and bringing about a speculative,
+          phosphorylation-based negative feedback.  The wiki does not
+          support this activation
+          model.</user-doc>
+        <weight daltons="100.0"/>
+        <binding-site name="to-MAPK">
+          <user-doc>
+            Binding
+            site assumes the obstructed shape when Sst2 is bound to
+            Ste2.</user-doc>
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+          <site-shape name="obstructed"/>
+        </binding-site>
+        <binding-site name="to-Ste2">
+          <user-doc>
+            Binding
+            site assumes the obstructed shape when Sst2 is bound to
+            MAPK.</user-doc>
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+          <site-shape name="obstructed"/>
+        </binding-site>
+        <mod-site name="site-phosphorylated-by-Fus3">
+          <default-mod-ref name="none"/>
+      </mod-site>
+      </mod-mol>
+      <mod-mol name="Ste4">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste4:Ste18"
+                                                                                                                                                                                                                                                                        anchor-name="Ste4-defined"/>
+        <weight daltons="46581.2"/>
+        <binding-site name="to-Gpa1">
+          <user-doc>
+            Binding
+            site assumes the obstructed shape when Ste4 binds Ste5, or
+            when Ste4 binds Ste20, blocking or inhibiting binding to
+            Gpa1.</user-doc>
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+          <site-shape name="obstructed"/>
+        </binding-site>
+        <binding-site name="to-Ste5">
+          <user-doc>
+            Binding
+            site assumes the obstructed shape when Ste4 is bound to
+            Gpa1, inhibiting or preventing binding to Ste5.  This site
+            is unaffected by binding of Ste4 to
+            Ste20.</user-doc>
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+          <site-shape name="obstructed"/>
+        </binding-site>
+        <binding-site name="to-Ste20">
+          <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste4:Ste18/Ste20_interaction">
+            Binding
+            site assumes the obstructed shape when Ste4 is bound to
+            Gpa1, preventing or inhibiting binding to Ste20.  This
+            site is unaffected by Ste4 binding to
+            Ste5.</user-doc>
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+          <site-shape name="obstructed"/>
+      </binding-site>
+      </mod-mol>
+      <mod-mol name="Ste20">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste20"
+                                                                                                                                                                                   anchor-name="Ste20-defined"/>
+        <weight daltons="102362"/>
+        <binding-site name="to-Ste4">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <binding-site name="to-AXP">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+      </binding-site>
+      </mod-mol>
+      <mod-mol name="Ste5">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste5"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        anchor-name="Ste5-defined"/>
+        <weight daltons="102728"/>
+        <binding-site name="to-Ste4">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <binding-site name="to-Ste11">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <binding-site name="to-Ste7">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <binding-site name="to-Fus3">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+      </binding-site>
+      </mod-mol>
+      <mod-mol name="Ste11">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste11"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     anchor-name="Ste11-defined">
+          Ste11
+          binding to Fus3, and in particular, competitive binding
+          between Ste5 and Fus3 to Ste11, is not included in this
+          model.</user-doc>
+        <weight daltons="80721.5"/>
+        <binding-site name="to-Ste5">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <binding-site name="to-AXP">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <mod-site name="Ste20-phosphorylation-site">
+          <user-doc>
+            This
+            site recieves all the phosphorylations from Ste20, and can
+            be doubly- or triply-phosphorylated.  This essentially
+            follows the wiki's
+            approach.</user-doc>
+          <default-mod-ref name="none"/>
+        </mod-site>
+        <mod-site name="Fus3-phosphorylation-site">
+          <default-mod-ref name="none"/>
+      </mod-site>
+      </mod-mol>
+      <mod-mol name="Ste7">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste7"
+                                                                                                                                                                                                      anchor-name="Ste7-defined">
+          Here,
+          I have simplified the way in which binding between Ste7 and
+          Fus3 is mutually exclusive with binding between Ste7 and
+          Ste5:  Just using the same binding site on Ste7 for both
+          bindings.  This is not the same as it's done in the
+          wiki.</user-doc>
+        <weight daltons="57709.4"/>
+        <binding-site name="target-site">
+          <user-doc>
+            Binding
+            between Ste7 and Fus3 is competitive with Ste7 binding to
+            Ste5 and with Fus3 binding to Ste5.  To simplify this
+            model, I am arranging this mutual exclusivity of binding
+            by using the same binding site on Ste7 to bind Ste5 or
+            either MAPK,  Fus3 or Kss1.  This way, mutual exclusion
+            works the same way on both the Fus3/Kss1 side and the Ste7
+            side.</user-doc>
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <binding-site name="to-AXP">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <mod-site name="site-phosphorylated-by-eleven">
+          <default-mod-ref name="none"/>
+        </mod-site>
+        <mod-site name="site-phosphorylated-by-three">
+          <default-mod-ref name="none"/>
+      </mod-site>
+      </mod-mol>
+      <mod-mol name="Fus3">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Fus3"
+                                                                                                                                                                                                                                                                                                                                                                                                                                            anchor-name="Fus3-defined">
+          Binding
+          of Fus3 to Ste7 prevents binding of Ste7 to Ste5 and
+          prevents binding of Fus3 to Ste5.  On the Fus3 side,
+          according to the wiki, Ste7 and Ste5 have to literally share
+          a single binding site, called just 'target-site' in the wiki
+          model.</user-doc>
+        <weight daltons="40772.3"/>
+        <binding-site name="target-site">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+          <site-shape name="activated"/>
+        </binding-site>
+        <binding-site name="to-AXP">
+          <default-shape-ref name="default"/>
+          <site-shape name="default"/>
+        </binding-site>
+        <mod-site name="phosphorylation-site-1">
+          <default-mod-ref name="none"/>
+        </mod-site>
+        <mod-site name="phosphorylation-site-2">
+          <default-mod-ref name="none"/>
+        </mod-site>
+        <allosteric-state>
+          <mod-map>
+            <mod-site-ref name="phosphorylation-site-1">
+              <mod-ref name="phosphorylated"/>
+            </mod-site-ref>
+            <mod-site-ref name="phosphorylation-site-2">
+              <mod-ref name="phosphorylated"/>
+          </mod-site-ref>
+          </mod-map>
+          <site-shape-map>
+            <binding-site-ref name="target-site">
+              <site-shape-ref name="activated"/>
+    </binding-site-ref>
+    </site-shape-map>
+    </allosteric-state>
+    </mod-mol>
+    </mols>
+    <allosteric-plexes/>
+    <allosteric-omnis>
+      <allosteric-omni>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Pheromone/Receptor/G_protein_interactions#Reaction_Definition_3"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          anchor-name="Ste5-obstructs-Ste4-Gpa1-binding">
+          Competitive
+          binding to Ste4 by Gpa1 and Ste5.  Here, binding of Ste4 to
+          Ste5 makes binding of Ste4 to Gpa1
+          impossible.</user-doc>
+        <plex>
+          <mol-instance name="the-Ste4">
+            <mol-ref name="Ste4"/>
+          </mol-instance>
+          <mol-instance name="the-Ste5">
+            <mol-ref name="Ste5"/>
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-Ste4">
+              <binding-site-ref name="to-Ste5"/>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-Ste5">
+              <binding-site-ref name="to-Ste4"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        <allosteric-sites>
+          <mol-instance-ref name="the-Ste4">
+            <binding-site-ref name="to-Gpa1">
+              <site-shape-ref name="obstructed"/>
+      </binding-site-ref>
+      </mol-instance-ref>
+      </allosteric-sites>
+      </allosteric-omni>
+      <allosteric-omni>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste4:Ste18/Ste20_interaction">
+          Competitive
+          binding to Ste4 by Gpa1 and Ste20.  Here, Ste20 binding to
+          Ste4 obstructs binding of Gpa1 to
+          Ste4.</user-doc>
+        <plex>
+          <mol-instance name="the-Ste4">
+            <mol-ref name="Ste4"/>
+          </mol-instance>
+          <mol-instance name="the-Ste20">
+            <mol-ref name="Ste20"/>
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-Ste4">
+              <binding-site-ref name="to-Ste20"/>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-Ste20">
+              <binding-site-ref name="to-Ste4"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        <allosteric-sites>
+          <mol-instance-ref name="the-Ste4">
+            <binding-site-ref name="to-Gpa1">
+              <site-shape-ref name="obstructed"/>
+      </binding-site-ref>
+      </mol-instance-ref>
+      </allosteric-sites>
+      </allosteric-omni>
+      <allosteric-omni>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste4:Ste18/Ste20_interaction">
+          Competitive
+          binding to Ste4 by Gpa1.  Here, Gpa1 binding to Ste4
+          obstructs binding of Ste4 to both Ste5 and Ste20.  Also,
+          Gpa1 binding to Ste2 is tightened when Gpa1 is bound to
+          Ste4.</user-doc>
+        <plex>
+          <mol-instance name="the-Gpa1">
+            <mol-ref name="Gpa1"/>
+          </mol-instance>
+          <mol-instance name="the-Ste4">
+            <mol-ref name="Ste4"/>
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-Gpa1">
+              <binding-site-ref name="to-Ste4"/>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-Ste4">
+              <binding-site-ref name="to-Gpa1"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        <allosteric-sites>
+          <mol-instance-ref name="the-Ste4">
+            <binding-site-ref name="to-Ste5">
+              <site-shape-ref name="obstructed"/>
+          </binding-site-ref>
+          </mol-instance-ref>
+          <mol-instance-ref name="the-Ste4">
+            <binding-site-ref name="to-Ste20">
+              <site-shape-ref name="obstructed"/>
+          </binding-site-ref>
+          </mol-instance-ref>
+          <mol-instance-ref name="the-Gpa1">
+            <binding-site-ref name="to-Ste2">
+              <site-shape-ref name="Ste4-bound"/>
+      </binding-site-ref>
+      </mol-instance-ref>
+      </allosteric-sites>
+      </allosteric-omni>
+      <allosteric-omni>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     anchor-name="Gpa1-dissociation-allostery-Ste2-GDP">
+          Gpa1
+          dissociation from Ste4.  This allosteric omni models the
+          change of shape in Gpa1 that happens when Gpa1 is bound to
+          GDP, in the case that Gpa1 IS bound to
+          Ste2.</user-doc>
+        <plex>
+          <mol-instance name="the-Ste2">
+            <mol-ref name="Ste2"/>
+          </mol-instance>
+          <mol-instance name="the-Gpa1">
+            <mol-ref name="Gpa1"/>
+          </mol-instance>
+          <mol-instance name="the-GDP">
+            <mol-ref name="GDP"/>
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-Ste2">
+              <binding-site-ref name="to-Gpa1"/>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-Gpa1">
+              <binding-site-ref name="to-Ste2"/>
+          </mol-instance-ref>
+          </binding>
+          <binding>
+            <mol-instance-ref name="the-Gpa1">
+              <binding-site-ref name="to-GXP"/>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-GDP">
+              <binding-site-ref name="GDP"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        <allosteric-sites>
+          <mol-instance-ref name="the-Gpa1">
+            <binding-site-ref name="to-Ste4">
+              <site-shape-ref name="Ste2-GDP-bound"/>
+      </binding-site-ref>
+      </mol-instance-ref>
+      </allosteric-sites>
+      </allosteric-omni>
+      <allosteric-omni>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            anchor-name="Gpa1-dissociation-allostery-Ste2-GTP">
+          Gpa1
+          dissociation from Ste4.  This allosteric omni models the
+          change of shape in Gpa1 that happens when Gpa1 is bound to
+          GTP, causing it to lose affinity for Ste4, in the case that
+          Gpa1 IS bound to
+          Ste2.</user-doc>
+        <plex>
+          <mol-instance name="the-Ste2">
+            <mol-ref name="Ste2"/>
+          </mol-instance>
+          <mol-instance name="the-Gpa1">
+            <mol-ref name="Gpa1"/>
+          </mol-instance>
+          <mol-instance name="the-GTP">
+            <mol-ref name="GTP"/>
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-Ste2">
+              <binding-site-ref name="to-Gpa1"/>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-Gpa1">
+              <binding-site-ref name="to-Ste2"/>
+          </mol-instance-ref>
+          </binding>
+          <binding>
+            <mol-instance-ref name="the-Gpa1">
+              <binding-site-ref name="to-GXP"/>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-GTP">
+              <binding-site-ref name="GTP"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        <allosteric-sites>
+          <mol-instance-ref name="the-Gpa1">
+            <binding-site-ref name="to-Ste4">
+              <site-shape-ref name="Ste2-GTP-bound"/>
+      </binding-site-ref>
+      </mol-instance-ref>
+      </allosteric-sites>
+      </allosteric-omni>
+      <allosteric-omni>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            anchor-name="Gpa1-dissociation-allostery-noSte2-GTP">
+          Gpa1
+          dissociation from Ste4.  This allosteric omni models the
+          change of shape in Gpa1 that happens when Gpa1 is bound to
+          GTP, causing it to lose affinity for Ste4, in the case that
+          Gpa1 is not bound to
+          Ste2.</user-doc>
+        <plex>
+          <mol-instance name="the-Gpa1">
+            <mol-ref name="Gpa1"/>
+          </mol-instance>
+          <mol-instance name="the-GTP">
+            <mol-ref name="GTP"/>
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-Gpa1">
+              <binding-site-ref name="to-GXP"/>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-GTP">
+              <binding-site-ref name="GTP"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        <unbound-sites>
+          <instance-ref name="the-Gpa1">
+            <site-ref name="to-Ste2"/>
+        </instance-ref>
+        </unbound-sites>
+        <allosteric-sites>
+          <mol-instance-ref name="the-Gpa1">
+            <binding-site-ref name="to-Ste4">
+              <site-shape-ref name="GTP-bound"/>
+      </binding-site-ref>
+      </mol-instance-ref>
+      </allosteric-sites>
+      </allosteric-omni>
+      <allosteric-omni>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         anchor-name="Gpa1-dissociation-allostery-noSte2-GDP">
+          Gpa1
+          dissociation from Ste4.  This allosteric omni models the
+          change of shape in Gpa1 that happens when Gpa1 is bound to
+          GDP, in the case that Gpa1 is not bound to
+          Ste2.</user-doc>
+        <plex>
+          <mol-instance name="the-Gpa1">
+            <mol-ref name="Gpa1"/>
+          </mol-instance>
+          <mol-instance name="the-GDP">
+            <mol-ref name="GDP"/>
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-Gpa1">
+              <binding-site-ref name="to-GXP"/>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-GDP">
+              <binding-site-ref name="GDP"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        <unbound-sites>
+          <instance-ref name="the-Gpa1">
+            <site-ref name="to-Ste2"/>
+        </instance-ref>
+        </unbound-sites>
+        <allosteric-sites>
+          <mol-instance-ref name="the-Gpa1">
+            <binding-site-ref name="to-Ste4">
+              <site-shape-ref name="GDP-bound"/>
+    </binding-site-ref>
+    </mol-instance-ref>
+    </allosteric-sites>
+    </allosteric-omni>
+    </allosteric-omnis>
+    <reaction-gens>
+      <dimerization-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Pheromone/Receptor/G_protein_interactions#Reaction_Definition"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            anchor-name="alpha-Ste2-binding">
+          alpha
+          binding to
+          Ste2.</user-doc>
+        <mol-ref name="alpha">
+          <site-ref name="to-Ste2"/>
+        </mol-ref>
+        <mol-ref name="Ste2">
+          <site-ref name="to-alpha"/>
+        </mol-ref>
+        <default-on-rate value="2.65e5"/>
+        <default-off-rate value="1.3e-3"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/RGS(Sst2)/Gα(Gpa1)/Receptor(Ste2)_interactions"
+                                                                                                                                                                                                                                                                anchor-name="Ste2-Sst2-binding">
+          Ste2-Sst2
+          binding. This model does not include Yck1 or Yck2, or is
+          this binding inhibited by Ste2 phosphorylated by Yck1 or
+          Yck2.</user-doc>
+        <mol-ref name="Ste2">
+          <site-ref name="to-Sst2"/>
+        </mol-ref>
+        <mol-ref name="Sst2">
+          <site-ref name="to-Ste2"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1.0"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Pheromone/Receptor/G_protein_interactions#Reaction_Definition_2"
+                                                                                                                                                                                                                                                          anchor-name="Gpa1-Ste2-binding">
+          Gpa1
+          binding to Ste2.  Being complexed with Ste4 causes Gpa1 to
+          bind more tightly to Ste2; here, this is achieved by
+          reducing the off-rate.  These rates do not seem to be in the
+          Wiki.</user-doc>
+        <mol-ref name="Gpa1">
+          <site-ref name="to-Ste2"/>
+        </mol-ref>
+        <mol-ref name="Ste2">
+          <site-ref name="to-Gpa1"/>
+        </mol-ref>
+        <default-on-rate value="2.0e7"/>
+        <default-off-rate value="2.0e1"/>
+        <allo-rates>
+          <site-shape-ref name="Ste4-bound"/>
+          <site-shape-ref name="default"/>
+          <on-rate value="2.0e7"/>
+          <off-rate value="2.0"/>
+      </allo-rates>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Gpa1
+          binding to GDP.  Note that this is 10 fold tighter than
+          binding to
+          GTP.</user-doc>
+        <mol-ref name="Gpa1">
+          <site-ref name="to-GXP"/>
+        </mol-ref>
+        <mol-ref name="GDP">
+          <site-ref name="GDP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e7"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Gpa1
+          binding to GTP.  Note that this is 10 fold looser than
+          binding to
+          GDP.</user-doc>
+        <mol-ref name="Gpa1">
+          <site-ref name="to-GXP"/>
+        </mol-ref>
+        <mol-ref name="GTP">
+          <site-ref name="GTP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange#Nucleotide_Exchange"
+                                                                                                                                                                                                                                             anchor-name="Gpa1-noSte4-nucleotide-exchange">
+          Gpa1
+          (no Ste4) nucleotide
+          exchange </user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Gpa1">
+              <mol-ref name="Gpa1"/>
+            </mol-instance>
+            <mol-instance name="the-GDP">
+              <mol-ref name="GDP"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-GXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-GDP">
+                <binding-site-ref name="GDP"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <unbound-sites>
+            <instance-ref name="the-Gpa1">
+              <site-ref name="to-Ste4"/>
+        </instance-ref>
+        </unbound-sites>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-GDP"/>
+            <small-mol-ref name="GTP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges/>
+        <rate value="6.17e-4"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange#Nucleotide_Exchange"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             anchor-name="alpha-Ste2-Gpa1-noSte4-nucleotide-exchange">
+          alpha-Ste2-Gpa1
+          (no Ste4) nucleotide
+          exchange </user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-alpha">
+              <mol-ref name="alpha"/>
+            </mol-instance>
+            <mol-instance name="the-Ste2">
+              <mol-ref name="Ste2"/>
+            </mol-instance>
+            <mol-instance name="the-Gpa1">
+              <mol-ref name="Gpa1"/>
+            </mol-instance>
+            <mol-instance name="the-GDP">
+              <mol-ref name="GDP"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-alpha">
+                <binding-site-ref name="to-Ste2"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste2">
+                <binding-site-ref name="to-alpha"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste2">
+                <binding-site-ref name="to-Gpa1"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-Ste2"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-GXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-GDP">
+                <binding-site-ref name="GDP"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <unbound-sites>
+            <instance-ref name="the-Gpa1">
+              <site-ref name="to-Ste4"/>
+        </instance-ref>
+        </unbound-sites>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-GDP"/>
+            <small-mol-ref name="GTP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges/>
+        <rate value="1.5e3"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange#Nucleotide_Exchange"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       anchor-name="Gpa1-Ste4-nucleotide-exchange">
+          Gpa1-Ste4
+          nucleotide
+          exchange </user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Gpa1">
+              <mol-ref name="Gpa1"/>
+            </mol-instance>
+            <mol-instance name="the-GDP">
+              <mol-ref name="GDP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste4">
+              <mol-ref name="Ste4"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-GXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-GDP">
+                <binding-site-ref name="GDP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-Ste4"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste4">
+                <binding-site-ref name="to-Gpa1"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-GDP"/>
+            <small-mol-ref name="GTP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges/>
+        <rate value="6.17e-7"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange#Nucleotide_Exchange"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           anchor-name="alpha-Ste2-Gpa1-Ste4-nucleotide-exchange">
+          alpha-Ste2-Gpa1-Ste4
+          nucleotide
+          exchange </user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-alpha">
+              <mol-ref name="alpha"/>
+            </mol-instance>
+            <mol-instance name="the-Ste2">
+              <mol-ref name="Ste2"/>
+            </mol-instance>
+            <mol-instance name="the-Gpa1">
+              <mol-ref name="Gpa1"/>
+            </mol-instance>
+            <mol-instance name="the-GDP">
+              <mol-ref name="GDP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste4">
+              <mol-ref name="Ste4"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-alpha">
+                <binding-site-ref name="to-Ste2"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste2">
+                <binding-site-ref name="to-alpha"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste2">
+                <binding-site-ref name="to-Gpa1"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-Ste2"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-GXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-GDP">
+                <binding-site-ref name="GDP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-Ste4"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste4">
+                <binding-site-ref name="to-Gpa1"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-GDP"/>
+            <small-mol-ref name="GTP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges/>
+        <rate value="1.5"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/G_protein_nucleotide_hydrolysis/exchange#Reaction_Definition_2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   anchor-name="Gpa1-hydrolysis">
+          Gpa1
+          auto-hydrolysis reaction.  This reaction should be assisted
+          by another involving
+          Sst2.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Gpa1">
+              <mol-ref name="Gpa1"/>
+            </mol-instance>
+            <mol-instance name="the-GTP">
+              <mol-ref name="GTP"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-GXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-GTP">
+                <binding-site-ref name="GTP"/>
+        </mol-instance-ref>
+        </binding>
+        </plex>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-GTP"/>
+            <small-mol-ref name="GDP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges/>
+        <additional-product-species name="phosphate"/>
+        <rate value="5.0e-3"/>
+      </omni-gen>
+      <dimerization-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Pheromone/Receptor/G_protein_interactions#Reaction_Definition_3"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        anchor-name="Gpa1-Ste4-binding">
+          Gpa1
+          binding to Ste4.  Modified by whether Gpa1 is bound to GTP
+          or GDP and by whether Gpa1 is bound to the alpha receptor
+          Ste2 or not. Binding between Ste4 and Gpa1 is also
+          competitive with binding between Ste4 and
+          Ste5.</user-doc>
+        <mol-ref name="Gpa1">
+          <site-ref name="to-Ste4"/>
+        </mol-ref>
+        <mol-ref name="Ste4">
+          <site-ref name="to-Gpa1"/>
+        </mol-ref>
+        <default-on-rate value="5.0e7"/>
+        <default-off-rate value="0.5"/>
+        <allo-rates>
+          <site-shape-ref name="GTP-bound"/>
+          <site-shape-ref name="default"/>
+          <on-rate value="5.0e7"/>
+          <off-rate value="5000"/>
+        </allo-rates>
+        <allo-rates>
+          <site-shape-ref name="Ste2-GTP-bound"/>
+          <site-shape-ref name="default"/>
+          <on-rate value="5.0e7"/>
+          <off-rate value="500"/>
+        </allo-rates>
+        <allo-rates>
+          <site-shape-ref name="Ste2-GDP-bound"/>
+          <site-shape-ref name="default"/>
+          <on-rate value="5.0e7"/>
+          <off-rate value="0.05"/>
+        </allo-rates>
+        <allo-rates>
+          <site-shape-ref name="GTP-bound"/>
+          <site-shape-ref name="obstructed"/>
+          <on-rate value="1.0"/>
+          <off-rate value="1.0e10"/>
+        </allo-rates>
+        <allo-rates>
+          <site-shape-ref name="Ste2-GDP-bound"/>
+          <site-shape-ref name="obstructed"/>
+          <on-rate value="1.0"/>
+          <off-rate value="1.0e10"/>
+        </allo-rates>
+        <allo-rates>
+          <site-shape-ref name="Ste2-GTP-bound"/>
+          <site-shape-ref name="obstructed"/>
+          <on-rate value="1.0"/>
+          <off-rate value="1.0e10"/>
+        </allo-rates>
+        <allo-rates>
+          <site-shape-ref name="default"/>
+          <site-shape-ref name="obstructed"/>
+          <on-rate value="1.0"/>
+          <off-rate value="1.0e10"/>
+      </allo-rates>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste4:Ste18/Ste5_interactions_and_Ste5_dimerization/oligomerization#Reaction_Definition_2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    anchor-name="Ste4-Ste5-binding">
+          Ste4
+          binding to
+          Ste5.</user-doc>
+        <mol-ref name="Ste4">
+          <site-ref name="to-Ste5"/>
+        </mol-ref>
+        <mol-ref name="Ste5">
+          <site-ref name="to-Ste4"/>
+        </mol-ref>
+        <default-on-rate value="5.0e6"/>
+        <default-off-rate value="2.0"/>
+        <allo-rates>
+          <site-shape-ref name="obstructed"/>
+          <site-shape-ref name="default"/>
+          <on-rate value="1.0"/>
+          <off-rate value="1.0e10"/>
+      </allo-rates>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste4:Ste18/Ste20_interaction">
+          Ste20
+          binding to Ste4.  Using typical on- and off-rates, as none
+          are in the wiki at this point.  The allo-rates here are
+          supposed to mean 'Ste2 will not bind to Ste4 when Ste4 is
+          bound to
+          Gpa1.'</user-doc>
+        <mol-ref name="Ste20">
+          <site-ref name="to-Ste4"/>
+        </mol-ref>
+        <mol-ref name="Ste4">
+          <site-ref name="to-Ste20"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1.0"/>
+        <allo-rates>
+          <site-shape-ref name="default"/>
+          <site-shape-ref name="obstructed"/>
+          <on-rate value="1.0"/>
+          <off-rate value="1.0e5"/>
+      </allo-rates>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Ste20
+          binding to
+          ADP</user-doc>
+        <mol-ref name="Ste20">
+          <site-ref name="to-AXP"/>
+        </mol-ref>
+        <mol-ref name="ADP">
+          <site-ref name="ADP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Ste20
+          binding to
+          ATP</user-doc>
+        <mol-ref name="Ste20">
+          <site-ref name="to-AXP"/>
+        </mol-ref>
+        <mol-ref name="ATP">
+          <site-ref name="ATP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/MAPK_phosphorylation_cascade#Reaction_Definition"
+                                                                                                                                                                                                                                             anchor-name="Ste20-phosphorylates-Ste11">
+          Ste20
+          phosphorylation of Ste11.  This reaction goes from no
+          phosphorylation to single
+          phosphorylation.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Ste20">
+              <mol-ref name="Ste20"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste4">
+              <mol-ref name="Ste4"/>
+            </mol-instance>
+            <mol-instance name="the-Ste5">
+              <mol-ref name="Ste5"/>
+            </mol-instance>
+            <mol-instance name="the-Ste11">
+              <mol-ref name="Ste11"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Ste20">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste20">
+                <binding-site-ref name="to-Ste4"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste4">
+                <binding-site-ref name="to-Ste20"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste4">
+                <binding-site-ref name="to-Ste5"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste4"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste11"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste11">
+                <binding-site-ref name="to-Ste5"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Ste11">
+              <mod-map>
+                <mod-site-ref name="Ste20-phosphorylation-site">
+                  <mod-ref name="none"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Ste11">
+              <mod-site-ref name="Ste20-phosphorylation-site"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="5.0"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/MAPK_phosphorylation_cascade#Reaction_Definition"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        anchor-name="Ste20-phosphorylates-Ste11">
+          Ste20
+          phosphorylation of Ste11.  This reaction goes from single
+          phosphorylation to double
+          phosphorylation.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Ste20">
+              <mol-ref name="Ste20"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste4">
+              <mol-ref name="Ste4"/>
+            </mol-instance>
+            <mol-instance name="the-Ste5">
+              <mol-ref name="Ste5"/>
+            </mol-instance>
+            <mol-instance name="the-Ste11">
+              <mol-ref name="Ste11"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Ste20">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste20">
+                <binding-site-ref name="to-Ste4"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste4">
+                <binding-site-ref name="to-Ste20"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste4">
+                <binding-site-ref name="to-Ste5"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste4"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste11"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste11">
+                <binding-site-ref name="to-Ste5"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Ste11">
+              <mod-map>
+                <mod-site-ref name="Ste20-phosphorylation-site">
+                  <mod-ref name="phosphorylated"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Ste11">
+              <mod-site-ref name="Ste20-phosphorylation-site"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="doubly-phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="5.0"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/MAPK_phosphorylation_cascade#Reaction_Definition"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         anchor-name="Ste20-phosphorylates-Ste11">
+          Ste20
+          phosphorylation of Ste11.  This reaction goes from double
+          phosphorylation to triple
+          phosphorylation.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Ste20">
+              <mol-ref name="Ste20"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste4">
+              <mol-ref name="Ste4"/>
+            </mol-instance>
+            <mol-instance name="the-Ste5">
+              <mol-ref name="Ste5"/>
+            </mol-instance>
+            <mol-instance name="the-Ste11">
+              <mol-ref name="Ste11"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Ste20">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste20">
+                <binding-site-ref name="to-Ste4"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste4">
+                <binding-site-ref name="to-Ste20"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste4">
+                <binding-site-ref name="to-Ste5"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste4"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste11"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste11">
+                <binding-site-ref name="to-Ste5"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Ste11">
+              <mod-map>
+                <mod-site-ref name="Ste20-phosphorylation-site">
+                  <mod-ref name="doubly-phosphorylated"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Ste11">
+              <mod-site-ref name="Ste20-phosphorylation-site"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="triply-phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="5.0"/>
+      </omni-gen>
+      <uni-mol-gen>
+        <user-doc>
+          Dephosphorylation
+          of singly-phosphorylated
+          Ste11.</user-doc>
+        <enabling-mol name="Ste11"/>
+        <enabling-modifications>
+          <mod-site-ref name="Ste20-phosphorylation-site">
+            <mod-ref name="phosphorylated"/>
+        </mod-site-ref>
+        </enabling-modifications>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-site-ref name="Ste20-phosphorylation-site"/>
+            <installed-mod-ref name="none"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <additional-reactant-species name="phosphatase-X"/>
+        <additional-product-species name="phosphatase-X"/>
+        <rate value="1.0"/>
+      </uni-mol-gen>
+      <uni-mol-gen>
+        <user-doc>
+          Dephosphorylation
+          of doubly-phosphorylated
+          Ste11.</user-doc>
+        <enabling-mol name="Ste11"/>
+        <enabling-modifications>
+          <mod-site-ref name="Ste20-phosphorylation-site">
+            <mod-ref name="doubly-phosphorylated"/>
+        </mod-site-ref>
+        </enabling-modifications>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-site-ref name="Ste20-phosphorylation-site"/>
+            <installed-mod-ref name="phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <additional-reactant-species name="phosphatase-X"/>
+        <additional-product-species name="phosphatase-X"/>
+        <rate value="1.0"/>
+      </uni-mol-gen>
+      <uni-mol-gen>
+        <user-doc>
+          Dephosphorylation
+          of triply-phosphorylated
+          Ste11.</user-doc>
+        <enabling-mol name="Ste11"/>
+        <enabling-modifications>
+          <mod-site-ref name="Ste20-phosphorylation-site">
+            <mod-ref name="triply-phosphorylated"/>
+        </mod-site-ref>
+        </enabling-modifications>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-site-ref name="Ste20-phosphorylation-site"/>
+            <installed-mod-ref name="doubly-phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <additional-reactant-species name="phosphatase-X"/>
+        <additional-product-species name="phosphatase-X"/>
+        <rate value="1.0"/>
+      </uni-mol-gen>
+      <dimerization-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste5/MAPK_cascade_interactions#Reaction_Definition_2">
+          Ste11
+          binding to Ste5.  Binding of Ste11 to Fus3, along with its
+          effect on Ste11 binding to Ste5, is not in this model.
+          Using typical rates here; none in the
+          wiki.</user-doc>
+        <mol-ref name="Ste11">
+          <site-ref name="to-Ste5"/>
+        </mol-ref>
+        <mol-ref name="Ste5">
+          <site-ref name="to-Ste11"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="0.1"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Ste11
+          binding to
+          ADP.</user-doc>
+        <mol-ref name="Ste11">
+          <site-ref name="to-AXP"/>
+        </mol-ref>
+        <mol-ref name="ADP">
+          <site-ref name="ADP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Ste11
+          binding to
+          ATP.</user-doc>
+        <mol-ref name="Ste11">
+          <site-ref name="to-AXP"/>
+        </mol-ref>
+        <mol-ref name="ATP">
+          <site-ref name="ATP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/MAPK_phosphorylation_cascade#Reaction_Definition_2">
+          Ste11
+          phosphorylation of Ste7; Ste11 singly phosphorylated.  Here,
+          since we do not model Ste5 dimerization or oligomerization,
+          we require that Ste11 phosphorylates Ste7 only in cis on the
+          same Ste5.  The wiki gives no argument that this is not the
+          case in fact.  It suggests that in cis and in trans are not
+          compatible, but it apparently does not give a reason to
+          prefer either.  Also note that, in this model, Ste7 gets
+          only one phosphorylation from Ste11, instead of two as in
+          the wiki model.  The wiki model does not seem to include
+          inhibitory back-phosphorylation of Ste7 by
+          Fus3.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Ste11">
+              <mol-ref name="Ste11"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste5">
+              <mol-ref name="Ste5"/>
+            </mol-instance>
+            <mol-instance name="the-Ste7">
+              <mol-ref name="Ste7"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Ste11">
+                <binding-site-ref name="to-Ste5"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste11"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste11">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste7"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste7">
+                <binding-site-ref name="target-site"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Ste11">
+              <mod-map>
+                <mod-site-ref name="Ste20-phosphorylation-site">
+                  <mod-ref name="phosphorylated"/>
+            </mod-site-ref>
+            </mod-map>
+            </mod-mol-instance-ref>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-map>
+                <mod-site-ref name="site-phosphorylated-by-eleven">
+                  <mod-ref name="none"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-site-ref name="site-phosphorylated-by-eleven"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="5.0"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/MAPK_phosphorylation_cascade#Reaction_Definition_2">
+          Ste11
+          phosphorylation of Ste7; Ste11 doubly phosphorylated.  Here,
+          since we do not model Ste5 dimerization or oligomerization,
+          we require that Ste11 phosphorylates Ste7 only in cis on the
+          same Ste5.  The wiki gives no argument that this is not the
+          case in fact.  It suggests that in cis and in trans are not
+          compatible, but it apparently does not give a reason to
+          prefer either.  Also note that, in this model, Ste7 gets
+          only one phosphorylation from Ste11, instead of two as in
+          the wiki model.  The wiki model does not seem to include
+          inhibitory back-phosphorylation of Ste7 by
+          Fus3.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Ste11">
+              <mol-ref name="Ste11"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste5">
+              <mol-ref name="Ste5"/>
+            </mol-instance>
+            <mol-instance name="the-Ste7">
+              <mol-ref name="Ste7"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Ste11">
+                <binding-site-ref name="to-Ste5"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste11"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste11">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste7"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste7">
+                <binding-site-ref name="target-site"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Ste11">
+              <mod-map>
+                <mod-site-ref name="Ste20-phosphorylation-site">
+                  <mod-ref name="doubly-phosphorylated"/>
+            </mod-site-ref>
+            </mod-map>
+            </mod-mol-instance-ref>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-map>
+                <mod-site-ref name="site-phosphorylated-by-eleven">
+                  <mod-ref name="none"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-site-ref name="site-phosphorylated-by-eleven"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="10.0"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/MAPK_phosphorylation_cascade#Reaction_Definition_2">
+          Ste11
+          phosphorylation of Ste7; Ste11 triply phosphorylated.  Here,
+          since we do not model Ste5 dimerization or oligomerization,
+          we require that Ste11 phosphorylates Ste7 only in cis on the
+          same Ste5.  The wiki gives no argument that this is not the
+          case in fact.  It suggests that in cis and in trans are not
+          compatible, but it apparently does not give a reason to
+          prefer either.  Also note that, in this model, Ste7 gets
+          only one phosphorylation from Ste11, instead of two as in
+          the wiki model.  The wiki model does not seem to include
+          inhibitory back-phosphorylation of Ste7 by
+          Fus3.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Ste11">
+              <mol-ref name="Ste11"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste5">
+              <mol-ref name="Ste5"/>
+            </mol-instance>
+            <mol-instance name="the-Ste7">
+              <mol-ref name="Ste7"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Ste11">
+                <binding-site-ref name="to-Ste5"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste11"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste11">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste7"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste7">
+                <binding-site-ref name="target-site"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Ste11">
+              <mod-map>
+                <mod-site-ref name="Ste20-phosphorylation-site">
+                  <mod-ref name="doubly-phosphorylated"/>
+            </mod-site-ref>
+            </mod-map>
+            </mod-mol-instance-ref>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-map>
+                <mod-site-ref name="site-phosphorylated-by-eleven">
+                  <mod-ref name="none"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-site-ref name="site-phosphorylated-by-eleven"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="15.0"/>
+      </omni-gen>
+      <uni-mol-gen>
+        <user-doc>
+          Dephosphorylation
+          of Ste7 activating site.  That is, the site phophorylated by
+          Ste11.  For now, this model differs from the wiki model in
+          not going on to a second phosphorylation of
+          Ste7.</user-doc>
+        <enabling-mol name="Ste7"/>
+        <enabling-modifications>
+          <mod-site-ref name="site-phosphorylated-by-eleven">
+            <mod-ref name="phosphorylated"/>
+        </mod-site-ref>
+        </enabling-modifications>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-site-ref name="site-phosphorylated-by-eleven"/>
+            <installed-mod-ref name="none"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <additional-reactant-species name="phosphatase-X"/>
+        <additional-product-species name="phosphatase-X"/>
+        <rate value="1.0"/>
+      </uni-mol-gen>
+      <dimerization-gen>
+        <user-doc>
+          Ste7
+          binding to Ste5.  In this simplification, Ste7 binds to Ste5
+          at the same binding site as Ste7 binds to MAPK, either Fus3
+          or
+          Kss1.  </user-doc>
+        <mol-ref name="Ste7">
+          <site-ref name="target-site"/>
+        </mol-ref>
+        <mol-ref name="Ste5">
+          <site-ref name="to-Ste7"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1.0"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Ste7
+          binding to
+          ADP.</user-doc>
+        <mol-ref name="Ste7">
+          <site-ref name="to-AXP"/>
+        </mol-ref>
+        <mol-ref name="ADP">
+          <site-ref name="ADP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Ste7
+          binding to
+          ATP.</user-doc>
+        <mol-ref name="Ste7">
+          <site-ref name="to-AXP"/>
+        </mol-ref>
+        <mol-ref name="ATP">
+          <site-ref name="ATP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Ste7
+          binding to Fus3.  In this model, Ste7 and Fus3 bind to each
+          other with the same sites that they bind to Ste5.  In the
+          wiki model, this is only the case for Fus3, while Ste7 has
+          separate binding sites for Fus3 and
+          Ste5.</user-doc>
+        <mol-ref name="Ste7">
+          <site-ref name="target-site"/>
+        </mol-ref>
+        <mol-ref name="Fus3">
+          <site-ref name="target-site"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1.0"/>
+      </dimerization-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/MAPK_phosphorylation_cascade#Fus3_phosphorylation_by_Ste7">
+          Ste7
+          phosphorylation of Fus3; first site on Fus3. As a
+          simplification in this model, Ste7 needs only one
+phosphorylation by Ste11 to be activated.  There is also the
+          unresolved back-phosphorylation issue.  Ste7 phosphorylates
+          the two sites on Fus3 independently.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Ste7">
+              <mol-ref name="Ste7"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste5">
+              <mol-ref name="Ste5"/>
+            </mol-instance>
+            <mol-instance name="the-Fus3">
+              <mol-ref name="Fus3"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Ste7">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste7">
+                <binding-site-ref name="target-site"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste7"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Fus3"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Fus3">
+                <binding-site-ref name="target-site"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-map>
+                <mod-site-ref name="site-phosphorylated-by-eleven">
+                  <mod-ref name="phosphorylated"/>
+                </mod-site-ref>
+                <mod-site-ref name="site-phosphorylated-by-three">
+                  <mod-ref name="none"/>
+            </mod-site-ref>
+            </mod-map>
+            </mod-mol-instance-ref>
+            <mod-mol-instance-ref name="the-Fus3">
+              <mod-map>
+                <mod-site-ref name="phosphorylation-site-1">
+                  <mod-ref name="none"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Fus3">
+              <mod-site-ref name="phosphorylation-site-1"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="10.0"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/MAPK_phosphorylation_cascade#Fus3_phosphorylation_by_Ste7">
+          Ste7 phosphorylation of Fus3; second site on Fus3. As a
+          simplification in this model, Ste7 needs only one
+          phosphorylation by Ste11 to be activated.  There is also the
+          unresolved back-phosphorylation issue.  Ste7 phosphorylates
+          the two sites on Fus3 independently.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Ste7">
+              <mol-ref name="Ste7"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <mol-instance name="the-Ste5">
+              <mol-ref name="Ste5"/>
+            </mol-instance>
+            <mol-instance name="the-Fus3">
+              <mol-ref name="Fus3"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Ste7">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste7">
+                <binding-site-ref name="target-site"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste7"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Fus3"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Fus3">
+                <binding-site-ref name="target-site"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-map>
+                <mod-site-ref name="site-phosphorylated-by-eleven">
+                  <mod-ref name="phosphorylated"/>
+                </mod-site-ref>
+                <mod-site-ref name="site-phosphorylated-by-three">
+                  <mod-ref name="none"/>
+            </mod-site-ref>
+            </mod-map>
+            </mod-mol-instance-ref>
+            <mod-mol-instance-ref name="the-Fus3">
+              <mod-map>
+                <mod-site-ref name="phosphorylation-site-2">
+                  <mod-ref name="none"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Fus3">
+              <mod-site-ref name="phosphorylation-site-2"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="10.0"/>
+      </omni-gen>
+      <uni-mol-gen>
+        <user-doc>
+          Dephosphorylation of Fus3 phosphorylation-site-1.</user-doc>
+        <enabling-mol name="Fus3"/>
+        <enabling-modifications>
+          <mod-site-ref name="phosphorylation-site-1">
+            <mod-ref name="phosphorylated"/>
+        </mod-site-ref>
+        </enabling-modifications>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-site-ref name="phosphorylation-site-1"/>
+            <installed-mod-ref name="none"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <additional-reactant-species name="phosphatase-X"/>
+        <additional-product-species name="phosphatase-X"/>
+        <rate value="1.0"/>
+      </uni-mol-gen>
+      <uni-mol-gen>
+        <user-doc>
+          Dephosphorylation of Fus3 phosphorylation-site-2.</user-doc>
+        <enabling-mol name="Fus3"/>
+        <enabling-modifications>
+          <mod-site-ref name="phosphorylation-site-2">
+            <mod-ref name="phosphorylated"/>
+        </mod-site-ref>
+        </enabling-modifications>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-site-ref name="phosphorylation-site-2"/>
+            <installed-mod-ref name="none"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <additional-reactant-species name="phosphatase-X"/>
+        <additional-product-species name="phosphatase-X"/>
+        <rate value="1.0"/>
+      </uni-mol-gen>
+      <dimerization-gen>
+        <user-doc>
+          Fus3 binding to Ste5</user-doc>
+        <mol-ref name="Fus3">
+          <site-ref name="target-site"/>
+        </mol-ref>
+        <mol-ref name="Ste5">
+          <site-ref name="to-Fus3"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1.0"/>
+        <allo-rates>
+          <site-shape-ref name="activated"/>
+          <site-shape-ref name="default"/>
+          <on-rate value="1.0"/>
+          <off-rate value="1.0e5"/>
+      </allo-rates>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Fus3 binding to ADP.</user-doc>
+        <mol-ref name="Fus3">
+          <site-ref name="to-AXP"/>
+        </mol-ref>
+        <mol-ref name="ADP">
+          <site-ref name="ADP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Fus3 binding to ATP.</user-doc>
+        <mol-ref name="Fus3">
+          <site-ref name="to-AXP"/>
+        </mol-ref>
+        <mol-ref name="ATP">
+          <site-ref name="ATP"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1e-10"/>
+      </dimerization-gen>
+      <dimerization-gen>
+        <user-doc>
+          Fus3 binding to Sst2.  Here, I am using the same site on
+          Fus3 that binds to Ste7 and to Ste5.  This means that Sst2
+          binding is competing with the other two.  This might not be
+          a good idea in that it will tend to either slow down Fus3
+          activation (if Sst2 binds well to Fus3) or fail to get Sst2
+          activated (if Sst2 and Fus3 bind poorly).</user-doc>
+        <mol-ref name="Fus3">
+          <site-ref name="target-site"/>
+        </mol-ref>
+        <mol-ref name="Sst2">
+          <site-ref name="to-MAPK"/>
+        </mol-ref>
+        <default-on-rate value="1.0e6"/>
+        <default-off-rate value="1.0"/>
+      </dimerization-gen>
+      <omni-gen>
+        <user-doc>
+          Fus3 back-phosphorylation of Ste7.  This is intended as a
+          speculative, phosphorylation-based negative feedback.  This
+          idea has been floating around tMSI, but it is not in the
+          Wiki model, except for the observation that Fus3
+          phosphorylates Ste7 in vitro at various siges.  Here, only
+          fully activated Fus3 can back-phosphorylate Ste7, and only
+          when they are both bound to Ste5.  An alternative might be
+          to allow Fus3 to back-phosphorylate Ste7 when they are bound
+          together off the scaffold, possibly at a different
+          rate.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Ste7">
+              <mol-ref name="Ste7"/>
+            </mol-instance>
+            <mol-instance name="the-Ste5">
+              <mol-ref name="Ste5"/>
+            </mol-instance>
+            <mol-instance name="the-Fus3">
+              <mol-ref name="Fus3"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Ste7">
+                <binding-site-ref name="target-site"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Ste7"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste5">
+                <binding-site-ref name="to-Fus3"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Fus3">
+                <binding-site-ref name="target-site"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Fus3">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-map>
+                <mod-site-ref name="site-phosphorylated-by-three">
+                  <mod-ref name="none"/>
+            </mod-site-ref>
+            </mod-map>
+            </mod-mol-instance-ref>
+            <mod-mol-instance-ref name="the-Fus3">
+              <mod-map>
+                <mod-site-ref name="phosphorylation-site-1">
+                  <mod-ref name="phosphorylated"/>
+                </mod-site-ref>
+                <mod-site-ref name="phosphorylation-site-2">
+                  <mod-ref name="phosphorylated"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Ste7">
+              <mod-site-ref name="site-phosphorylated-by-three"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="10"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc>
+          Fus3 phosphorylation of Sst2.  This is intended to be part
+          of a speculative, phosphorylation-based negative feedback.
+          The wiki model doesn't seem to include this feedback.  This
+          phosphorylation requires the substrate Sst2 to be bound to
+          Fus3 at the same site where Ste5 and Ste7 bind, which may
+          cause trouble.  It may be necessary to put another binding
+          site on Fus3 for Sst2 binding.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Sst2">
+              <mol-ref name="Sst2"/>
+            </mol-instance>
+            <mol-instance name="the-Fus3">
+              <mol-ref name="Fus3"/>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Sst2">
+                <binding-site-ref name="to-MAPK"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Fus3">
+                <binding-site-ref name="target-site"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Fus3">
+                <binding-site-ref name="to-AXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Sst2">
+              <mod-map>
+                <mod-site-ref name="site-phosphorylated-by-Fus3">
+                  <mod-ref name="none"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP"/>
+            <small-mol-ref name="ADP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Sst2">
+              <mod-site-ref name="site-phosphorylated-by-Fus3"/>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="phosphorylated"/>
+        </modification-exchange>
+        </modification-exchanges>
+        <rate value="10"/>
+      </omni-gen>
+      <omni-gen>
+        <user-doc>
+          Sst2-assisted Gpa1 hydrolysis.  This is part of a
+          speculative, phosphorylation-based negative feedback in that
+          this assistance of the hydrolysis reaction requires Sst2 to
+          have been phosphorylated by (activated) Fus3.</user-doc>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Sst2">
+              <mol-ref name="Sst2"/>
+            </mol-instance>
+            <mol-instance name="the-Ste2">
+              <mol-ref name="Ste2"/>
+            </mol-instance>
+            <mol-instance name="the-Gpa1">
+              <mol-ref name="Gpa1"/>
+            </mol-instance>
+            <mol-instance name="the-GTP">
+              <mol-ref name="GTP"/>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Sst2">
+                <binding-site-ref name="to-Ste2"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Ste2">
+                <binding-site-ref name="to-Sst2"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Ste2">
+                <binding-site-ref name="to-Gpa1"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-Ste2"/>
+            </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Gpa1">
+                <binding-site-ref name="to-GXP"/>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-GTP">
+                <binding-site-ref name="GTP"/>
+          </mol-instance-ref>
+          </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-Sst2">
+              <mod-map>
+                <mod-site-ref name="site-phosphorylated-by-Fus3">
+                  <mod-ref name="phosphorylated"/>
+        </mod-site-ref>
+        </mod-map>
+        </mod-mol-instance-ref>
+        </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-GTP"/>
+            <small-mol-ref name="GDP"/>
+        </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges/>
+        <additional-product-species name="phosphate"/>
+        <rate value="10.0"/>
+    </omni-gen>
+    </reaction-gens>
+    <explicit-species>
+      <plex-species name="ATP-singleton">
+        <user-doc>
+          This population is unsupported.  Intended to be
+          plenty.</user-doc>
+        <plex>
+          <mol-instance name="the-ATP">
+            <mol-ref name="ATP"/>
+        </mol-instance>
+        </plex>
+        <population count="10000000"/>
+      </plex-species>
+      <plex-species name="GTP-singleton">
+        <user-doc>
+          This population is unsupported.  Intended to be
+          plenty.</user-doc>
+        <plex>
+          <mol-instance name="the-GTP">
+            <mol-ref name="GTP"/>
+        </mol-instance>
+        </plex>
+        <population count="8000000"/>
+      </plex-species>
+      <plex-species name="ADP-singleton">
+        <user-doc>
+          This population is unsupported.  Intended to be
+          plenty.</user-doc>
+        <plex>
+          <mol-instance name="the-ADP">
+            <mol-ref name="ADP"/>
+        </mol-instance>
+        </plex>
+        <population count="6000000"/>
+      </plex-species>
+      <plex-species name="GDP-singleton">
+        <user-doc>
+          This population is unsupported.  Intended to be
+          plenty.</user-doc>
+        <plex>
+          <mol-instance name="the-GDP">
+            <mol-ref name="GDP"/>
+        </mol-instance>
+        </plex>
+        <population count="4000000"/>
+      </plex-species>
+      <stoch-species name="phosphate">
+        <user-doc anchor-href="http://en.wikipedia.org/wiki/Inorganic_phosphate"
+                  anchor-name="phosphate-defined">
+          This population is unsupported.  Intended to be
+          plenty.</user-doc>
+        <weight daltons="94.97"/>
+        <population count="10000000"/>
+      </stoch-species>
+      <stoch-species name="phosphatase-X">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Non-specific_dephosphorylation">
+          This species is intended to carry out non-specific
+          dephosphorylation.</user-doc>
+        <weight daltons="1000.0"/>
+        <population count="5000"/>
+      </stoch-species>
+      <plex-species name="alpha-singleton">
+        <plex>
+          <mol-instance name="theAlpha">
+            <mol-ref name="alpha"/>
+        </mol-instance>
+        </plex>
+        <instance-states/>
+        <population count="0"/>
+      </plex-species>
+      <plex-species name="Ste2-singleton">
+        <plex>
+          <mol-instance name="the-Ste2">
+            <mol-ref name="Ste2"/>
+        </mol-instance>
+        </plex>
+        <instance-states/>
+        <population count="7100"/>
+      </plex-species>
+      <plex-species name="Gpa1-singleton">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Gpa1_num"
+        anchor-name="Gpa1-initial-pop">
+          This 9000 is from the wiki, differing from my early number
+          from Kirsten. In my earlier models, I've always started with
+          Gpa1 loaded up with GDP; here, starting with all singleton
+          molecules, to go along with what is being said in the
+          Wiki.</user-doc>
+        <plex>
+          <mol-instance name="the-Gpa1">
+            <mol-ref name="Gpa1"/>
+        </mol-instance>
+        </plex>
+        <population count="9000"/>
+      </plex-species>
+      <plex-species name="Ste4-singleton">
+        <user-doc anchor-href="http://yeastpheromonemodel.org/wiki/Ste4_num"
+                  anchor-name="Ste4-initial-pop">
+          This 9000 is from the Wiki, differing from my early number
+          from Kirsten.</user-doc>
+        <plex>
+          <mol-instance name="the-Ste4">
+            <mol-ref name="Ste4"/>
+        </mol-instance>
+        </plex>
+        <population count="9000"/>
+      </plex-species>
+      <plex-species name="Ste20-singleton">
+        <plex>
+          <mol-instance name="the-Ste20">
+            <mol-ref name="Ste20"/>
+        </mol-instance>
+        </plex>
+        <instance-states/>
+        <population count="4212"/>
+      </plex-species>
+      <plex-species name="Ste5-singleton">
+        <plex>
+          <mol-instance name="the-Ste5">
+            <mol-ref name="Ste5"/>
+        </mol-instance>
+        </plex>
+        <population count="1900"/>
+      </plex-species>
+      <plex-species name="Ste11-singleton">
+        <plex>
+          <mol-instance name="the-Ste11">
+            <mol-ref name="Ste11"/>
+        </mol-instance>
+        </plex>
+        <population count="3524"/>
+      </plex-species>
+      <plex-species name="Ste7-singleton">
+        <plex>
+          <mol-instance name="the-Ste7">
+            <mol-ref name="Ste7"/>
+        </mol-instance>
+        </plex>
+        <population count="924"/>
+      </plex-species>
+      <plex-species name="Fus3-singleton">
+        <plex>
+          <mol-instance name="the-Fus3">
+            <mol-ref name="Fus3"/>
+        </mol-instance>
+        </plex>
+        <population count="20413"/>
+      </plex-species>
+      <plex-species name="Sst2-singleton">
+        <user-doc>
+          This number is unsupported.  Nothing in wiki.</user-doc>
+        <plex>
+          <mol-instance name="the-Sst2">
+            <mol-ref name="Sst2"/>
+        </mol-instance>
+        </plex>
+        <instance-states/>
+        <population count="500"/>
+    </plex-species>
+    </explicit-species>
+    <explicit-reactions>
+      <reaction>
+        <substrate-species-ref multiplicity="1" name="ADP-singleton"/>
+        <substrate-species-ref multiplicity="1" name="phosphate"/>
+        <product-species-ref multiplicity="1" name="ATP-singleton"/>
+        <rate value="1.0e6"/>
+      </reaction>
+      <reaction>
+        <substrate-species-ref multiplicity="1" name="GDP-singleton"/>
+        <substrate-species-ref multiplicity="1" name="phosphate"/>
+        <product-species-ref multiplicity="1" name="GTP-singleton"/>
+        <rate value="1.0e6"/>
+    </reaction>
+    </explicit-reactions>
+    <volume liters="5.0e-14"/>
+</model>
+<streams>
+  <species-streams>
+    <omni-species-stream name="Ste2-alpha dimer">
+      <plex>
+        <mol-instance name="the-alpha">
+          <mol-ref name="alpha" />
+        </mol-instance>
+        <mol-instance name="the-Ste2">
+          <mol-ref name="Ste2" />
+        </mol-instance>
+      <binding>
+        <mol-instance-ref name="the-alpha">
+          <binding-site-ref name="to-Ste2" />
+        </mol-instance-ref>
+        <mol-instance-ref name="the-Ste2">
+          <binding-site-ref name="to-alpha" />
+        </mol-instance-ref>
+      </binding>
+      </plex>
+    </omni-species-stream>
+
+  </species-streams>
+</streams>
+</moleculizer-input>
+

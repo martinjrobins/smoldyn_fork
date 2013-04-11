@@ -1,0 +1,84 @@
+# Adapted from MinD5.txt
+
+graphics opengl
+
+dim 3
+
+species X
+
+difc X(all) 10.0
+color X(all) red
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 10 r
+
+/* ********************
+This is a simplified version of MinD5.txt, and it shows the same error.
+In this file, the sole molecule is called X.  It can dimerize.  Also,
+it has a modification site that can be in state A or B.
+Full list of species and their abbreviations:
+A = X = X($mod{A})
+B = X($mod{B})
+AA = X($mod{A}).X($mod{A})
+AB = X($mod{A}).X($mod{B})
+BB = X($mod{B}).X($mod{B})
+The full list of reactions (in the order that Libmzr reports them) is:
+mzr1   A + A -> AA
+mzr2   A -> B
+mzr3   A + B -> AB
+mzr4   B + B -> BB
+mzr5   B -> A
+mzr6   AA -> A + A
+mzr7   AA -> AB
+mzr8   AB -> A + B
+mzr9   AB -> AA
+mzr10  BB -> B + B
+mzr11  BB -> AB
+This list is missing the reaction AB -> BB.
+This error is identical to that in the MinD5.txt issue.  The missing reaction is a
+transformation reaction from a heterodimer.  I'm guessing that the problem arises
+because the original version of Moleculizer generated both species AB and BA, and then
+species BA would have a transformation reaction to BB.  However, now that BA is eliminated
+(which is correct because it is identical to AB), the transformation reaction to BB
+is not generated.
+
+*/ *******************
+
+
+start_rules
+
+==== Modifications ====
+  name=A, mass=0;
+  name=B, mass=0;
+
+==== Mols ====
+  X(ds,*mod{A,B}), mass = 1000;
+
+=== Association-Reactions ===
+  X(ds) + X(ds) -> X(ds!0).X(ds!0),
+	kon = 1, koff = 1;
+
+=== Transformation-Reactions ===
+  X(*mod{A}) -> X(*mod{B}), k=1;
+  X(*mod{B}) -> X(*mod{A}), k=1;
+
+end_rules
+reference_difc X
+
+expand_network all
+
+mol 1000 X u u u
+
+output_files stdout
+cmd B molcountheader stdout
+cmd N 100 molcount stdout
+#cmd A diagnostics all stdout
+
+end_file
+
+

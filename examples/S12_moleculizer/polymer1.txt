@@ -1,0 +1,61 @@
+# polymer1.txt
+
+/*
+
+This file defines a single species, X, which has left and right binding sites.
+Left and right binding sites bind each other, meaning that X can polymerize.
+For the reaction X + X <-> XX, the association rate is 20 and dissociation rate
+is 1.  A problem used to arise with reaction mzr8, which is for trimer dissociation:
+XXX -> XX + X.  The generated dissociation rate constant was 1 but is now
+2 because there are two possible break points.  This problem has been fixed.
+
+In general, for symmetric dissociation (e.g. XX -> X + X, or XXXX -> XX + XX),
+the dissociation rate constant should be 1.  For asymmetric dissociation (e.g.
+XXX -> XX + X, or XXXX -> XXX + X), the dissociation rate constant should be 2.
+
+The above rule is general for this system, but I don't know how to generalize
+it to all systems.
+
+*/
+
+
+graphics opengl_good
+random_seed 1
+
+dim 3
+
+
+start_rules
+===== Mols ======================
+  X(L, R), mass = 1000.0;
+
+===== Association-Reactions =========
+  X(L) + X(R) -> X(L!0).X(R!0),
+    kon = 20, koff = 1;
+end_rules
+
+expand_network 0
+
+species X
+difc X 1
+
+reference_difc X
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+mol 1000 X u u u
+
+output_files stdout
+cmd n 10 molcountheader stdout
+cmd n 10 molcount stdout
+
+cmd n 100 diagnostics reaction
+
+end_file
+

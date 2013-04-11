@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<moleculizer-input>
+  <model>
+    <modifications>
+      <modification name="none">
+        <weight-delta daltons="0.0">
+        </weight-delta>
+      </modification>
+      <modification name="phosphorylated">
+        <weight-delta daltons="42.0">
+        </weight-delta>
+      </modification>
+    </modifications>
+    <mols>
+      <small-mol name="ATP">
+        <weight daltons="100.0">
+        </weight>
+      </small-mol>
+      <small-mol name="ADP">
+        <weight daltons="100.0">
+        </weight>
+      </small-mol>
+      <mod-mol name="Sub">
+        <weight daltons="1000.0">
+        </weight>
+        <binding-site name="to-Kin">
+          <default-shape-ref name="default">
+          </default-shape-ref>
+          <site-shape name="default">
+          </site-shape>
+        </binding-site>
+        <mod-site name="phos-site">
+          <default-mod-ref name="none">
+          </default-mod-ref>
+        </mod-site>
+      </mod-mol>
+      <mod-mol name="Kin">
+        <weight daltons="1000.0">
+        </weight>
+        <binding-site name="to-AXP">
+          <default-shape-ref name="default">
+          </default-shape-ref>
+          <site-shape name="default">
+          </site-shape>
+        </binding-site>
+        <binding-site name="to-Sub">
+          <default-shape-ref name="default">
+          </default-shape-ref>
+          <site-shape name="default">
+          </site-shape>
+        </binding-site>
+        <binding-site name="to-X">
+          <default-shape-ref name="default">
+          </default-shape-ref>
+          <site-shape name="default">
+          </site-shape>
+        </binding-site>
+      </mod-mol>
+      <mod-mol name="X">
+        <weight daltons="1000.0">
+        </weight>
+        <binding-site name="to-Kin">
+          <default-shape-ref name="default">
+          </default-shape-ref>
+          <site-shape name="default">
+          </site-shape>
+        </binding-site>
+        <mod-site name="phos-site">
+          <default-mod-ref name="none">
+          </default-mod-ref>
+        </mod-site>
+      </mod-mol>
+    </mols>
+    <allosteric-plexes>
+    </allosteric-plexes>
+    <allosteric-omnis>
+    </allosteric-omnis>
+    <reaction-gens>
+      <dimerization-gen>
+        <mol-ref name="ATP">
+          <site-ref name="ATP">
+          </site-ref>
+        </mol-ref>
+        <mol-ref name="Kin">
+          <site-ref name="to-AXP">
+          </site-ref>
+        </mol-ref>
+        <default-on-rate value="1.0e12">
+        </default-on-rate>
+        <default-off-rate value="1.0">
+        </default-off-rate>
+      </dimerization-gen>
+      <dimerization-gen>
+        <mol-ref name="ADP">
+          <site-ref name="ADP">
+          </site-ref>
+        </mol-ref>
+        <mol-ref name="Kin">
+          <site-ref name="to-AXP">
+          </site-ref>
+        </mol-ref>
+        <default-on-rate value="1.0e12">
+        </default-on-rate>
+        <default-off-rate value="1.0">
+        </default-off-rate>
+      </dimerization-gen>
+      <dimerization-gen>
+        <mol-ref name="Sub">
+          <site-ref name="to-Kin">
+          </site-ref>
+        </mol-ref>
+        <mol-ref name="Kin">
+          <site-ref name="to-Sub">
+          </site-ref>
+        </mol-ref>
+        <default-on-rate value="1.0e12">
+        </default-on-rate>
+        <default-off-rate value="1.0">
+        </default-off-rate>
+      </dimerization-gen>
+      <dimerization-gen>
+        <mol-ref name="Kin">
+          <site-ref name="to-X">
+          </site-ref>
+        </mol-ref>
+        <mol-ref name="X">
+          <site-ref name="to-Kin">
+          </site-ref>
+        </mol-ref>
+        <default-on-rate value="1.0e12">
+        </default-on-rate>
+        <default-off-rate value="1.0">
+        </default-off-rate>
+      </dimerization-gen>
+      <omni-gen>
+        <enabling-omniplex>
+          <plex>
+            <mol-instance name="the-Sub">
+              <mol-ref name="Sub">
+              </mol-ref>
+            </mol-instance>
+            <mol-instance name="the-Kin">
+              <mol-ref name="Kin">
+              </mol-ref>
+            </mol-instance>
+            <mol-instance name="the-ATP">
+              <mol-ref name="ATP">
+              </mol-ref>
+            </mol-instance>
+            <mol-instance name="the-X">
+              <mol-ref name="X">
+              </mol-ref>
+            </mol-instance>
+            <binding>
+              <mol-instance-ref name="the-Sub">
+                <binding-site-ref name="to-Kin">
+                </binding-site-ref>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-Kin">
+                <binding-site-ref name="to-Sub">
+                </binding-site-ref>
+              </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Kin">
+                <binding-site-ref name="to-AXP">
+                </binding-site-ref>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-ATP">
+                <binding-site-ref name="ATP">
+                </binding-site-ref>
+              </mol-instance-ref>
+            </binding>
+            <binding>
+              <mol-instance-ref name="the-Kin">
+                <binding-site-ref name="to-X">
+                </binding-site-ref>
+              </mol-instance-ref>
+              <mol-instance-ref name="the-X">
+                <binding-site-ref name="to-Kin">
+                </binding-site-ref>
+              </mol-instance-ref>
+            </binding>
+          </plex>
+          <instance-states>
+            <mod-mol-instance-ref name="the-X">
+              <mod-map>
+                <mod-site-ref name="phos-site">
+                  <mod-ref name="phosphorylated">
+                  </mod-ref>
+                </mod-site-ref>
+              </mod-map>
+            </mod-mol-instance-ref>
+            <mod-mol-instance-ref name="the-Sub">
+              <mod-map>
+                <mod-site-ref name="phos-site">
+                  <mod-ref name="none">
+                  </mod-ref>
+                </mod-site-ref>
+              </mod-map>
+            </mod-mol-instance-ref>
+          </instance-states>
+        </enabling-omniplex>
+        <small-mol-exchanges>
+          <small-mol-exchange>
+            <small-mol-instance-ref name="the-ATP">
+            </small-mol-instance-ref>
+            <small-mol-ref name="ADP">
+            </small-mol-ref>
+          </small-mol-exchange>
+        </small-mol-exchanges>
+        <modification-exchanges>
+          <modification-exchange>
+            <mod-mol-instance-ref name="the-Sub">
+              <mod-site-ref name="phos-site">
+              </mod-site-ref>
+            </mod-mol-instance-ref>
+            <installed-mod-ref name="phosphorylated">
+            </installed-mod-ref>
+          </modification-exchange>
+        </modification-exchanges>
+        <rate value="1.0">
+        </rate>
+      </omni-gen>
+    </reaction-gens>
+    <explicit-species>
+      <plex-species name="input-complex">
+        <plex>
+          <mol-instance name="the-Sub">
+            <mol-ref name="Sub">
+            </mol-ref>
+          </mol-instance>
+          <mol-instance name="the-Kin">
+            <mol-ref name="Kin">
+            </mol-ref>
+          </mol-instance>
+          <mol-instance name="the-ATP">
+            <mol-ref name="ATP">
+            </mol-ref>
+          </mol-instance>
+          <binding>
+            <mol-instance-ref name="the-Sub">
+              <binding-site-ref name="to-Kin">
+              </binding-site-ref>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-Kin">
+              <binding-site-ref name="to-Sub">
+              </binding-site-ref>
+            </mol-instance-ref>
+          </binding>
+          <binding>
+            <mol-instance-ref name="the-Kin">
+              <binding-site-ref name="to-AXP">
+              </binding-site-ref>
+            </mol-instance-ref>
+            <mol-instance-ref name="the-ATP">
+              <binding-site-ref name="ATP">
+              </binding-site-ref>
+            </mol-instance-ref>
+          </binding>
+        </plex>
+        <parameters>
+          <parameter name="kD" value="100.0" />
+        </parameters>
+        </plex-species>
+        <plex-species name="X-native">
+          <plex>
+            <mol-instance name="the-X">
+              <mol-ref name="X">
+              </mol-ref>
+            </mol-instance>
+          </plex>
+          <parameters>
+            <parameter name="kD" value="110.0" />
+            </parameters>
+          </plex-species>
+          <plex-species name="X-phos">
+            <plex>
+              <mol-instance name="the-X">
+                <mol-ref name="X">
+                </mol-ref>
+              </mol-instance>
+            </plex>
+            <parameters>
+              <parameter name="kD" value="10.0" />
+              </parameters>
+              <instance-states>
+                <mod-mol-instance-ref name="the-X">
+                  <mod-map>
+                    <mod-site-ref name="phos-site">
+                      <mod-ref name="phosphorylated">
+                      </mod-ref>
+                    </mod-site-ref>
+                  </mod-map>
+                </mod-mol-instance-ref>
+              </instance-states>
+            </plex-species>
+          </explicit-species>
+          <explicit-reactions>
+          </explicit-reactions>
+        </model>
+  <streams><species-streams></species-streams></streams>
+      </moleculizer-input>
+      

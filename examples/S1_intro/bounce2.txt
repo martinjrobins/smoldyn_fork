@@ -1,0 +1,28 @@
+# Simple bouncing molecules in a 2-D system
+
+graphics opengl
+
+dim 2
+species red
+species green
+
+difc red 3
+difc green 1
+
+color red 1 0 0
+color green 0 1 0
+
+time_start 0
+time_stop 1000
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+
+mol 20 red u u
+mol 8 green 80 40
+
+end_file
+
+
+

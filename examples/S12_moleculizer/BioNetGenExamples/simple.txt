@@ -1,0 +1,105 @@
+# simple.txt
+# This is a BioNetGen example model.
+
+
+graphics opengl_good
+
+dim 3
+
+species EGF EGFR
+
+
+start_rules
+=== Modifications =================
+  name=default, mass=0;
+  name=U, mass=0;
+  name=P, mass=0;
+
+===== Molecules ======================
+  EGF(R), mass = 10000.0;
+  EGFR(L,CR1,Y1068{default,U,P}), mass = 10000.0;
+
+==== Species-Classes ================
+
+===== Association-Reactions =========	
+  EGF(R) + EGFR(L) -> EGF(R!0).EGFR(L!0), kon=0.00015, koff=0.06;
+
+=== Allosteric-Classes ================
+
+
+===== Explicit-Species ===============
+
+end_rules
+
+expand_network 1
+
+
+difc EGF 1
+difc EGFR 1
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+mol 1200 EGF u u u
+mol 1800 EGFR u u u
+
+cmd b pause
+
+end_file
+
+
+
+/*
+BioNetGen model
+
+begin model 
+begin parameters
+   # Physical and geometric constants
+   NA     6.0e23 #Avogadro’s num
+   f	    0.01 #scaling factor
+   Vo      f*1e-10 # L
+   V       f*3e-12 # L
+ 
+  # Initial concentrations
+   EGF_conc 2e-9 # nM
+   EGF0   EGF_conc*NA*Vo #nM
+   EGFR0  f*1.8e5    #copy per cell
+
+   # Rate constants 
+   kp1    9.0e7/(NA*Vo) #input /M/sec         
+   km1   0.06         #/sec    
+end parameters
+
+begin molecule types
+   EGF(R)
+   EGFR(L,CR1,Y1068~U~P)
+end molecule types
+
+begin seed species
+   EGF(R)              EGF0
+   EGFR(L,CR1,Y1068~U) EGFR0
+end seed species
+
+begin reaction rules
+   EGF(R) + EGFR(L) <-> EGF(R!1).EGFR(L!1) kp1, km1
+end reaction rules
+
+begin observables
+ # Species LR EGF(R!1).EGFR(L!1)
+  Molecules Lbound EGF(R!+)
+end observables
+end model
+
+begin actions
+  generate_network({overwrite=>1});
+  saveConcentrations();
+  simulate_ode({suffix=>ode,n_steps=>20,t_end=>100});
+#  resetConcentrations();
+#  simulate_nf({suffix=>ssa,n_steps=>20,t_end=>100});
+end actions
+*/

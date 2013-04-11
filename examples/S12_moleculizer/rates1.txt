@@ -1,0 +1,49 @@
+# rates1.txt
+
+/*
+Reaction: A + A <-> AA
+Small-mols, no binding sites, no modification sites
+Order 2 rate constant should be 1, and it is.
+This shows a symmetry challenge which is now handled correctly.
+*/
+
+dim 3
+
+
+start_rules
+#xml_output rates1xml.txt
+
+=== Modifications ===
+
+===== Mols ======================
+  A, mass =10;
+
+===== Association-Reactions =========
+  A + A -> A(!0).A(!0), kon=1, koff=1;
+
+=== Explicit-Species ===
+  A(!0).A(!0), name=AA;
+
+end_rules
+
+
+expand_network all
+
+species A
+difc all 1
+
+reference_difc A
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 100 r
+
+mol 100 A u u u
+
+
+end_file
+

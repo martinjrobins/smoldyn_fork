@@ -1,0 +1,81 @@
+# Simple A + B <-> AB reaction network.
+
+graphics opengl_good
+
+dim 2
+max_species 100
+max_mol 1000
+
+species A
+species B C D E
+display_size all 2
+
+difc all 20.0
+
+#color A 0 1 0		# green
+#color B 0.4 0.4 1	# light blue
+
+time_start 0
+time_stop 10
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+
+start_rules
+=== Modifications ===========
+  name=None, mass=0;
+  name=ATP, mass=507;
+  name=ADP, mass=427;
+
+===== Molecules ======================
+  A(to-B), mass = 10000;
+  B(to-A), mass = 10000;
+
+  C(to-D,to-E {active,inactive}), mass=10000;
+  D, mass=100;			# D is a small-mol
+  E(to-C), mass=20000;
+
+  F(to-G,*AXP-site {None,ADP,ATP}), mass=10000;
+  G(to-F), mass=5000;
+
+===== Association-Reactions =========	
+  A(to-B) + B(to-A) -> A(to-B!1).B(to-A!1),
+     kon = 100.0,   koff = 4.0;
+
+  C(to-D) + D -> C(to-D!1).D(!1),
+     kon=100, koff=5;
+
+  C(to-E{active}) + E(to-C) -> C(to-E{active}!1).E(to-C!1),
+     kon=100, koff=5;
+
+===== Explicit-Species ==========
+  A(to-B!1).B(to-A!1), name=AB;
+  C(to-D!1,to-E).D(!1), name=CD;
+  C(to-D!1,to-E!2).D(!1).E(to-C!2), name = CDE;
+
+==== Species-Classes =========
+  A, name=Aclass;
+  B(to-A), name=Bclass;
+  A(to-B!1).B(to-A!1), name=ABclass;
+
+end_rules
+
+species_class_color ABclass 1 0 0
+
+mol 250 A 30 30
+mol 250 B 70 70
+mol 100 C 80 20
+mol 100 D 20 80
+mol 10 E 50 1
+
+output_files stdout
+cmd B molcountheader stdout
+#cmd @ 2 set color AB 1 0 0.3
+cmd N 50 molcount stdout
+cmd A molcountheader stdout
+cmd A diagnostics all
+
+end_file
+
+

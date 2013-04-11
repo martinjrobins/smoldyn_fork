@@ -1,0 +1,98 @@
+# MinD5.txt
+
+graphics opengl_good
+
+dim 3
+
+species MinD
+
+difc MinD(all) 10.0
+color MinD(all) red
+
+time_start 0
+time_stop 100
+time_step 0.01
+
+boundaries 0 0 100 r
+boundaries 1 0 100 r
+boundaries 2 0 10 r
+
+/* ********************
+
+This file generates 30 reactions, but misses 6 reactions.
+
+Run this file for parameters only (i.e. use -p option, so simulation doesn't run).
+
+Abbreviations:
+A = MinD = MinD($axp{Apo})
+D = MinD($axp{ADP})
+T = MinD($axp{ATP})
+AA = MinD(ds!0,$axp{Apo}).MinD(ds!0,$axp{Apo})
+DD = MinD(ds!0,$axp{ADP}).MinD(ds!0,$axp{ADP})
+TT = MinD(ds!0,$axp{ATP}).MinD(ds!0,$axp{ATP})
+DA = MinD(ds!0,$axp{ADP}).MinD(ds!0,$axp{ATP})
+DT = MinD(ds!0,$axp{ADP}).MinD(ds!0,$axp{ATP})
+TA = MinD(ds!0,$axp{ATP}).MinD(ds!0,$axp{Apo})
+
+The correct reaction network has substitution reactions among all monomer species:
+A <-> D, A <-> T, and D <-> T
+It also has symmetric dimerizations:
+A + A <-> AA, D + D <-> DD, and T + T <-> TT
+It also has asymmetric dimerizations:
+A + D <-> DA, A + T <-> TA, and D + T <-> DT
+It also has substitution reactions among dimers:
+AA <-> DA, AA <-> TA, DD <-> DA, DD <-> DT, TT <-> DT, TT <-> TA,
+DA <-> TA, DA <-> DT, and DT <-> TA
+
+All reactions are generated correctly except for some listed in the last class
+The following 6 reactions are not generated:
+DA -> DD
+DA -> DT
+DT -> TT
+TA -> TT
+TA -> DT
+DT -> TA
+
+
+
+*/ *******************
+
+
+start_rules
+
+==== Modifications ====
+  name=Apo, mass=0; name=ADP, mass=427; name=ATP, mass=507;
+
+==== Mols ====
+  MinD(ds{inact,act},*axp{Apo,ADP,ATP}), mass = 29600;
+  P, mass = 95;
+
+=== Association-Reactions ===
+  MinD(ds{inact}) + MinD(ds{inact}) -> MinD(ds!0).MinD(ds!0),
+	kon = 1, koff = 1,
+  MinD(ds{inact}) + MinD(ds{act}) -> MinD(ds!0).MinD(ds!0),
+	kon = 1, koff = 1,
+  MinD(ds{act}) + MinD(ds{act}) -> MinD(ds!0).MinD(ds!0),
+	kon = 1, koff = 1;
+
+=== Transformation-Reactions ===
+  MinD(*axp{Apo}) -> MinD(*axp{ATP}), k=1;
+  MinD(*axp{ATP}) -> MinD(*axp{Apo}), k=1;
+  MinD(*axp{Apo}) -> MinD(*axp{ADP}), k=1;
+  MinD(*axp{ADP}) -> MinD(*axp{Apo}), k=1;
+  MinD(*axp{ATP}) -> MinD(*axp{ADP}), k=1;
+  MinD(*axp{ADP}) -> MinD(*axp{ATP}), k=1;
+
+=== Allostery-Classes ===
+  MinD(ds{act<-*},*axp{ATP});
+
+end_rules
+
+reference_difc MinD
+expand_network all
+
+mol 100 MinD u u u
+
+end_file
+
+
